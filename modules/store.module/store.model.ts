@@ -2,15 +2,11 @@ import { Schema, model } from "mongoose";
 import IStore from "./store.interface";
 import validator from "validator";
 import { Types } from "mongoose";
-import { countries } from "../../utils/constants/countries.enum";
 
 const storeSchema = new Schema<IStore>(
   {
     storeName: { type: String, required: true },
-    // storePhotoURL: { type: String, validate: validator.isURL, required: true },
-    storeLink: { type: String, required: true },
-    countries: [{ type: String, required: true, enum: countries }],
-    countriesFlag: [{ type: String }],
+    storeLink: { type: String, required: true, validate: validator.isURL },
     storeDescription: String,
     howToUse: [
       [

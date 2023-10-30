@@ -7,6 +7,24 @@ import { roles } from "../../utils/constants/authorization_roles";
 const storeRouter = express.Router();
 
 /**
+ *@api{post}/add add new store
+ *@apiDescription add a new store
+ *@apiPermission admin and manager
+ *@apiHeader token
+ *@apiBody photoURL, storeName, storeExternalLink, description, howToUse
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} added store.
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+storeRouter.post(
+  "/add",
+  verify_token,
+  verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
+  storeController.addNewStoreController
+);
+
+/**
  *@api{get}/ get all store
  *@apiDescription get all stores
  *@apiPermission none
@@ -64,24 +82,6 @@ storeRouter.get(
  *@apiError store not found
  */
 storeRouter.get("/:id", storeController.getAStoreController);
-
-/**
- *@api{post}/add add new store
- *@apiDescription add a new store
- *@apiPermission admin and manager
- *@apiHeader token
- *@apiBody photoURL, storeName, countries,storeExternalLink, description, howToUse
- *@apiParam none
- *@apiQuery none
- *@apiSuccess {Object} added store.
- *@apiError 401, 403 unauthorized & forbidden
- */
-storeRouter.post(
-  "/add",
-  verify_token,
-  verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
-  storeController.addNewStoreController
-);
 
 /**
  *@api{put}/:id update a store

@@ -53,7 +53,7 @@ const get_payload_from_token_1 = require("../../utils/get_payload_from_token");
 const loginUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { email, name, uid, picture } = req.user;
-        const { countries, phoneNumber } = req.body;
+        const { country, phoneNumber } = req.body;
         const existUser = yield userServices.getUserByEmailService(email);
         let newUser;
         let accessToken;
@@ -61,7 +61,7 @@ const loginUserController = (req, res, next) => __awaiter(void 0, void 0, void 0
             newUser = yield userServices.addNewUserService({
                 email,
                 name,
-                countries,
+                country,
                 phoneNumber,
                 uid,
                 photoURL: picture,

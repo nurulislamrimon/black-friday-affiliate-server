@@ -72,15 +72,21 @@ export const addNewStoreController = async (
   next: NextFunction
 ) => {
   try {
-    const { storeName, storePhotoURL, storeLink, countries } = req.body;
+    const { storeName, storePhotoURL, storeLink } = req.body;
     const existStore = await storeServices.getStoreByStoreNameService(
       storeName
     );
 
-    if (!storeName || !storePhotoURL || !storeLink || !countries) {
-      throw new Error("Please enter required information!");
+    if (!storeName || !storePhotoURL || !storeLink) {
+      res.status(400).json({
+        success: false,
+        error: "Please enter required information!",
+      });
     } else if (existStore?.storeName === storeName) {
-      throw new Error("Store already exist!");
+      res.status(400).json({
+        success: false,
+        error: "Store already exists!",
+      });
     } else {
       const postBy = await getUserByEmailService(req.body.decoded.email);
 
@@ -88,7 +94,8 @@ export const addNewStoreController = async (
         ...req.body,
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       });
-      res.send({
+
+      res.status(201).json({
         success: true,
         data: result,
       });
@@ -98,6 +105,7 @@ export const addNewStoreController = async (
     next(error);
   }
 };
+
 // get all stores
 export const getAllStoresController = async (
   req: Request,

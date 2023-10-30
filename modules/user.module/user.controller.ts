@@ -13,7 +13,7 @@ export const loginUserController = async (
 ) => {
   try {
     const { email, name, uid, picture } = req.user;
-    const { countries, phoneNumber } = req.body;
+    const { country, phoneNumber } = req.body;
     const existUser = await userServices.getUserByEmailService(email);
 
     let newUser;
@@ -22,7 +22,7 @@ export const loginUserController = async (
       newUser = await userServices.addNewUserService({
         email,
         name,
-        countries,
+        country,
         phoneNumber,
         uid,
         photoURL: picture,
