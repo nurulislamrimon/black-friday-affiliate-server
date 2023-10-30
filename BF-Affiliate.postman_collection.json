@@ -1,0 +1,1029 @@
+{
+	"info": {
+		"_postman_id": "5b1b6291-25a9-496b-b5be-1a83c53729e0",
+		"name": "BF-Affiliate",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "22663141"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "home",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}"
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/refresh"
+					},
+					"response": []
+				},
+				{
+					"name": "verify user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/verify/sharif@gmail.com"
+					},
+					"response": []
+				},
+				{
+					"name": "about me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/me"
+					},
+					"response": []
+				},
+				{
+					"name": "update me",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/me"
+					},
+					"response": []
+				},
+				{
+					"name": "get all users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get favourite stores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/favourite/store"
+					},
+					"response": []
+				},
+				{
+					"name": "Get favourite posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/favourite/post"
+					},
+					"response": []
+				},
+				{
+					"name": "favourite store add & remove",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/favourite/store/64aac9d99505ef872dea273a"
+					},
+					"response": []
+				},
+				{
+					"name": "favourite post add & remove",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/favourite/post/6496a1a3c87971d6fba72fd8"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "get all stores client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/store"
+					},
+					"response": []
+				},
+				{
+					"name": "get a store by storeName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/store/name/Noon Food"
+					},
+					"response": []
+				},
+				{
+					"name": "get a store by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/store/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "get all stores admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/store/all"
+					},
+					"response": []
+				},
+				{
+					"name": "add new store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"storeName\": \"united state store\",\r\n    \"storePhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"storeLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/store/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a store",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/store/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a store",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/store/64ae9e11fbb41a9c5a2bbc65"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Brand",
+			"item": [
+				{
+					"name": "get all brands client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/brand"
+					},
+					"response": []
+				},
+				{
+					"name": "get a brand by storeName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/brand/name/Noon Food"
+					},
+					"response": []
+				},
+				{
+					"name": "get a brand by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/brand/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "get all brands admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/brand/all?storeName=adidas",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"brand",
+								"all"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "adidas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"brandName\": \"united state brand\",\r\n    \"brandPhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"brandLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/brand/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a brand",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/brand/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a brand",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/brand/64ae9e11fbb41a9c5a2bbc65"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "get all categories client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/category"
+					},
+					"response": []
+				},
+				{
+					"name": "get a category by storeName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/category/name/Noon Food"
+					},
+					"response": []
+				},
+				{
+					"name": "get a category by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/category/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "get all categories admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/category/all?storeName=adidas",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"category",
+								"all"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "adidas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"categoryName\": \"united state category\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/category/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/category/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/category/64ae9e11fbb41a9c5a2bbc65"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Campaign",
+			"item": [
+				{
+					"name": "get all campaigns client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/campaign"
+					},
+					"response": []
+				},
+				{
+					"name": "get a campaign by campaignName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/campaign/name/Noon Food"
+					},
+					"response": []
+				},
+				{
+					"name": "get a campaign by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/campaign/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "get all campaigns admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/campaign/all?storeName=adidas",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"campaign",
+								"all"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "adidas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"campaignName\": \"united state campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/campaign/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a campaign",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/campaign/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a campaign",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/campaign/64ae9e11fbb41a9c5a2bbc65"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Network",
+			"item": [
+				{
+					"name": "get all networks client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/network"
+					},
+					"response": []
+				},
+				{
+					"name": "get a network by networkName",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/network/name/Noon Food"
+					},
+					"response": []
+				},
+				{
+					"name": "get a network by Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/network/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "get all network admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/network/all?storeName=adidas",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"network",
+								"all"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "adidas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new network",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"campaignName\": \"united state campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/network/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a network",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/network/6533adb2f843da5b1da10063"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a network",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/network/64ae9e11fbb41a9c5a2bbc65"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "search globally client",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/post/search?searchTerm=ad",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"search"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "ad"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "search globally admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/post/search/all?searchTerm=un",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"search",
+								"all"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "un"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "add new post",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postTitle\":\"united state post1\",\r\n    \"storeName\":\"united state store\",\r\n    \"brandName\":\"united state brand\",\r\n    \"categoryName\":\"united state category\",\r\n    \"campaignName\":\"united state campaign\",\r\n    \"expireDate\":\"10/10/2024\",\r\n    \"countries\":[\"Canada\"],\r\n    \"postType\":\"Coupon\",\r\n    \"couponCode\":\"ALPHA1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/post/add"
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/post?storeName=Noon",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"post"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "Noon"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts admin",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/post/all?storeName=Adidas",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"post",
+								"all"
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "Adidas"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get a post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/6533c6a8f267b27489641dbc"
+					},
+					"response": []
+				},
+				{
+					"name": "update a post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/6474d29ad48d9031937af9dc"
+					},
+					"response": []
+				},
+				{
+					"name": "revealed post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/revealed/64aea20be235d356c7c7e574"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/6474d8392f4a47a40d4932af"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notification",
+			"item": [
+				{
+					"name": "get notification amount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/notification"
+					},
+					"response": []
+				},
+				{
+					"name": "get notification amount Copy",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/notification/all"
+					},
+					"response": []
+				},
+				{
+					"name": "update a post",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/user/notification/readed/64787233c6db631a4268b74b"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Carousel",
+			"item": [
+				{
+					"name": "add carousel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/carousel/add"
+					},
+					"response": []
+				},
+				{
+					"name": "get carousel",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/carousel"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Contact",
+			"item": [
+				{
+					"name": "add Contact",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/contact/add"
+					},
+					"response": []
+				},
+				{
+					"name": "get Contact",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/contact"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Administrator",
+			"item": [
+				{
+					"name": "add administrator",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/administrators/add"
+					},
+					"response": []
+				},
+				{
+					"name": "get all admin and managers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/administrators"
+					},
+					"response": []
+				},
+				{
+					"name": "get me admin and managers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pcmltb25wY0BnbWFpbC5jb20iLCJpYXQiOjE2OTc2MzkyMDEsImV4cCI6MTY5NzcyNTYwMX0.zW5sq_8Z1enL2uZkSQ4Ubh5HMbs6n_ZGcBtt9h8ufmU"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/administrators/me"
+					},
+					"response": []
+				},
+				{
+					"name": "update a role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/administrators/65030401dc3d20c655e3ce35"
+					},
+					"response": []
+				},
+				{
+					"name": "delete a role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/administrators/6503042ddc3d20c655e3ce3a"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
