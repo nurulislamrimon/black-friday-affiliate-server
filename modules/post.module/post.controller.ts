@@ -7,14 +7,11 @@ import { getBrandByBrandNameService } from "../brand.module/brand.services";
 import { getCategoryByCategoryNameService } from "../category.module/category.services";
 import { getCampaignByCampaignNameService } from "../campaign.module/campaign.services";
 import { getNetworkByNetworkNameService } from "../network.module/network.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // add new Post controller
-export const addNewPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const {
       postTitle,
       storeName,
@@ -86,51 +83,33 @@ export const addNewPostController = async (
         console.log(`Post ${result._id} is added!`);
       }
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // add new Post controller
-export const searchGloballyClientController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const searchGloballyClientController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await PostServices.searchGloballyClientService(req.query);
     res.send({
       success: true,
       data: result,
     });
     console.log(`global search is responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
-export const searchGloballyAdminController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+);
+export const searchGloballyAdminController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await PostServices.searchGloballyAdminService(req.query);
     res.send({
       success: true,
       data: result,
     });
     console.log(`global search is responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get a Post controller
-export const getAPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const result = await PostServices.getPostByIdService(postId);
     if (!result) {
@@ -142,54 +121,36 @@ export const getAPostController = async (
       });
       console.log(`Post ${result._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get all Posts
-export const getAllPostsByAdminController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllPostsByAdminController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await PostServices.getAllPosts(req.query, false);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Posts are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get all active Posts
-export const getAllActivePostsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllActivePostsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await PostServices.getAllPosts(req.query, true);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Posts are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Post controller
-export const updateAPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateAPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existPost = await PostServices.getPostByIdService(postId);
 
@@ -209,18 +170,12 @@ export const updateAPostController = async (
       });
       console.log(`Post ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // revealed a Post controller
-export const revealedAPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const revealedAPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existPost = await PostServices.getPostByIdService(postId);
 
@@ -235,18 +190,12 @@ export const revealedAPostController = async (
       });
       console.log(`Post ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Post controller
-export const deleteAPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteAPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existPost = await PostServices.getPostByIdService(postId);
 
@@ -261,17 +210,11 @@ export const deleteAPostController = async (
       });
       console.log(`Post ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a Post controller
-export const deleteManyPostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteManyPostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postIds = req.body.posts;
     if (!postIds) {
       throw new Error("posts are required!");
@@ -283,7 +226,5 @@ export const deleteManyPostController = async (
       data: result,
     });
     console.log(`Post ${result} is added!`);
-  } catch (error) {
-    next(error);
   }
-};
+);

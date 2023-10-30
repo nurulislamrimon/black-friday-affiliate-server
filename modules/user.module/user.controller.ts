@@ -5,13 +5,10 @@ import { Types } from "mongoose";
 import { getStoreByIdService } from "../store.module/store.services";
 import { getPostByIdService } from "../post.module/post.services";
 import { getPayloadFromToken } from "../../utils/get_payload_from_token";
+import catchAsync from "../../Shared/catchAsync";
 
-export const loginUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const loginUserController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { email, name, uid, picture } = req.user;
     const { country, phoneNumber } = req.body;
     const existUser = await userServices.getUserByEmailService(email);
@@ -46,16 +43,11 @@ export const loginUserController = async (
       });
       console.log(`user ${existUser._id} is responsed!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
-export const refreshUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+);
+
+export const refreshUserController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const userRefreshTokenFromCookies = req.cookies.refreshToken;
     const userRefreshTokenFromHeader = req.headers.cookies;
 
@@ -75,18 +67,12 @@ export const refreshUserController = async (
       data: { accessToken },
     });
     console.log(`New access token created from refresh token`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // about me by token
-export const getAboutMeUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAboutMeUserController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const email = req.body.decoded.email;
     const result = await userServices.getUserByEmailService(email);
     if (!result) {
@@ -98,17 +84,11 @@ export const getAboutMeUserController = async (
       });
       console.log(`user responsed!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update me from token
-export const updateAboutMeUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateAboutMeUserController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const userEmail = req.body.decoded.email;
     const isUserExist = await userServices.getUserByEmailService(userEmail);
 
@@ -124,34 +104,22 @@ export const updateAboutMeUserController = async (
       success: true,
       data: result,
     });
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all user
-export const getAllUserController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllUserController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.getAllUserService(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} user responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all favourite stores
-export const getAllFavouriteStoreController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllFavouriteStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.getFavouriteStoreService(
       req.body.decoded.email
     );
@@ -160,17 +128,11 @@ export const getAllFavouriteStoreController = async (
       result,
     });
     console.log(`${result?._id} favourite stores responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all favourite posts
-export const getAllFavouritePostController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllFavouritePostController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.getFavouritePostService(
       req.body.decoded.email
     );
@@ -179,17 +141,11 @@ export const getAllFavouritePostController = async (
       result,
     });
     console.log(`${result?._id} favourite posts responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get add favourite stores
-export const addAndRemoveStoreFromFavouriteController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addAndRemoveStoreFromFavouriteController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const storeId = new Types.ObjectId(req.params.id);
     const isStoreExist = await getStoreByIdService(storeId);
     if (!isStoreExist) {
@@ -205,17 +161,11 @@ export const addAndRemoveStoreFromFavouriteController = async (
       });
       console.log(`Store favourite list modified!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get add favourite stores
-export const addAndRemovePostFromFavouriteController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addAndRemovePostFromFavouriteController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const PostId = new Types.ObjectId(req.params.id);
     const isPostExist = await getPostByIdService(PostId);
     if (!isPostExist) {
@@ -231,17 +181,11 @@ export const addAndRemovePostFromFavouriteController = async (
       });
       console.log(`Post favourite list modified!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all notification counted
-export const getUnreadedNotificationCountController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getUnreadedNotificationCountController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.getUnreadedNotificationCountService(
       req.body.decoded.email
     );
@@ -250,17 +194,11 @@ export const getUnreadedNotificationCountController = async (
       data: result,
     });
     console.log(`${result} user responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all notifications
-export const getNotificationController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getNotificationController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await userServices.getNotificationService(
       req.body.decoded.email
     );
@@ -269,17 +207,11 @@ export const getNotificationController = async (
       data: result,
     });
     console.log(`${result?._id} user responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // set post status to readed
-export const setNotificationReadedController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const setNotificationReadedController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const result = await userServices.setNotificationReadedService(
       req.body.decoded.email,
@@ -290,7 +222,5 @@ export const setNotificationReadedController = async (
       data: result,
     });
     console.log(`notification ${postId} is readed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);

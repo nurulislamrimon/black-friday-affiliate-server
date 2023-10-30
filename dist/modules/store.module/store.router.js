@@ -33,6 +33,18 @@ const verify_authorization_1 = require("../../middlewares/verify_authorization")
 const authorization_roles_1 = require("../../utils/constants/authorization_roles");
 const storeRouter = express_1.default.Router();
 /**
+ *@api{post}/add add new store
+ *@apiDescription add a new store
+ *@apiPermission admin and manager
+ *@apiHeader token
+ *@apiBody photoURL, storeName, storeExternalLink, description, howToUse
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} added store.
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+storeRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), storeController.addNewStoreController);
+/**
  *@api{get}/ get all store
  *@apiDescription get all stores
  *@apiPermission none
@@ -80,18 +92,6 @@ storeRouter.get("/name/:storeName", storeController.getAStoreByStoreNameControll
  *@apiError store not found
  */
 storeRouter.get("/:id", storeController.getAStoreController);
-/**
- *@api{post}/add add new store
- *@apiDescription add a new store
- *@apiPermission admin and manager
- *@apiHeader token
- *@apiBody photoURL, storeName, countries,storeExternalLink, description, howToUse
- *@apiParam none
- *@apiQuery none
- *@apiSuccess {Object} added store.
- *@apiError 401, 403 unauthorized & forbidden
- */
-storeRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), storeController.addNewStoreController);
 /**
  *@api{put}/:id update a store
  *@apiDescription update a store by id with validation

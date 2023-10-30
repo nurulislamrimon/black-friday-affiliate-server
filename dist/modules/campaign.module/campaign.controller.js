@@ -31,150 +31,112 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteACampaignController = exports.updateACampaignController = exports.getAllCampaignsController = exports.addNewCampaignController = exports.getAllActiveCampaignsController = exports.getACampaignByCampaignNameController = exports.getACampaignController = void 0;
 const campaignServices = __importStar(require("./campaign.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
 const post_services_1 = require("../post.module/post.services");
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Campaign by Id controller
-const getACampaignController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const campaignId = new mongoose_1.Types.ObjectId(req.params.id);
-        const result = yield campaignServices.getCampaignByIdService(campaignId);
-        if (!result) {
-            throw new Error("Campaign not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getACampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const campaignId = new mongoose_1.Types.ObjectId(req.params.id);
+    const result = yield campaignServices.getCampaignByIdService(campaignId);
+    if (!result) {
+        throw new Error("Campaign not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getACampaignController = getACampaignController;
+}));
 // get Campaign by Id controller
-const getACampaignByCampaignNameController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const campaignName = req.params.CampaignName;
-        const result = yield campaignServices.getCampaignByCampaignNameService(campaignName);
-        if (!result) {
-            throw new Error("Campaign not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getACampaignByCampaignNameController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const campaignName = req.params.CampaignName;
+    const result = yield campaignServices.getCampaignByCampaignNameService(campaignName);
+    if (!result) {
+        throw new Error("Campaign not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getACampaignByCampaignNameController = getACampaignByCampaignNameController;
+}));
 // get all active Campaigns
-const getAllActiveCampaignsController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllActiveCampaignsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    try {
-        const result = yield campaignServices.getAllActiveCampaigns(req.query);
-        res.send(Object.assign({ success: true }, result));
-        console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Campaigns are responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllActiveCampaignsController = getAllActiveCampaignsController;
+    const result = yield campaignServices.getAllActiveCampaigns(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Campaigns are responsed!`);
+}));
 // add new Campaign controller
-const addNewCampaignController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { campaignPhotoURL, campaignName, countries } = req.body;
-        const existCampaign = yield campaignServices.getCampaignByCampaignNameService(campaignName);
-        if (!campaignPhotoURL || !campaignName || !countries) {
-            throw new Error("Please enter required information:  campaignName, campaignPhotoURL, countries!");
-        }
-        else if ((existCampaign === null || existCampaign === void 0 ? void 0 : existCampaign.campaignName) === campaignName) {
-            throw new Error("Campaign already exist!");
-        }
-        else {
-            const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield campaignServices.addNewCampaignService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Campaign ${result} is added!`);
-        }
+exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { campaignPhotoURL, campaignName, countries } = req.body;
+    const existCampaign = yield campaignServices.getCampaignByCampaignNameService(campaignName);
+    if (!campaignPhotoURL || !campaignName || !countries) {
+        throw new Error("Please enter required information:  campaignName, campaignPhotoURL, countries!");
     }
-    catch (error) {
-        next(error);
+    else if ((existCampaign === null || existCampaign === void 0 ? void 0 : existCampaign.campaignName) === campaignName) {
+        throw new Error("Campaign already exist!");
     }
-});
-exports.addNewCampaignController = addNewCampaignController;
+    else {
+        const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield campaignServices.addNewCampaignService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Campaign ${result} is added!`);
+    }
+}));
 // get all Campaigns
-const getAllCampaignsController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllCampaignsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    try {
-        const result = yield campaignServices.getAllCampaigns(req.query);
-        res.send(Object.assign({ success: true }, result));
-        console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Campaigns are responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllCampaignsController = getAllCampaignsController;
+    const result = yield campaignServices.getAllCampaigns(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Campaigns are responsed!`);
+}));
 // update a Campaign controller
-const updateACampaignController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existCampaign = yield campaignServices.getCampaignByIdService(postId);
-        if (!existCampaign) {
-            throw new Error("Campaign doesn't exist!");
-        }
-        else {
-            const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield campaignServices.updateACampaignService(postId, Object.assign(Object.assign({}, req.body), { existCampaign, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Campaign ${result} is added!`);
-        }
+exports.updateACampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existCampaign = yield campaignServices.getCampaignByIdService(postId);
+    if (!existCampaign) {
+        throw new Error("Campaign doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else {
+        const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield campaignServices.updateACampaignService(postId, Object.assign(Object.assign({}, req.body), { existCampaign, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Campaign ${result} is added!`);
     }
-});
-exports.updateACampaignController = updateACampaignController;
+}));
 // update a Campaign controller
-const deleteACampaignController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const CampaignId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existCampaign = yield campaignServices.getCampaignByIdService(CampaignId);
-        const isRelatedPostExist = yield (0, post_services_1.getPostByCampaignIdService)(CampaignId);
-        if (!existCampaign) {
-            throw new Error("Campaign doesn't exist!");
-        }
-        else if (isRelatedPostExist.length) {
-            throw new Error("Sorry! This Campaign has some posts, You can't delete the Campaign!");
-        }
-        else {
-            const result = yield campaignServices.deleteACampaignService(CampaignId);
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Campaign ${result} is added!`);
-        }
+exports.deleteACampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const CampaignId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existCampaign = yield campaignServices.getCampaignByIdService(CampaignId);
+    const isRelatedPostExist = yield (0, post_services_1.getPostByCampaignIdService)(CampaignId);
+    if (!existCampaign) {
+        throw new Error("Campaign doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else if (isRelatedPostExist.length) {
+        throw new Error("Sorry! This Campaign has some posts, You can't delete the Campaign!");
     }
-});
-exports.deleteACampaignController = deleteACampaignController;
+    else {
+        const result = yield campaignServices.deleteACampaignService(CampaignId);
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Campaign ${result} is added!`);
+    }
+}));

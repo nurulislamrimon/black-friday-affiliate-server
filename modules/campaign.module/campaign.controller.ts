@@ -3,14 +3,11 @@ import * as campaignServices from "./campaign.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByCampaignIdService } from "../post.module/post.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // get Campaign by Id controller
-export const getACampaignController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getACampaignController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const campaignId = new Types.ObjectId(req.params.id);
 
     const result = await campaignServices.getCampaignByIdService(campaignId);
@@ -22,17 +19,11 @@ export const getACampaignController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get Campaign by Id controller
-export const getACampaignByCampaignNameController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getACampaignByCampaignNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const campaignName = req.params.CampaignName;
 
     const result = await campaignServices.getCampaignByCampaignNameService(
@@ -46,34 +37,22 @@ export const getACampaignByCampaignNameController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all active Campaigns
-export const getAllActiveCampaignsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllActiveCampaignsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await campaignServices.getAllActiveCampaigns(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Campaigns are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // add new Campaign controller
-export const addNewCampaignController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewCampaignController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { campaignPhotoURL, campaignName, countries } = req.body;
     const existCampaign =
       await campaignServices.getCampaignByCampaignNameService(campaignName);
@@ -97,34 +76,22 @@ export const addNewCampaignController = async (
       });
       console.log(`Campaign ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all Campaigns
-export const getAllCampaignsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllCampaignsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await campaignServices.getAllCampaigns(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Campaigns are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a Campaign controller
-export const updateACampaignController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateACampaignController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existCampaign = await campaignServices.getCampaignByIdService(postId);
 
@@ -144,17 +111,11 @@ export const updateACampaignController = async (
       });
       console.log(`Campaign ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a Campaign controller
-export const deleteACampaignController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteACampaignController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const CampaignId = new Types.ObjectId(req.params.id);
     const existCampaign = await campaignServices.getCampaignByIdService(
       CampaignId
@@ -177,7 +138,5 @@ export const deleteACampaignController = async (
       });
       console.log(`Campaign ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

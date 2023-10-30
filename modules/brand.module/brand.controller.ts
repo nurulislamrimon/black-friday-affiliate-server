@@ -3,14 +3,11 @@ import * as BrandServices from "./brand.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByBrandIdService } from "../post.module/post.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // get Brand by Id controller
-export const getABrandController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getABrandController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const BrandId = new Types.ObjectId(req.params.id);
 
     const result = await BrandServices.getBrandByIdService(BrandId);
@@ -22,17 +19,11 @@ export const getABrandController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get Brand by Id controller
-export const getABrandByBrandNameController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getABrandByBrandNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const BrandName = req.params.BrandName;
 
     const result = await BrandServices.getBrandByBrandNameService(BrandName);
@@ -44,34 +35,22 @@ export const getABrandByBrandNameController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all active Brands
-export const getAllActiveBrandsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllActiveBrandsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await BrandServices.getAllActiveBrands(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Brands are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // add new Brand controller
-export const addNewBrandController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewBrandController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { brandPhotoURL, brandName, countries } = req.body;
     const existBrand = await BrandServices.getBrandByBrandNameService(
       brandName
@@ -96,34 +75,22 @@ export const addNewBrandController = async (
       });
       console.log(`Brand ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all Brands
-export const getAllBrandsController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllBrandsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await BrandServices.getAllBrands(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Brands are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a Brand controller
-export const updateABrandController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateABrandController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existBrand = await BrandServices.getBrandByIdService(postId);
 
@@ -143,17 +110,11 @@ export const updateABrandController = async (
       });
       console.log(`Brand ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a Brand controller
-export const deleteABrandController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteABrandController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const BrandId = new Types.ObjectId(req.params.id);
     const existBrand = await BrandServices.getBrandByIdService(BrandId);
 
@@ -174,7 +135,5 @@ export const deleteABrandController = async (
       });
       console.log(`Brand ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

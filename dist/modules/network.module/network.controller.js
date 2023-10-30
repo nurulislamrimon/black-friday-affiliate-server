@@ -31,137 +31,105 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteANetworkController = exports.updateANetworkController = exports.getAllNetworksController = exports.addNewNetworkController = exports.getANetworkByIdController = exports.getANetworkByNetworkNameController = void 0;
 const networkServices = __importStar(require("./network.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
 const post_services_1 = require("../post.module/post.services");
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Network by Id controller
-const getANetworkByNetworkNameController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const NetworkName = req.params.NetworkName;
-        const result = yield networkServices.getNetworkByNetworkNameService(NetworkName);
-        if (!result) {
-            throw new Error("Network not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getANetworkByNetworkNameController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const NetworkName = req.params.NetworkName;
+    const result = yield networkServices.getNetworkByNetworkNameService(NetworkName);
+    if (!result) {
+        throw new Error("Network not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getANetworkByNetworkNameController = getANetworkByNetworkNameController;
+}));
 // get Network by Id controller
-const getANetworkByIdController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const NetworkId = new mongoose_1.Types.ObjectId(req.params.id);
-        const result = yield networkServices.getNetworkByIdService(NetworkId);
-        if (!result) {
-            throw new Error("Network not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getANetworkByIdController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const NetworkId = new mongoose_1.Types.ObjectId(req.params.id);
+    const result = yield networkServices.getNetworkByIdService(NetworkId);
+    if (!result) {
+        throw new Error("Network not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getANetworkByIdController = getANetworkByIdController;
+}));
 // add new Network controller
-const addNewNetworkController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { networkName } = req.body;
-        const existNetwork = yield networkServices.getNetworkByNetworkNameService(networkName);
-        if (!networkName) {
-            throw new Error("Please enter required information: networkName!");
-        }
-        else if ((existNetwork === null || existNetwork === void 0 ? void 0 : existNetwork.networkName) === networkName) {
-            throw new Error("Network already exist!");
-        }
-        else {
-            const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield networkServices.addNewNetworkService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Network ${result._id} is added!`);
-        }
+exports.addNewNetworkController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { networkName } = req.body;
+    const existNetwork = yield networkServices.getNetworkByNetworkNameService(networkName);
+    if (!networkName) {
+        throw new Error("Please enter required information: networkName!");
     }
-    catch (error) {
-        next(error);
+    else if ((existNetwork === null || existNetwork === void 0 ? void 0 : existNetwork.networkName) === networkName) {
+        throw new Error("Network already exist!");
     }
-});
-exports.addNewNetworkController = addNewNetworkController;
+    else {
+        const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield networkServices.addNewNetworkService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Network ${result._id} is added!`);
+    }
+}));
 // get all Networks
-const getAllNetworksController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllNetworksController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    try {
-        const result = yield networkServices.getAllNetworks(req.query);
-        res.send(Object.assign({ success: true }, result));
-        console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Networks are responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllNetworksController = getAllNetworksController;
+    const result = yield networkServices.getAllNetworks(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Networks are responsed!`);
+}));
 // update a Network controller
-const updateANetworkController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existNetwork = yield networkServices.getNetworkByIdService(postId);
-        if (!existNetwork) {
-            throw new Error("Network doesn't exist!");
-        }
-        else {
-            const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield networkServices.updateANetworkService(postId, Object.assign(Object.assign({}, req.body), { existNetwork, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Network ${result} is added!`);
-        }
+exports.updateANetworkController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existNetwork = yield networkServices.getNetworkByIdService(postId);
+    if (!existNetwork) {
+        throw new Error("Network doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else {
+        const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield networkServices.updateANetworkService(postId, Object.assign(Object.assign({}, req.body), { existNetwork, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Network ${result} is added!`);
     }
-});
-exports.updateANetworkController = updateANetworkController;
+}));
 // update a Network controller
-const deleteANetworkController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const NetworkId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existNetwork = yield networkServices.getNetworkByIdService(NetworkId);
-        const isRelatedPostExist = yield (0, post_services_1.getPostByNetworkIdService)(NetworkId);
-        if (!existNetwork) {
-            throw new Error("Network doesn't exist!");
-        }
-        else if (isRelatedPostExist.length) {
-            throw new Error("Sorry! This Network has some posts, You can't delete the Network!");
-        }
-        else {
-            const result = yield networkServices.deleteANetworkService(NetworkId);
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Network ${result} is added!`);
-        }
+exports.deleteANetworkController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const NetworkId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existNetwork = yield networkServices.getNetworkByIdService(NetworkId);
+    const isRelatedPostExist = yield (0, post_services_1.getPostByNetworkIdService)(NetworkId);
+    if (!existNetwork) {
+        throw new Error("Network doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else if (isRelatedPostExist.length) {
+        throw new Error("Sorry! This Network has some posts, You can't delete the Network!");
     }
-});
-exports.deleteANetworkController = deleteANetworkController;
+    else {
+        const result = yield networkServices.deleteANetworkService(NetworkId);
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Network ${result} is added!`);
+    }
+}));

@@ -4,8 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.globalErrorHandler = exports.routeNotFound = void 0;
-const error_codes_from_message_1 = require("../utils/error_codes_from_message");
 const colors_1 = __importDefault(require("@colors/colors"));
+const handleValidationError_1 = __importDefault(require("../Errors/handleValidationError"));
+const castErrors_1 = __importDefault(require("../Errors/castErrors"));
+const ApiError_1 = __importDefault(require("../Errors/ApiError"));
+const mongoose_1 = __importDefault(require("mongoose"));
 const routeNotFound = (req, res, next) => {
     try {
         res.send({
@@ -19,34 +22,53 @@ const routeNotFound = (req, res, next) => {
     }
 };
 exports.routeNotFound = routeNotFound;
-const globalErrorHandler = (err, req, res, next) => {
-    if (res.headersSent) {
-        throw new Error("Something went wrong!");
+const globalErrorHandler = (error, req, res, next) => {
+    process.env.env === "development" &&
+        console.log(`🐱‍🏍 globalErrorHandler ~~`, { error });
+    let statusCode = 500;
+    let message = "Something went wrong !";
+    let errorMessages = [];
+    // if (error?.name === "ValidationError") {
+    if (error instanceof mongoose_1.default.Error.ValidationError) {
+        const simplifiedError = (0, handleValidationError_1.default)(error);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
     }
-    else {
-        if (typeof err === "string") {
-            res.status((0, error_codes_from_message_1.error_code_from_message)(err)).send({
-                success: false,
-                message: err,
-                stack: process.env.NODE_ENV !== "development" ? "" : err,
-            });
-            console.log(colors_1.default.red(err));
-        }
-        else if (err) {
-            res.status((0, error_codes_from_message_1.error_code_from_message)(err.message)).send({
-                success: false,
-                message: err.message,
-                stack: process.env.NODE_ENV !== "development" ? "" : err === null || err === void 0 ? void 0 : err.stack,
-            });
-            console.log(colors_1.default.red(err.message));
-        }
-        else {
-            res.send({
-                success: false,
-                message: "Internal server error!",
-            });
-            console.log(colors_1.default.red(err));
-        }
+    else if ((error === null || error === void 0 ? void 0 : error.name) === "CastError") {
+        const simplifiedError = (0, castErrors_1.default)(error);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessages = simplifiedError.errorMessages;
     }
+    else if (error instanceof ApiError_1.default) {
+        statusCode = error === null || error === void 0 ? void 0 : error.statusCode;
+        message = error.message;
+        errorMessages = (error === null || error === void 0 ? void 0 : error.message)
+            ? [
+                {
+                    path: "",
+                    message: error === null || error === void 0 ? void 0 : error.message,
+                },
+            ]
+            : [];
+    }
+    else if (error instanceof Error) {
+        message = error === null || error === void 0 ? void 0 : error.message;
+        errorMessages = (error === null || error === void 0 ? void 0 : error.message)
+            ? [
+                {
+                    path: "",
+                    message: error === null || error === void 0 ? void 0 : error.message,
+                },
+            ]
+            : [];
+    }
+    res.status(statusCode).json({
+        success: false,
+        message,
+        errorMessages,
+        stack: process.env.env !== "production" ? error === null || error === void 0 ? void 0 : error.stack : undefined,
+    });
 };
 exports.globalErrorHandler = globalErrorHandler;

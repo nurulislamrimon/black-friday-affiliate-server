@@ -1,11 +1,11 @@
 import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
 import { error_code_from_message } from "../utils/error_codes_from_message";
 import colors from "@colors/colors";
-import mongooseType from "mongoose";
 import { IGenericErrorMessage } from "../interfaces/error";
 import handleValidationError from "../Errors/handleValidationError";
 import handleCastError from "../Errors/castErrors";
 import ApiError from "../Errors/ApiError";
+import mongoose from "mongoose";
 
 export const routeNotFound = (
   req: Request,
@@ -36,7 +36,8 @@ export const globalErrorHandler: ErrorRequestHandler = (
   let message = "Something went wrong !";
   let errorMessages: IGenericErrorMessage[] = [];
 
-  if (error?.name === "ValidationError") {
+  // if (error?.name === "ValidationError") {
+  if (error instanceof mongoose.Error.ValidationError) {
     const simplifiedError = handleValidationError(error);
     statusCode = simplifiedError.statusCode;
     message = simplifiedError.message;

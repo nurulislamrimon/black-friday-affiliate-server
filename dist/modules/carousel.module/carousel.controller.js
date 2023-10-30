@@ -31,54 +31,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addNewCarouselController = exports.getCarouselController = void 0;
 const carouselServices = __importStar(require("./carousel.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get carousel controller
-const getCarouselController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield carouselServices.getCarouselService("-updateBy -postBy");
+exports.getCarouselController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield carouselServices.getCarouselService("-updateBy -postBy");
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`carousel ${result === null || result === void 0 ? void 0 : result._id} is added!`);
+}));
+// add new carousel controller
+exports.addNewCarouselController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { carousel } = req.body;
+    if (!carousel) {
+        throw new Error("Please enter required information!");
+    }
+    else {
+        const isACarouselExist = (yield carouselServices.getCarouselService(""));
+        let result;
+        if (!isACarouselExist) {
+            const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+            result = yield carouselServices.addNewCarouselService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
+        }
+        else {
+            const id = new mongoose_1.Types.ObjectId(isACarouselExist === null || isACarouselExist === void 0 ? void 0 : isACarouselExist._id);
+            const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+            result = yield carouselServices.updateCarouselByIdService(id, Object.assign(Object.assign({}, req.body), { updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        }
         res.send({
             success: true,
             data: result,
         });
         console.log(`carousel ${result === null || result === void 0 ? void 0 : result._id} is added!`);
     }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getCarouselController = getCarouselController;
-// add new carousel controller
-const addNewCarouselController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { carousel } = req.body;
-        if (!carousel) {
-            throw new Error("Please enter required information!");
-        }
-        else {
-            const isACarouselExist = (yield carouselServices.getCarouselService(""));
-            let result;
-            if (!isACarouselExist) {
-                const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-                result = yield carouselServices.addNewCarouselService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
-            }
-            else {
-                const id = new mongoose_1.Types.ObjectId(isACarouselExist === null || isACarouselExist === void 0 ? void 0 : isACarouselExist._id);
-                const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-                result = yield carouselServices.updateCarouselByIdService(id, Object.assign(Object.assign({}, req.body), { updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-            }
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`carousel ${result === null || result === void 0 ? void 0 : result._id} is added!`);
-        }
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.addNewCarouselController = addNewCarouselController;
+}));

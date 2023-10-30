@@ -31,48 +31,40 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addNewContactController = exports.getContactController = void 0;
 const ContactServices = __importStar(require("./Contact.services"));
 const user_services_1 = require("../user.module/user.services");
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Contact controller
-const getContactController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield ContactServices.getContactService("-updateBy -postBy");
+exports.getContactController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield ContactServices.getContactService("-updateBy -postBy");
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`Contact ${result === null || result === void 0 ? void 0 : result._id} is added!`);
+}));
+// add new Contact controller
+exports.addNewContactController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { contact } = req.body;
+    if (!contact) {
+        throw new Error("Please enter required information!");
+    }
+    else {
+        const isAContactExist = (yield ContactServices.getContactService(""));
+        if (isAContactExist) {
+            yield ContactServices.updateActiveContactToInactiveService();
+        }
+        const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield ContactServices.addNewContactService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
         res.send({
             success: true,
             data: result,
         });
         console.log(`Contact ${result === null || result === void 0 ? void 0 : result._id} is added!`);
     }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getContactController = getContactController;
-// add new Contact controller
-const addNewContactController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { contact } = req.body;
-        if (!contact) {
-            throw new Error("Please enter required information!");
-        }
-        else {
-            const isAContactExist = (yield ContactServices.getContactService(""));
-            if (isAContactExist) {
-                yield ContactServices.updateActiveContactToInactiveService();
-            }
-            const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield ContactServices.addNewContactService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Contact ${result === null || result === void 0 ? void 0 : result._id} is added!`);
-        }
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.addNewContactController = addNewContactController;
+}));

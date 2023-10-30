@@ -2,13 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import * as administratorsServices from "./administrators.services";
 import { Types } from "mongoose";
 import { roles } from "../../utils/constants/authorization_roles";
+import catchAsync from "../../Shared/catchAsync";
 
-export const addNewAdministratorController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewAdministratorController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { email } = req.body;
     const existAdministrator =
       await administratorsServices.getAdministratorsByEmailService(email);
@@ -23,18 +20,12 @@ export const addNewAdministratorController = async (
       data: newAdministrator,
     });
     console.log(`user ${newAdministrator._id} is responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // // get all admin and managers
-export const getAllAdminAndManagerController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllAdminAndManagerController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await administratorsServices.getAllAdminAndManagerService(
       req.query
     );
@@ -43,18 +34,12 @@ export const getAllAdminAndManagerController = async (
       ...result,
     });
     console.log(`Administrators ${result?.data?.length} are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // // get all admin and managers
-export const getMeAdminAndManagerController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getMeAdminAndManagerController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await administratorsServices.getMeAdminAndManagerService(
       req.body.decoded.email
     );
@@ -63,18 +48,12 @@ export const getMeAdminAndManagerController = async (
       data: result,
     });
     console.log(`Administrator is responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 //update an administrator
-export const updateAdministratorController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateAdministratorController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const targetedAdministratorId = new Types.ObjectId(req.params.id);
     const targetedAdministrator =
       (await administratorsServices.getAdministratorsByIdService(
@@ -102,18 +81,12 @@ export const updateAdministratorController = async (
       });
       console.log(`Administrator is updated!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 //update an administrator
-export const deleteAdministratorController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteAdministratorController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const targetedAdministratorId = new Types.ObjectId(req.params.id);
     const targetedAdministrator =
       (await administratorsServices.getAdministratorsByIdService(
@@ -141,7 +114,5 @@ export const deleteAdministratorController = async (
       });
       console.log(`Administrator is delete!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

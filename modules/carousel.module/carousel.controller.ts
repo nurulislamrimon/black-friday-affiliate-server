@@ -2,14 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import * as carouselServices from "./carousel.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
+import catchAsync from "../../Shared/catchAsync";
 
 // get carousel controller
-export const getCarouselController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getCarouselController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await carouselServices.getCarouselService(
       "-updateBy -postBy"
     );
@@ -18,17 +15,11 @@ export const getCarouselController = async (
       data: result,
     });
     console.log(`carousel ${result?._id} is added!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // add new carousel controller
-export const addNewCarouselController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewCarouselController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { carousel } = req.body;
 
     if (!carousel) {
@@ -66,7 +57,5 @@ export const addNewCarouselController = async (
       });
       console.log(`carousel ${result?._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

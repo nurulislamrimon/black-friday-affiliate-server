@@ -6,13 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
-const countries_enum_1 = require("../../utils/constants/countries.enum");
 const storeSchema = new mongoose_1.Schema({
     storeName: { type: String, required: true },
-    // storePhotoURL: { type: String, validate: validator.isURL, required: true },
-    storeLink: { type: String, required: true },
-    countries: [{ type: String, required: true, enum: countries_enum_1.countries }],
-    countriesFlag: [{ type: String }],
+    storeLink: { type: String, required: true, validate: validator_1.default.isURL },
     storeDescription: String,
     howToUse: [
         [

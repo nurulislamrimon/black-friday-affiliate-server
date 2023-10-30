@@ -3,14 +3,11 @@ import * as storeServices from "./store.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByStoreIdService } from "../post.module/post.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // get store by Id controller
-export const getAStoreController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const storeId = new Types.ObjectId(req.params.id);
 
     const result = await storeServices.getStoreByIdService(storeId);
@@ -22,17 +19,11 @@ export const getAStoreController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get store by Id controller
-export const getAStoreByStoreNameController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAStoreByStoreNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const storeName = req.params.storeName;
 
     const result = await storeServices.getStoreByStoreNameService(storeName);
@@ -44,34 +35,22 @@ export const getAStoreByStoreNameController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // get all active stores
-export const getAllActiveStoresController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllActiveStoresController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await storeServices.getAllActiveStores(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} stores are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // add new store controller
-export const addNewStoreController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { storeName, storePhotoURL, storeLink } = req.body;
     const existStore = await storeServices.getStoreByStoreNameService(
       storeName
@@ -101,35 +80,23 @@ export const addNewStoreController = async (
       });
       console.log(`Store ${result._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get all stores
-export const getAllStoresController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllStoresController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await storeServices.getAllStores(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} stores are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a store controller
-export const updateAStoreController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateAStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existStore = await storeServices.getStoreByIdService(postId);
 
@@ -149,17 +116,11 @@ export const updateAStoreController = async (
       });
       console.log(`Store ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 // update a store controller
-export const deleteAStoreController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteAStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const storeId = new Types.ObjectId(req.params.id);
     const existStore = await storeServices.getStoreByIdService(storeId);
 
@@ -180,7 +141,5 @@ export const deleteAStoreController = async (
       });
       console.log(`Store ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

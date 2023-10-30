@@ -31,137 +31,105 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteACategoryController = exports.updateACategoryController = exports.getAllCategorysController = exports.addNewCategoryController = exports.getACategoryByIdController = exports.getACategoryByCategoryNameController = void 0;
 const CategoryServices = __importStar(require("./category.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
 const post_services_1 = require("../post.module/post.services");
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Category by Id controller
-const getACategoryByCategoryNameController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const categoryName = req.params.categoryName;
-        const result = yield CategoryServices.getCategoryByCategoryNameService(categoryName);
-        if (!result) {
-            throw new Error("Category not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getACategoryByCategoryNameController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const categoryName = req.params.categoryName;
+    const result = yield CategoryServices.getCategoryByCategoryNameService(categoryName);
+    if (!result) {
+        throw new Error("Category not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getACategoryByCategoryNameController = getACategoryByCategoryNameController;
+}));
 // get Category by Id controller
-const getACategoryByIdController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const CategoryId = new mongoose_1.Types.ObjectId(req.params.id);
-        const result = yield CategoryServices.getCategoryByIdService(CategoryId);
-        if (!result) {
-            throw new Error("Category not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-        }
+exports.getACategoryByIdController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const CategoryId = new mongoose_1.Types.ObjectId(req.params.id);
+    const result = yield CategoryServices.getCategoryByIdService(CategoryId);
+    if (!result) {
+        throw new Error("Category not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
     }
-});
-exports.getACategoryByIdController = getACategoryByIdController;
+}));
 // add new Category controller
-const addNewCategoryController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { categoryName } = req.body;
-        const existCategory = yield CategoryServices.getCategoryByCategoryNameService(categoryName);
-        if (!categoryName) {
-            throw new Error("Please enter required information: categoryName!");
-        }
-        else if ((existCategory === null || existCategory === void 0 ? void 0 : existCategory.categoryName) === categoryName) {
-            throw new Error("Category already exist!");
-        }
-        else {
-            const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield CategoryServices.addNewCategoryService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Category ${result._id} is added!`);
-        }
+exports.addNewCategoryController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { categoryName } = req.body;
+    const existCategory = yield CategoryServices.getCategoryByCategoryNameService(categoryName);
+    if (!categoryName) {
+        throw new Error("Please enter required information: categoryName!");
     }
-    catch (error) {
-        next(error);
+    else if ((existCategory === null || existCategory === void 0 ? void 0 : existCategory.categoryName) === categoryName) {
+        throw new Error("Category already exist!");
     }
-});
-exports.addNewCategoryController = addNewCategoryController;
+    else {
+        const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield CategoryServices.addNewCategoryService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Category ${result._id} is added!`);
+    }
+}));
 // get all Categorys
-const getAllCategorysController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllCategorysController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    try {
-        const result = yield CategoryServices.getAllCategorys(req.query);
-        res.send(Object.assign({ success: true }, result));
-        console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Categorys are responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllCategorysController = getAllCategorysController;
+    const result = yield CategoryServices.getAllCategorys(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Categorys are responsed!`);
+}));
 // update a Category controller
-const updateACategoryController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existCategory = yield CategoryServices.getCategoryByIdService(postId);
-        if (!existCategory) {
-            throw new Error("Category doesn't exist!");
-        }
-        else {
-            const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-            const result = yield CategoryServices.updateACategoryService(postId, Object.assign(Object.assign({}, req.body), { existCategory, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Category ${result} is added!`);
-        }
+exports.updateACategoryController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existCategory = yield CategoryServices.getCategoryByIdService(postId);
+    if (!existCategory) {
+        throw new Error("Category doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else {
+        const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
+        const result = yield CategoryServices.updateACategoryService(postId, Object.assign(Object.assign({}, req.body), { existCategory, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Category ${result} is added!`);
     }
-});
-exports.updateACategoryController = updateACategoryController;
+}));
 // update a Category controller
-const deleteACategoryController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const CategoryId = new mongoose_1.Types.ObjectId(req.params.id);
-        const existCategory = yield CategoryServices.getCategoryByIdService(CategoryId);
-        const isRelatedPostExist = yield (0, post_services_1.getPostByCategoryIdService)(CategoryId);
-        if (!existCategory) {
-            throw new Error("Category doesn't exist!");
-        }
-        else if (isRelatedPostExist.length) {
-            throw new Error("Sorry! This Category has some posts, You can't delete the Category!");
-        }
-        else {
-            const result = yield CategoryServices.deleteACategoryService(CategoryId);
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Category ${result} is added!`);
-        }
+exports.deleteACategoryController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const CategoryId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existCategory = yield CategoryServices.getCategoryByIdService(CategoryId);
+    const isRelatedPostExist = yield (0, post_services_1.getPostByCategoryIdService)(CategoryId);
+    if (!existCategory) {
+        throw new Error("Category doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else if (isRelatedPostExist.length) {
+        throw new Error("Sorry! This Category has some posts, You can't delete the Category!");
     }
-});
-exports.deleteACategoryController = deleteACategoryController;
+    else {
+        const result = yield CategoryServices.deleteACategoryService(CategoryId);
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Category ${result} is added!`);
+    }
+}));

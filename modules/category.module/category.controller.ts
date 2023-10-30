@@ -3,14 +3,11 @@ import * as CategoryServices from "./category.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByCategoryIdService } from "../post.module/post.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // get Category by Id controller
-export const getACategoryByCategoryNameController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getACategoryByCategoryNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const categoryName = req.params.categoryName;
 
     const result = await CategoryServices.getCategoryByCategoryNameService(
@@ -24,18 +21,12 @@ export const getACategoryByCategoryNameController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get Category by Id controller
-export const getACategoryByIdController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getACategoryByIdController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const CategoryId = new Types.ObjectId(req.params.id);
 
     const result = await CategoryServices.getCategoryByIdService(CategoryId);
@@ -47,18 +38,12 @@ export const getACategoryByIdController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // add new Category controller
-export const addNewCategoryController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewCategoryController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { categoryName } = req.body;
     const existCategory =
       await CategoryServices.getCategoryByCategoryNameService(categoryName);
@@ -80,36 +65,24 @@ export const addNewCategoryController = async (
       });
       console.log(`Category ${result._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get all Categorys
-export const getAllCategorysController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllCategorysController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await CategoryServices.getAllCategorys(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Categorys are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Category controller
-export const updateACategoryController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateACategoryController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existCategory = await CategoryServices.getCategoryByIdService(postId);
 
@@ -129,18 +102,12 @@ export const updateACategoryController = async (
       });
       console.log(`Category ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Category controller
-export const deleteACategoryController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteACategoryController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const CategoryId = new Types.ObjectId(req.params.id);
     const existCategory = await CategoryServices.getCategoryByIdService(
       CategoryId
@@ -163,7 +130,5 @@ export const deleteACategoryController = async (
       });
       console.log(`Category ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

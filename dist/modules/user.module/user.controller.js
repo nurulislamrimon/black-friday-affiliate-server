@@ -42,6 +42,9 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.setNotificationReadedController = exports.getNotificationController = exports.getUnreadedNotificationCountController = exports.addAndRemovePostFromFavouriteController = exports.addAndRemoveStoreFromFavouriteController = exports.getAllFavouritePostController = exports.getAllFavouriteStoreController = exports.getAllUserController = exports.updateAboutMeUserController = exports.getAboutMeUserController = exports.refreshUserController = exports.loginUserController = void 0;
 const userServices = __importStar(require("./user.services"));
@@ -50,235 +53,164 @@ const mongoose_1 = require("mongoose");
 const store_services_1 = require("../store.module/store.services");
 const post_services_1 = require("../post.module/post.services");
 const get_payload_from_token_1 = require("../../utils/get_payload_from_token");
-const loginUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { email, name, uid, picture } = req.user;
-        const { country, phoneNumber } = req.body;
-        const existUser = yield userServices.getUserByEmailService(email);
-        let newUser;
-        let accessToken;
-        if (!existUser) {
-            newUser = yield userServices.addNewUserService({
-                email,
-                name,
-                country,
-                phoneNumber,
-                uid,
-                photoURL: picture,
-            });
-        }
-        else {
-            accessToken = (0, generate_token_1.generate_token)({ email: email });
-            const refreshToken = (0, generate_token_1.generate_token)({ email: email }, "365d", process.env.refresh_key);
-            const cookieOptions = {
-                secure: true,
-                expires: new Date(Date.now() + 50000),
-            };
-            res.cookie("refreshToken", refreshToken, cookieOptions);
-            res.send({
-                success: true,
-                refreshToken,
-                data: { user: existUser || newUser, accessToken },
-            });
-            console.log(`user ${existUser._id} is responsed!`);
-        }
+const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
+exports.loginUserController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, name, uid, picture } = req.user;
+    const { country, phoneNumber } = req.body;
+    const existUser = yield userServices.getUserByEmailService(email);
+    let newUser;
+    let accessToken;
+    if (!existUser) {
+        newUser = yield userServices.addNewUserService({
+            email,
+            name,
+            country,
+            phoneNumber,
+            uid,
+            photoURL: picture,
+        });
     }
-    catch (error) {
-        next(error);
-    }
-});
-exports.loginUserController = loginUserController;
-const refreshUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userRefreshTokenFromCookies = req.cookies.refreshToken;
-        const userRefreshTokenFromHeader = req.headers.cookies;
-        if (!userRefreshTokenFromCookies && !userRefreshTokenFromHeader) {
-            throw new Error("Refresh token not found");
-        }
-        const payload = (0, get_payload_from_token_1.getPayloadFromToken)(userRefreshTokenFromCookies || userRefreshTokenFromHeader, process.env.refresh_key);
-        const accessToken = (0, generate_token_1.generate_token)({ email: payload === null || payload === void 0 ? void 0 : payload.email });
+    else {
+        accessToken = (0, generate_token_1.generate_token)({ email: email });
+        const refreshToken = (0, generate_token_1.generate_token)({ email: email }, "365d", process.env.refresh_key);
+        const cookieOptions = {
+            secure: true,
+            expires: new Date(Date.now() + 50000),
+        };
+        res.cookie("refreshToken", refreshToken, cookieOptions);
         res.send({
             success: true,
-            data: { accessToken },
+            refreshToken,
+            data: { user: existUser || newUser, accessToken },
         });
-        console.log(`New access token created from refresh token`);
+        console.log(`user ${existUser._id} is responsed!`);
     }
-    catch (error) {
-        next(error);
+}));
+exports.refreshUserController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userRefreshTokenFromCookies = req.cookies.refreshToken;
+    const userRefreshTokenFromHeader = req.headers.cookies;
+    if (!userRefreshTokenFromCookies && !userRefreshTokenFromHeader) {
+        throw new Error("Refresh token not found");
     }
-});
-exports.refreshUserController = refreshUserController;
+    const payload = (0, get_payload_from_token_1.getPayloadFromToken)(userRefreshTokenFromCookies || userRefreshTokenFromHeader, process.env.refresh_key);
+    const accessToken = (0, generate_token_1.generate_token)({ email: payload === null || payload === void 0 ? void 0 : payload.email });
+    res.send({
+        success: true,
+        data: { accessToken },
+    });
+    console.log(`New access token created from refresh token`);
+}));
 // about me by token
-const getAboutMeUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const email = req.body.decoded.email;
-        const result = yield userServices.getUserByEmailService(email);
-        if (!result) {
-            throw new Error("User not found!");
-        }
-        else {
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`user responsed!`);
-        }
+exports.getAboutMeUserController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const email = req.body.decoded.email;
+    const result = yield userServices.getUserByEmailService(email);
+    if (!result) {
+        throw new Error("User not found!");
     }
-    catch (error) {
-        next(error);
+    else {
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`user responsed!`);
     }
-});
-exports.getAboutMeUserController = getAboutMeUserController;
+}));
 // update me from token
-const updateAboutMeUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const userEmail = req.body.decoded.email;
-        const isUserExist = yield userServices.getUserByEmailService(userEmail);
-        if (!isUserExist) {
-            throw new Error("User not found!");
-        }
-        const _a = req.body, { newPosts, favourite, email } = _a, rest = __rest(_a, ["newPosts", "favourite", "email"]);
-        const result = yield userServices.updateMeByEmailService(isUserExist._id, rest);
-        res.send({
-            success: true,
-            data: result,
-        });
+exports.updateAboutMeUserController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const userEmail = req.body.decoded.email;
+    const isUserExist = yield userServices.getUserByEmailService(userEmail);
+    if (!isUserExist) {
+        throw new Error("User not found!");
     }
-    catch (error) {
-        next(error);
-    }
-});
-exports.updateAboutMeUserController = updateAboutMeUserController;
+    const _a = req.body, { newPosts, favourite, email } = _a, rest = __rest(_a, ["newPosts", "favourite", "email"]);
+    const result = yield userServices.updateMeByEmailService(isUserExist._id, rest);
+    res.send({
+        success: true,
+        data: result,
+    });
+}));
 // get all user
-const getAllUserController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllUserController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    try {
-        const result = yield userServices.getAllUserService(req.query);
-        res.send(Object.assign({ success: true }, result));
-        console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} user responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllUserController = getAllUserController;
+    const result = yield userServices.getAllUserService(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} user responsed!`);
+}));
 // get all favourite stores
-const getAllFavouriteStoreController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield userServices.getFavouriteStoreService(req.body.decoded.email);
-        res.send({
-            success: true,
-            result,
-        });
-        console.log(`${result === null || result === void 0 ? void 0 : result._id} favourite stores responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllFavouriteStoreController = getAllFavouriteStoreController;
+exports.getAllFavouriteStoreController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield userServices.getFavouriteStoreService(req.body.decoded.email);
+    res.send({
+        success: true,
+        result,
+    });
+    console.log(`${result === null || result === void 0 ? void 0 : result._id} favourite stores responsed!`);
+}));
 // get all favourite posts
-const getAllFavouritePostController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield userServices.getFavouritePostService(req.body.decoded.email);
+exports.getAllFavouritePostController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield userServices.getFavouritePostService(req.body.decoded.email);
+    res.send({
+        success: true,
+        result,
+    });
+    console.log(`${result === null || result === void 0 ? void 0 : result._id} favourite posts responsed!`);
+}));
+// get add favourite stores
+exports.addAndRemoveStoreFromFavouriteController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const storeId = new mongoose_1.Types.ObjectId(req.params.id);
+    const isStoreExist = yield (0, store_services_1.getStoreByIdService)(storeId);
+    if (!isStoreExist) {
+        throw new Error("Sorry, Store doesn't exist!");
+    }
+    else {
+        const result = yield userServices.addAndRemoveStoreFromFavouriteService(req.body.decoded.email, storeId);
         res.send({
             success: true,
             result,
         });
-        console.log(`${result === null || result === void 0 ? void 0 : result._id} favourite posts responsed!`);
+        console.log(`Store favourite list modified!`);
     }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getAllFavouritePostController = getAllFavouritePostController;
+}));
 // get add favourite stores
-const addAndRemoveStoreFromFavouriteController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const storeId = new mongoose_1.Types.ObjectId(req.params.id);
-        const isStoreExist = yield (0, store_services_1.getStoreByIdService)(storeId);
-        if (!isStoreExist) {
-            throw new Error("Sorry, Store doesn't exist!");
-        }
-        else {
-            const result = yield userServices.addAndRemoveStoreFromFavouriteService(req.body.decoded.email, storeId);
-            res.send({
-                success: true,
-                result,
-            });
-            console.log(`Store favourite list modified!`);
-        }
+exports.addAndRemovePostFromFavouriteController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const PostId = new mongoose_1.Types.ObjectId(req.params.id);
+    const isPostExist = yield (0, post_services_1.getPostByIdService)(PostId);
+    if (!isPostExist) {
+        throw new Error("Sorry, Post doesn't exist!");
     }
-    catch (error) {
-        next(error);
+    else {
+        const result = yield userServices.addAndRemovePostFromFavouriteService(req.body.decoded.email, PostId);
+        res.send({
+            success: true,
+            result,
+        });
+        console.log(`Post favourite list modified!`);
     }
-});
-exports.addAndRemoveStoreFromFavouriteController = addAndRemoveStoreFromFavouriteController;
-// get add favourite stores
-const addAndRemovePostFromFavouriteController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const PostId = new mongoose_1.Types.ObjectId(req.params.id);
-        const isPostExist = yield (0, post_services_1.getPostByIdService)(PostId);
-        if (!isPostExist) {
-            throw new Error("Sorry, Post doesn't exist!");
-        }
-        else {
-            const result = yield userServices.addAndRemovePostFromFavouriteService(req.body.decoded.email, PostId);
-            res.send({
-                success: true,
-                result,
-            });
-            console.log(`Post favourite list modified!`);
-        }
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.addAndRemovePostFromFavouriteController = addAndRemovePostFromFavouriteController;
+}));
 // get all notification counted
-const getUnreadedNotificationCountController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield userServices.getUnreadedNotificationCountService(req.body.decoded.email);
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`${result} user responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getUnreadedNotificationCountController = getUnreadedNotificationCountController;
+exports.getUnreadedNotificationCountController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield userServices.getUnreadedNotificationCountService(req.body.decoded.email);
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`${result} user responsed!`);
+}));
 // get all notifications
-const getNotificationController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield userServices.getNotificationService(req.body.decoded.email);
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`${result === null || result === void 0 ? void 0 : result._id} user responsed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.getNotificationController = getNotificationController;
+exports.getNotificationController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield userServices.getNotificationService(req.body.decoded.email);
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`${result === null || result === void 0 ? void 0 : result._id} user responsed!`);
+}));
 // set post status to readed
-const setNotificationReadedController = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postId = new mongoose_1.Types.ObjectId(req.params.id);
-        const result = yield userServices.setNotificationReadedService(req.body.decoded.email, postId);
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`notification ${postId} is readed!`);
-    }
-    catch (error) {
-        next(error);
-    }
-});
-exports.setNotificationReadedController = setNotificationReadedController;
+exports.setNotificationReadedController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const postId = new mongoose_1.Types.ObjectId(req.params.id);
+    const result = yield userServices.setNotificationReadedService(req.body.decoded.email, postId);
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`notification ${postId} is readed!`);
+}));

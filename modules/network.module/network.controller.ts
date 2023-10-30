@@ -3,14 +3,11 @@ import * as networkServices from "./network.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByNetworkIdService } from "../post.module/post.services";
+import catchAsync from "../../Shared/catchAsync";
 
 // get Network by Id controller
-export const getANetworkByNetworkNameController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getANetworkByNetworkNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const NetworkName = req.params.NetworkName;
 
     const result = await networkServices.getNetworkByNetworkNameService(
@@ -24,18 +21,12 @@ export const getANetworkByNetworkNameController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get Network by Id controller
-export const getANetworkByIdController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getANetworkByIdController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const NetworkId = new Types.ObjectId(req.params.id);
 
     const result = await networkServices.getNetworkByIdService(NetworkId);
@@ -47,18 +38,12 @@ export const getANetworkByIdController = async (
         data: result,
       });
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // add new Network controller
-export const addNewNetworkController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewNetworkController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { networkName } = req.body;
     const existNetwork = await networkServices.getNetworkByNetworkNameService(
       networkName
@@ -81,36 +66,24 @@ export const addNewNetworkController = async (
       });
       console.log(`Network ${result._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // get all Networks
-export const getAllNetworksController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getAllNetworksController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await networkServices.getAllNetworks(req.query);
     res.send({
       success: true,
       ...result,
     });
     console.log(`${result?.data?.length} Networks are responsed!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Network controller
-export const updateANetworkController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const updateANetworkController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
     const existNetwork = await networkServices.getNetworkByIdService(postId);
 
@@ -130,18 +103,12 @@ export const updateANetworkController = async (
       });
       console.log(`Network ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
 
 // update a Network controller
-export const deleteANetworkController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const deleteANetworkController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const NetworkId = new Types.ObjectId(req.params.id);
     const existNetwork = await networkServices.getNetworkByIdService(NetworkId);
 
@@ -162,7 +129,5 @@ export const deleteANetworkController = async (
       });
       console.log(`Network ${result} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);

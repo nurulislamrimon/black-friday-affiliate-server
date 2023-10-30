@@ -1,32 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import * as ContactServices from "./Contact.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import catchAsync from "../../Shared/catchAsync";
 
 // get Contact controller
-export const getContactController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const getContactController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const result = await ContactServices.getContactService("-updateBy -postBy");
     res.send({
       success: true,
       data: result,
     });
     console.log(`Contact ${result?._id} is added!`);
-  } catch (error) {
-    next(error);
   }
-};
+);
 // add new Contact controller
-export const addNewContactController = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+export const addNewContactController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
     const { contact } = req.body;
 
     if (!contact) {
@@ -53,7 +43,5 @@ export const addNewContactController = async (
       });
       console.log(`Contact ${result?._id} is added!`);
     }
-  } catch (error) {
-    next(error);
   }
-};
+);
