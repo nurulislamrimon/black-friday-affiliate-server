@@ -5,49 +5,6 @@ import { Types } from "mongoose";
 import { getPostByStoreIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
-// get store by Id controller
-export const getAStoreController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const storeId = new Types.ObjectId(req.params.id);
-
-    const result = await storeServices.getStoreByIdService(storeId);
-    if (!result) {
-      throw new Error("Store not found!");
-    } else {
-      res.send({
-        success: true,
-        data: result,
-      });
-    }
-  }
-);
-// get store by Id controller
-export const getAStoreByStoreNameController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const storeName = req.params.storeName;
-
-    const result = await storeServices.getStoreByStoreNameService(storeName);
-    if (!result) {
-      throw new Error("Store not found!");
-    } else {
-      res.send({
-        success: true,
-        data: result,
-      });
-    }
-  }
-);
-// get all active stores
-export const getAllActiveStoresController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await storeServices.getAllActiveStores(req.query);
-    res.send({
-      success: true,
-      ...result,
-    });
-    console.log(`${result?.data?.length} stores are responsed!`);
-  }
-);
 // add new store controller
 export const addNewStoreController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -83,6 +40,52 @@ export const addNewStoreController = catchAsync(
   }
 );
 
+// get store by Id controller
+export const getAStoreController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const storeId = new Types.ObjectId(req.params.id);
+
+    const result = await storeServices.getStoreByIdService(storeId);
+    if (!result) {
+      throw new Error("Store not found!");
+    } else {
+      res.send({
+        success: true,
+        data: result,
+      });
+    }
+  }
+);
+
+// get store by Id controller
+export const getAStoreByStoreNameController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const storeName = req.params.storeName;
+
+    const result = await storeServices.getStoreByStoreNameService(storeName);
+    if (!result) {
+      throw new Error("Store not found!");
+    } else {
+      res.send({
+        success: true,
+        data: result,
+      });
+    }
+  }
+);
+
+// get all active stores
+export const getAllActiveStoresController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await storeServices.getAllActiveStores(req.query);
+    res.send({
+      success: true,
+      ...result,
+    });
+    console.log(`${result?.data?.length} stores are responsed!`);
+  }
+);
+
 // get all stores
 export const getAllStoresController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -94,6 +97,7 @@ export const getAllStoresController = catchAsync(
     console.log(`${result?.data?.length} stores are responsed!`);
   }
 );
+
 // update a store controller
 export const updateAStoreController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -118,6 +122,7 @@ export const updateAStoreController = catchAsync(
     }
   }
 );
+
 // update a store controller
 export const deleteAStoreController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

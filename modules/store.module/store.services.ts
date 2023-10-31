@@ -3,6 +3,12 @@ import Store from "./store.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { store_query_fields } from "../../utils/constants";
 
+//== create new Store
+export const addNewStoreService = async (store: object) => {
+  const result = await Store.create(store);
+  return result;
+};
+
 //== get Store by name
 export const getStoreByStoreNameService = async (storeName: string) => {
   const result = await Store.findOne({ storeName: storeName });
@@ -14,11 +20,6 @@ export const getStoreByIdService = async (id: Types.ObjectId) => {
   return result;
 };
 
-//== create new Store
-export const addNewStoreService = async (store: object) => {
-  const result = await Store.create(store);
-  return result;
-};
 //== update a Store
 export const updateAStoreService = async (
   storeId: Types.ObjectId,

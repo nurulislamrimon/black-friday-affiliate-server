@@ -54,6 +54,7 @@ storeRouter.get(
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
   storeController.getAllStoresController
 );
+
 /**
  *@api{get}/:id get a store by id
  *@apiDescription get a store by id
@@ -100,6 +101,7 @@ storeRouter.patch(
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
   storeController.updateAStoreController
 );
+
 /**
  *@api{delete}/:id delete a store
  *@apiDescription delete a store by id

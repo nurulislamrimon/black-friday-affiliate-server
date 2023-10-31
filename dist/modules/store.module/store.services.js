@@ -23,10 +23,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAStoreService = exports.getAllActiveStores = exports.getAllStores = exports.updateAStoreService = exports.addNewStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = void 0;
+exports.deleteAStoreService = exports.getAllActiveStores = exports.getAllStores = exports.updateAStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = exports.addNewStoreService = void 0;
 const store_model_1 = __importDefault(require("./store.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+//== create new Store
+const addNewStoreService = (store) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield store_model_1.default.create(store);
+    return result;
+});
+exports.addNewStoreService = addNewStoreService;
 //== get Store by name
 const getStoreByStoreNameService = (storeName) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield store_model_1.default.findOne({ storeName: storeName });
@@ -39,12 +45,6 @@ const getStoreByIdService = (id) => __awaiter(void 0, void 0, void 0, function* 
     return result;
 });
 exports.getStoreByIdService = getStoreByIdService;
-//== create new Store
-const addNewStoreService = (store) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield store_model_1.default.create(store);
-    return result;
-});
-exports.addNewStoreService = addNewStoreService;
 //== update a Store
 const updateAStoreService = (storeId, newData) => __awaiter(void 0, void 0, void 0, function* () {
     // add updator info
