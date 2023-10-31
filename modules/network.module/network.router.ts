@@ -31,7 +31,7 @@ networkRouter.get("/", networkController.getAllNetworksController);
  *@apiError Network not found
  */
 networkRouter.get(
-  "/name/:NetworkName",
+  "/name/:networkName",
   networkController.getANetworkByNetworkNameController
 );
 

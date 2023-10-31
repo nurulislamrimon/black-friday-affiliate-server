@@ -55,7 +55,7 @@ networkRouter.get("/", networkController.getAllNetworksController);
  *@apiSuccess {Object} Network.
  *@apiError Network not found
  */
-networkRouter.get("/name/:NetworkName", networkController.getANetworkByNetworkNameController);
+networkRouter.get("/name/:networkName", networkController.getANetworkByNetworkNameController);
 /**
  *@api{get}/:id get a Network by id
  *@apiDescription get a Network by id

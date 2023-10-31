@@ -71,23 +71,20 @@ const getPostByBrandIdService = (brandId) => __awaiter(void 0, void 0, void 0, f
 });
 exports.getPostByBrandIdService = getPostByBrandIdService;
 //== get Post by brand Id
-const getPostByCampaignIdService = (brandId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ brand: brandId }).populate("brand", {
-        brandName: 1,
-        photoURL: 1,
-    });
+const getPostByCampaignIdService = (campaignId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ campaign: campaignId });
     return result;
 });
 exports.getPostByCampaignIdService = getPostByCampaignIdService;
 //== get Post by brand Id
-const getPostByCategoryIdService = (brandId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ category: brandId }).populate("brand");
+const getPostByCategoryIdService = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ category: categoryId });
     return result;
 });
 exports.getPostByCategoryIdService = getPostByCategoryIdService;
 //== get Post by brand Id
 const getPostByNetworkIdService = (networkId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ network: networkId }).populate("brand");
+    const result = yield post_model_1.default.find({ network: networkId });
     return result;
 });
 exports.getPostByNetworkIdService = getPostByNetworkIdService;
@@ -158,7 +155,7 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
             $project: {
                 "store._id": 1,
                 "store.storeName": 1,
-                "store.photoURL": 1,
+                "store.storePhotoURL": 1,
                 postTitle: 1,
                 postType: 1,
                 externalLink: 1,

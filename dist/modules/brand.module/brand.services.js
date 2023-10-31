@@ -125,7 +125,7 @@ const getAllActiveBrands = (query) => __awaiter(void 0, void 0, void 0, function
         {
             $lookup: {
                 from: "posts",
-                foreignField: "Brand",
+                foreignField: "brand",
                 localField: "_id",
                 as: "existPosts",
             },

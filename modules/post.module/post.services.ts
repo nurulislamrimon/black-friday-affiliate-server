@@ -48,11 +48,10 @@ export const getPostByBrandIdService = async (brandId: Types.ObjectId) => {
   return result;
 };
 //== get Post by brand Id
-export const getPostByCampaignIdService = async (brandId: Types.ObjectId) => {
-  const result = await Post.find({ brand: brandId }).populate("brand", {
-    brandName: 1,
-    photoURL: 1,
-  });
+export const getPostByCampaignIdService = async (
+  campaignId: Types.ObjectId
+) => {
+  const result = await Post.find({ campaign: campaignId });
   return result;
 };
 //== get Post by brand Id
@@ -157,7 +156,7 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
       $project: {
         "store._id": 1,
         "store.storeName": 1,
-        "store.photoURL": 1,
+        "store.storePhotoURL": 1,
         postTitle: 1,
         postType: 1,
         externalLink: 1,

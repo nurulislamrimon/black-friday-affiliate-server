@@ -62,7 +62,7 @@ const getAllCategorys = (query) => __awaiter(void 0, void 0, void 0, function* (
         {
             $lookup: {
                 from: "posts",
-                foreignField: "Category",
+                foreignField: "category",
                 localField: "_id",
                 as: "existPosts",
             },

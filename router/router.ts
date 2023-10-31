@@ -25,12 +25,12 @@ const routesArray = [
     element: brandRouter,
   },
   {
-    path: "/campaign",
-    element: CampaignRouter,
-  },
-  {
     path: "/category",
     element: categoryRouter,
+  },
+  {
+    path: "/campaign",
+    element: CampaignRouter,
   },
   {
     path: "/network",

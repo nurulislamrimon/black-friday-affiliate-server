@@ -49,7 +49,7 @@ export const getAllNetworks = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Network",
+        foreignField: "network",
         localField: "_id",
         as: "existPosts",
       },
@@ -83,7 +83,7 @@ export const getAllNetworks = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Network",
+        foreignField: "network",
         localField: "_id",
         as: "existPosts",
       },

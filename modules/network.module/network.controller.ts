@@ -106,7 +106,7 @@ export const updateANetworkController = catchAsync(
   }
 );
 
-// update a Network controller
+// Delete a Network controller
 export const deleteANetworkController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const NetworkId = new Types.ObjectId(req.params.id);

@@ -113,7 +113,7 @@ exports.updateANetworkController = (0, catchAsync_1.default)((req, res, next) =>
         console.log(`Network ${result} is added!`);
     }
 }));
-// update a Network controller
+// Delete a Network controller
 exports.deleteANetworkController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const NetworkId = new mongoose_1.Types.ObjectId(req.params.id);
     const existNetwork = yield networkServices.getNetworkByIdService(NetworkId);

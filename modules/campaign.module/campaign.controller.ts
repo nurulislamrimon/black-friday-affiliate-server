@@ -74,7 +74,7 @@ export const addNewCampaignController = catchAsync(
         success: true,
         data: result,
       });
-      console.log(`Campaign ${result} is added!`);
+      console.log(`Campaign ${result._id} is added!`);
     }
   }
 );

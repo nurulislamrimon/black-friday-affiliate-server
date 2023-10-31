@@ -29,12 +29,12 @@ const routesArray = [
         element: brand_router_1.default,
     },
     {
-        path: "/campaign",
-        element: campaign_router_1.default,
-    },
-    {
         path: "/category",
         element: category_router_1.default,
+    },
+    {
+        path: "/campaign",
+        element: campaign_router_1.default,
     },
     {
         path: "/network",

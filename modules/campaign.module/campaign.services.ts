@@ -56,7 +56,7 @@ export const getAllCampaigns = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Campaign",
+        foreignField: "campaign",
         localField: "_id",
         as: "existPosts",
       },
@@ -90,7 +90,7 @@ export const getAllCampaigns = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Campaign",
+        foreignField: "campaign",
         localField: "_id",
         as: "existPosts",
       },
@@ -125,7 +125,7 @@ export const getAllActiveCampaigns = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Campaign",
+        foreignField: "campaign",
         localField: "_id",
         as: "existPosts",
       },
@@ -164,7 +164,7 @@ export const getAllActiveCampaigns = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Campaign",
+        foreignField: "campaign",
         localField: "_id",
         as: "existPosts",
       },

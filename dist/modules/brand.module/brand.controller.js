@@ -36,7 +36,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteABrandController = exports.updateABrandController = exports.getAllBrandsController = exports.addNewBrandController = exports.getAllActiveBrandsController = exports.getABrandByBrandNameController = exports.getABrandController = void 0;
-const BrandServices = __importStar(require("./brand.services"));
+const brandServices = __importStar(require("./brand.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
 const post_services_1 = require("../post.module/post.services");
@@ -44,7 +44,7 @@ const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Brand by Id controller
 exports.getABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const BrandId = new mongoose_1.Types.ObjectId(req.params.id);
-    const result = yield BrandServices.getBrandByIdService(BrandId);
+    const result = yield brandServices.getBrandByIdService(BrandId);
     if (!result) {
         throw new Error("Brand not found!");
     }
@@ -58,7 +58,7 @@ exports.getABrandController = (0, catchAsync_1.default)((req, res, next) => __aw
 // get Brand by Id controller
 exports.getABrandByBrandNameController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const BrandName = req.params.BrandName;
-    const result = yield BrandServices.getBrandByBrandNameService(BrandName);
+    const result = yield brandServices.getBrandByBrandNameService(BrandName);
     if (!result) {
         throw new Error("Brand not found!");
     }
@@ -72,14 +72,14 @@ exports.getABrandByBrandNameController = (0, catchAsync_1.default)((req, res, ne
 // get all active Brands
 exports.getAllActiveBrandsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield BrandServices.getAllActiveBrands(req.query);
+    const result = yield brandServices.getAllActiveBrands(req.query);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Brands are responsed!`);
 }));
 // add new Brand controller
 exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { brandPhotoURL, brandName, countries } = req.body;
-    const existBrand = yield BrandServices.getBrandByBrandNameService(brandName);
+    const existBrand = yield brandServices.getBrandByBrandNameService(brandName);
     if (!brandPhotoURL || !brandName || !countries) {
         throw new Error("Please enter required information: brandPhotoURL, brandName, countries!");
     }
@@ -88,7 +88,7 @@ exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __
     }
     else {
         const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield BrandServices.addNewBrandService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
+        const result = yield brandServices.addNewBrandService(Object.assign(Object.assign({}, req.body), { postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) }));
         res.send({
             success: true,
             data: result,
@@ -99,20 +99,20 @@ exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __
 // get all Brands
 exports.getAllBrandsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    const result = yield BrandServices.getAllBrands(req.query);
+    const result = yield brandServices.getAllBrands(req.query);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Brands are responsed!`);
 }));
 // update a Brand controller
 exports.updateABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const postId = new mongoose_1.Types.ObjectId(req.params.id);
-    const existBrand = yield BrandServices.getBrandByIdService(postId);
+    const existBrand = yield brandServices.getBrandByIdService(postId);
     if (!existBrand) {
         throw new Error("Brand doesn't exist!");
     }
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield BrandServices.updateABrandService(postId, Object.assign(Object.assign({}, req.body), { existBrand, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        const result = yield brandServices.updateABrandService(postId, Object.assign(Object.assign({}, req.body), { existBrand, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
         res.send({
             success: true,
             data: result,
@@ -123,7 +123,7 @@ exports.updateABrandController = (0, catchAsync_1.default)((req, res, next) => _
 // update a Brand controller
 exports.deleteABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const BrandId = new mongoose_1.Types.ObjectId(req.params.id);
-    const existBrand = yield BrandServices.getBrandByIdService(BrandId);
+    const existBrand = yield brandServices.getBrandByIdService(BrandId);
     const isRelatedPostExist = yield (0, post_services_1.getPostByBrandIdService)(BrandId);
     if (!existBrand) {
         throw new Error("Brand doesn't exist!");
@@ -132,7 +132,7 @@ exports.deleteABrandController = (0, catchAsync_1.default)((req, res, next) => _
         throw new Error("Sorry! This Brand has some posts, You can't delete the Brand!");
     }
     else {
-        const result = yield BrandServices.deleteABrandService(BrandId);
+        const result = yield brandServices.deleteABrandService(BrandId);
         res.send({
             success: true,
             data: result,

@@ -93,7 +93,7 @@ exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) =>
             success: true,
             data: result,
         });
-        console.log(`Campaign ${result} is added!`);
+        console.log(`Campaign ${result._id} is added!`);
     }
 }));
 // get all Campaigns
