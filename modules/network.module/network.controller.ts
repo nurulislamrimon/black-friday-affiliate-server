@@ -8,7 +8,7 @@ import catchAsync from "../../Shared/catchAsync";
 // get Network by Id controller
 export const getANetworkByNetworkNameController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const NetworkName = req.params.NetworkName;
+    const NetworkName = req.params.networkName;
 
     const result = await networkServices.getNetworkByNetworkNameService(
       NetworkName

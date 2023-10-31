@@ -5,12 +5,15 @@ import { brand_query_fields } from "../../utils/constants";
 
 //== get Brand by name
 export const getBrandByBrandNameService = async (brandName: string) => {
-  const result = await Brand.findOne({ brandName: brandName });
+  const result = await Brand.findOne(
+    { brandName: brandName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 //== get Brand by objectId
 export const getBrandByIdService = async (id: Types.ObjectId) => {
-  const result = await Brand.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+  const result = await Brand.findOne({ _id: id }, "-postBy -updateBy");
   return result;
 };
 
@@ -151,7 +154,7 @@ export const getAllActiveBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Brand",
+        foreignField: "brand",
         localField: "_id",
         as: "existPosts",
       },

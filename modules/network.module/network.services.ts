@@ -5,13 +5,16 @@ import { network_query_fields } from "../../utils/constants";
 
 //== get Network by name
 export const getNetworkByNetworkNameService = async (networkName: string) => {
-  const result = await Network.findOne({ networkName: networkName });
+  const result = await Network.findOne(
+    { networkName: networkName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 
 //== get Network by objectId
 export const getNetworkByIdService = async (id: Types.ObjectId) => {
-  const result = await Network.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+  const result = await Network.findOne({ _id: id }, "-postBy -updateBy");
   return result;
 };
 

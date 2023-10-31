@@ -7,16 +7,16 @@ import { category_query_fields } from "../../utils/constants";
 export const getCategoryByCategoryNameService = async (
   categoryName: string
 ) => {
-  const result = await Category.findOne({ categoryName: categoryName });
+  const result = await Category.findOne(
+    { categoryName: categoryName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 
 //== get Category by objectId
 export const getCategoryByIdService = async (id: Types.ObjectId) => {
-  const result = await Category.findOne(
-    { _id: id },
-    { postBy: 0, updateBy: 0 }
-  );
+  const result = await Category.findOne({ _id: id }, "-postBy -updateBy");
   return result;
 };
 

@@ -73,7 +73,7 @@ export const addNewBrandController = catchAsync(
         success: true,
         data: result,
       });
-      console.log(`Brand ${result} is added!`);
+      console.log(`Brand ${result._id} is added!`);
     }
   }
 );

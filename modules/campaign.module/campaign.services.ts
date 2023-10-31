@@ -7,15 +7,15 @@ import { campaign_query_fields } from "../../utils/constants";
 export const getCampaignByCampaignNameService = async (
   campaignName: string
 ) => {
-  const result = await Campaign.findOne({ campaignName: campaignName });
+  const result = await Campaign.findOne(
+    { campaignName: campaignName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 //== get Campaign by objectId
 export const getCampaignByIdService = async (id: Types.ObjectId) => {
-  const result = await Campaign.findOne(
-    { _id: id },
-    { postBy: 0, updateBy: 0 }
-  );
+  const result = await Campaign.findOne({ _id: id }, "-postBy -updateBy");
   return result;
 };
 

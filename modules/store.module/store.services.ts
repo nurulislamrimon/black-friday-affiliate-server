@@ -11,12 +11,15 @@ export const addNewStoreService = async (store: object) => {
 
 //== get Store by name
 export const getStoreByStoreNameService = async (storeName: string) => {
-  const result = await Store.findOne({ storeName: storeName });
+  const result = await Store.findOne(
+    { storeName: storeName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 //== get Store by objectId
 export const getStoreByIdService = async (id: Types.ObjectId) => {
-  const result = await Store.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+  const result = await Store.findOne({ _id: id }, "-postBy -updateBy");
   return result;
 };
 
