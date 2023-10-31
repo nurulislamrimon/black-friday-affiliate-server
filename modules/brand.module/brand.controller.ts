@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import * as BrandServices from "./brand.services";
+import * as brandServices from "./brand.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import { getPostByBrandIdService } from "../post.module/post.services";
@@ -10,7 +10,7 @@ export const getABrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const BrandId = new Types.ObjectId(req.params.id);
 
-    const result = await BrandServices.getBrandByIdService(BrandId);
+    const result = await brandServices.getBrandByIdService(BrandId);
     if (!result) {
       throw new Error("Brand not found!");
     } else {
@@ -26,7 +26,7 @@ export const getABrandByBrandNameController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const BrandName = req.params.BrandName;
 
-    const result = await BrandServices.getBrandByBrandNameService(BrandName);
+    const result = await brandServices.getBrandByBrandNameService(BrandName);
     if (!result) {
       throw new Error("Brand not found!");
     } else {
@@ -40,7 +40,7 @@ export const getABrandByBrandNameController = catchAsync(
 // get all active Brands
 export const getAllActiveBrandsController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await BrandServices.getAllActiveBrands(req.query);
+    const result = await brandServices.getAllActiveBrands(req.query);
     res.send({
       success: true,
       ...result,
@@ -52,7 +52,7 @@ export const getAllActiveBrandsController = catchAsync(
 export const addNewBrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { brandPhotoURL, brandName, countries } = req.body;
-    const existBrand = await BrandServices.getBrandByBrandNameService(
+    const existBrand = await brandServices.getBrandByBrandNameService(
       brandName
     );
 
@@ -65,7 +65,7 @@ export const addNewBrandController = catchAsync(
     } else {
       const postBy = await getUserByEmailService(req.body.decoded.email);
 
-      const result = await BrandServices.addNewBrandService({
+      const result = await brandServices.addNewBrandService({
         ...req.body,
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       });
@@ -80,7 +80,7 @@ export const addNewBrandController = catchAsync(
 // get all Brands
 export const getAllBrandsController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await BrandServices.getAllBrands(req.query);
+    const result = await brandServices.getAllBrands(req.query);
     res.send({
       success: true,
       ...result,
@@ -92,13 +92,13 @@ export const getAllBrandsController = catchAsync(
 export const updateABrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const postId = new Types.ObjectId(req.params.id);
-    const existBrand = await BrandServices.getBrandByIdService(postId);
+    const existBrand = await brandServices.getBrandByIdService(postId);
 
     if (!existBrand) {
       throw new Error("Brand doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await BrandServices.updateABrandService(postId, {
+      const result = await brandServices.updateABrandService(postId, {
         ...req.body,
         existBrand,
         updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
@@ -116,7 +116,7 @@ export const updateABrandController = catchAsync(
 export const deleteABrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const BrandId = new Types.ObjectId(req.params.id);
-    const existBrand = await BrandServices.getBrandByIdService(BrandId);
+    const existBrand = await brandServices.getBrandByIdService(BrandId);
 
     const isRelatedPostExist = await getPostByBrandIdService(BrandId);
 
@@ -127,7 +127,7 @@ export const deleteABrandController = catchAsync(
         "Sorry! This Brand has some posts, You can't delete the Brand!"
       );
     } else {
-      const result = await BrandServices.deleteABrandService(BrandId);
+      const result = await brandServices.deleteABrandService(BrandId);
 
       res.send({
         success: true,

@@ -112,7 +112,7 @@ export const getAllActiveBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Brand",
+        foreignField: "brand",
         localField: "_id",
         as: "existPosts",
       },

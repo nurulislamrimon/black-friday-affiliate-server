@@ -100,6 +100,7 @@ brandRouter.patch(
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
   brandController.updateABrandController
 );
+
 /**
  *@api{delete}/:id delete a Brand
  *@apiDescription delete a Brand by id
