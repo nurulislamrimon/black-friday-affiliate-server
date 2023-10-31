@@ -56,13 +56,15 @@ export const getPostByCampaignIdService = async (brandId: Types.ObjectId) => {
   return result;
 };
 //== get Post by brand Id
-export const getPostByCategoryIdService = async (brandId: Types.ObjectId) => {
-  const result = await Post.find({ category: brandId }).populate("brand");
+export const getPostByCategoryIdService = async (
+  categoryId: Types.ObjectId
+) => {
+  const result = await Post.find({ category: categoryId });
   return result;
 };
 //== get Post by brand Id
 export const getPostByNetworkIdService = async (networkId: Types.ObjectId) => {
-  const result = await Post.find({ network: networkId }).populate("brand");
+  const result = await Post.find({ network: networkId });
   return result;
 };
 //== get Post by objectId

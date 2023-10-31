@@ -58,7 +58,7 @@ export const getAllCategorys = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Category",
+        foreignField: "category",
         localField: "_id",
         as: "existPosts",
       },
