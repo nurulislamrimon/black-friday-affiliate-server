@@ -123,7 +123,7 @@ exports.updateAStoreController = (0, catchAsync_1.default)((req, res, next) => _
             success: true,
             data: result,
         });
-        console.log(`Store ${result} is added!`);
+        console.log(`Store is updated!`);
     }
 }));
 // update a store controller

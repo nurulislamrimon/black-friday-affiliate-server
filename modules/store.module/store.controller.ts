@@ -118,7 +118,7 @@ export const updateAStoreController = catchAsync(
         success: true,
         data: result,
       });
-      console.log(`Store ${result} is added!`);
+      console.log(`Store is updated!`);
     }
   }
 );
