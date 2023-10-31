@@ -29,13 +29,13 @@ const search_filter_and_queries_1 = require("../../utils/search_filter_and_queri
 const constants_1 = require("../../utils/constants");
 //== get Category by name
 const getCategoryByCategoryNameService = (categoryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_model_1.default.findOne({ categoryName: categoryName });
+    const result = yield category_model_1.default.findOne({ categoryName: categoryName }, "-postBy -updateBy");
     return result;
 });
 exports.getCategoryByCategoryNameService = getCategoryByCategoryNameService;
 //== get Category by objectId
 const getCategoryByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+    const result = yield category_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
     return result;
 });
 exports.getCategoryByIdService = getCategoryByIdService;

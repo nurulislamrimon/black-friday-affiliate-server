@@ -22,48 +22,18 @@ export const searchGloballyAdminService = async (query: object) => {
 };
 //== get Post by name
 export const getPostByPostTitleService = async (postTitle: string) => {
-  const result = await Post.findOne({ postTitle: postTitle }).populate(
-    "store",
-    {
+  const result = await Post.findOne({ postTitle: postTitle }).populate({
+    path: "store brand category campaign",
+    select: {
       storeName: 1,
-      photoURL: 1,
-    }
-  );
-  return result;
-};
-//== get Post by store Id
-export const getPostByStoreIdService = async (storeId: Types.ObjectId) => {
-  const result = await Post.find({ store: storeId }).populate("store", {
-    storeName: 1,
-    photoURL: 1,
+      storePhotoURL: 1,
+      brandName: 1,
+      brandPhotoURL: 1,
+      categoryName: 1,
+      campaignName: 1,
+      campaignPhotoURL: 1,
+    },
   });
-  return result;
-};
-//== get Post by brand Id
-export const getPostByBrandIdService = async (brandId: Types.ObjectId) => {
-  const result = await Post.find({ brand: brandId }).populate("brand", {
-    brandName: 1,
-    photoURL: 1,
-  });
-  return result;
-};
-//== get Post by brand Id
-export const getPostByCampaignIdService = async (
-  campaignId: Types.ObjectId
-) => {
-  const result = await Post.find({ campaign: campaignId });
-  return result;
-};
-//== get Post by brand Id
-export const getPostByCategoryIdService = async (
-  categoryId: Types.ObjectId
-) => {
-  const result = await Post.find({ category: categoryId });
-  return result;
-};
-//== get Post by brand Id
-export const getPostByNetworkIdService = async (networkId: Types.ObjectId) => {
-  const result = await Post.find({ network: networkId });
   return result;
 };
 //== get Post by objectId
@@ -71,9 +41,17 @@ export const getPostByIdService = async (id: Types.ObjectId) => {
   const result = await Post.findOne(
     { _id: id },
     { postBy: 0, updateBy: 0 }
-  ).populate("store", {
-    storeName: 1,
-    photoURL: 1,
+  ).populate({
+    path: "store brand category campaign",
+    select: {
+      storeName: 1,
+      storePhotoURL: 1,
+      brandName: 1,
+      brandPhotoURL: 1,
+      categoryName: 1,
+      campaignName: 1,
+      campaignPhotoURL: 1,
+    },
   });
   return result;
 };
@@ -82,8 +60,16 @@ export const getPostByIdService = async (id: Types.ObjectId) => {
 export const addNewPostService = async (post: object) => {
   const createdPost = await Post.create(post);
   const result = await createdPost.populate({
-    path: "store",
-    select: "storeName",
+    path: "store brand category campaign",
+    select: {
+      storeName: 1,
+      storePhotoURL: 1,
+      brandName: 1,
+      brandPhotoURL: 1,
+      categoryName: 1,
+      campaignName: 1,
+      campaignPhotoURL: 1,
+    },
   });
   await setPostAsUnreadToUserService(createdPost._id);
   return result;
@@ -148,8 +134,35 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
       },
     },
     {
+      $lookup: {
+        from: "brands",
+        localField: "brand",
+        foreignField: "_id",
+        as: "brandPopulated",
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "category",
+        foreignField: "_id",
+        as: "categoryPopulated",
+      },
+    },
+    {
+      $lookup: {
+        from: "campaigns",
+        localField: "campaign",
+        foreignField: "_id",
+        as: "campaignPopulated",
+      },
+    },
+    {
       $addFields: {
         store: { $arrayElemAt: ["$storePopulated", 0] },
+        brand: { $arrayElemAt: ["$brandPopulated", 0] },
+        category: { $arrayElemAt: ["$categoryPopulated", 0] },
+        campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
       },
     },
     {
@@ -157,6 +170,14 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
         "store._id": 1,
         "store.storeName": 1,
         "store.storePhotoURL": 1,
+        "brand._id": 1,
+        "brand.brandName": 1,
+        "brand.brandPhotoURL": 1,
+        "category._id": 1,
+        "category.categoryName": 1,
+        "campaign._id": 1,
+        "campaign.campaignName": 1,
+        "campaign.campaignPhotoURL": 1,
         postTitle: 1,
         postType: 1,
         externalLink: 1,
@@ -241,5 +262,43 @@ export const deleteAPostService = async (PostId: Types.ObjectId) => {
 export const deleteManyPostService = async (PostId: Types.ObjectId[]) => {
   const result = await Post.deleteMany({ _id: PostId });
 
+  return result;
+};
+
+// based on special ids====================
+
+//== get Post by store Id
+export const getPostByStoreIdService = async (storeId: Types.ObjectId) => {
+  const result = await Post.find({ store: storeId }).populate("store", {
+    storeName: 1,
+    photoURL: 1,
+  });
+  return result;
+};
+//== get Post by brand Id
+export const getPostByBrandIdService = async (brandId: Types.ObjectId) => {
+  const result = await Post.find({ brand: brandId }).populate("brand", {
+    brandName: 1,
+    photoURL: 1,
+  });
+  return result;
+};
+//== get Post by brand Id
+export const getPostByCampaignIdService = async (
+  campaignId: Types.ObjectId
+) => {
+  const result = await Post.find({ campaign: campaignId });
+  return result;
+};
+//== get Post by brand Id
+export const getPostByCategoryIdService = async (
+  categoryId: Types.ObjectId
+) => {
+  const result = await Post.find({ category: categoryId });
+  return result;
+};
+//== get Post by brand Id
+export const getPostByNetworkIdService = async (networkId: Types.ObjectId) => {
+  const result = await Post.find({ network: networkId });
   return result;
 };

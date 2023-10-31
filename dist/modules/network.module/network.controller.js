@@ -43,7 +43,7 @@ const post_services_1 = require("../post.module/post.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Network by Id controller
 exports.getANetworkByNetworkNameController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const NetworkName = req.params.NetworkName;
+    const NetworkName = req.params.networkName;
     const result = yield networkServices.getNetworkByNetworkNameService(NetworkName);
     if (!result) {
         throw new Error("Network not found!");

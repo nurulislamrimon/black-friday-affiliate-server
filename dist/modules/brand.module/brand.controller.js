@@ -93,7 +93,7 @@ exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __
             success: true,
             data: result,
         });
-        console.log(`Brand ${result} is added!`);
+        console.log(`Brand ${result._id} is added!`);
     }
 }));
 // get all Brands

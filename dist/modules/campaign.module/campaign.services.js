@@ -29,13 +29,13 @@ const search_filter_and_queries_1 = require("../../utils/search_filter_and_queri
 const constants_1 = require("../../utils/constants");
 //== get Campaign by name
 const getCampaignByCampaignNameService = (campaignName) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield campaign_model_1.default.findOne({ campaignName: campaignName });
+    const result = yield campaign_model_1.default.findOne({ campaignName: campaignName }, "-postBy -updateBy");
     return result;
 });
 exports.getCampaignByCampaignNameService = getCampaignByCampaignNameService;
 //== get Campaign by objectId
 const getCampaignByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield campaign_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+    const result = yield campaign_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
     return result;
 });
 exports.getCampaignByIdService = getCampaignByIdService;

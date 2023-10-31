@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteManyPostService = exports.deleteAPostService = exports.getAllPosts = exports.revealedAPostService = exports.updateAPostService = exports.setPostAsUnreadToUserService = exports.addNewPostService = exports.getPostByIdService = exports.getPostByNetworkIdService = exports.getPostByCategoryIdService = exports.getPostByCampaignIdService = exports.getPostByBrandIdService = exports.getPostByStoreIdService = exports.getPostByPostTitleService = exports.searchGloballyAdminService = exports.searchGloballyClientService = void 0;
+exports.getPostByNetworkIdService = exports.getPostByCategoryIdService = exports.getPostByCampaignIdService = exports.getPostByBrandIdService = exports.getPostByStoreIdService = exports.deleteManyPostService = exports.deleteAPostService = exports.getAllPosts = exports.revealedAPostService = exports.updateAPostService = exports.setPostAsUnreadToUserService = exports.addNewPostService = exports.getPostByIdService = exports.getPostByPostTitleService = exports.searchGloballyAdminService = exports.searchGloballyClientService = void 0;
 const post_model_1 = __importDefault(require("./post.model"));
 const user_model_1 = __importDefault(require("../user.module/user.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
@@ -45,54 +45,34 @@ const searchGloballyAdminService = (query) => __awaiter(void 0, void 0, void 0, 
 exports.searchGloballyAdminService = searchGloballyAdminService;
 //== get Post by name
 const getPostByPostTitleService = (postTitle) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.findOne({ postTitle: postTitle }).populate("store", {
-        storeName: 1,
-        photoURL: 1,
+    const result = yield post_model_1.default.findOne({ postTitle: postTitle }).populate({
+        path: "store brand category campaign",
+        select: {
+            storeName: 1,
+            storePhotoURL: 1,
+            brandName: 1,
+            brandPhotoURL: 1,
+            categoryName: 1,
+            campaignName: 1,
+            campaignPhotoURL: 1,
+        },
     });
     return result;
 });
 exports.getPostByPostTitleService = getPostByPostTitleService;
-//== get Post by store Id
-const getPostByStoreIdService = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ store: storeId }).populate("store", {
-        storeName: 1,
-        photoURL: 1,
-    });
-    return result;
-});
-exports.getPostByStoreIdService = getPostByStoreIdService;
-//== get Post by brand Id
-const getPostByBrandIdService = (brandId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ brand: brandId }).populate("brand", {
-        brandName: 1,
-        photoURL: 1,
-    });
-    return result;
-});
-exports.getPostByBrandIdService = getPostByBrandIdService;
-//== get Post by brand Id
-const getPostByCampaignIdService = (campaignId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ campaign: campaignId });
-    return result;
-});
-exports.getPostByCampaignIdService = getPostByCampaignIdService;
-//== get Post by brand Id
-const getPostByCategoryIdService = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ category: categoryId });
-    return result;
-});
-exports.getPostByCategoryIdService = getPostByCategoryIdService;
-//== get Post by brand Id
-const getPostByNetworkIdService = (networkId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ network: networkId });
-    return result;
-});
-exports.getPostByNetworkIdService = getPostByNetworkIdService;
 //== get Post by objectId
 const getPostByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 }).populate("store", {
-        storeName: 1,
-        photoURL: 1,
+    const result = yield post_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 }).populate({
+        path: "store brand category campaign",
+        select: {
+            storeName: 1,
+            storePhotoURL: 1,
+            brandName: 1,
+            brandPhotoURL: 1,
+            categoryName: 1,
+            campaignName: 1,
+            campaignPhotoURL: 1,
+        },
     });
     return result;
 });
@@ -101,8 +81,16 @@ exports.getPostByIdService = getPostByIdService;
 const addNewPostService = (post) => __awaiter(void 0, void 0, void 0, function* () {
     const createdPost = yield post_model_1.default.create(post);
     const result = yield createdPost.populate({
-        path: "store",
-        select: "storeName",
+        path: "store brand category campaign",
+        select: {
+            storeName: 1,
+            storePhotoURL: 1,
+            brandName: 1,
+            brandPhotoURL: 1,
+            categoryName: 1,
+            campaignName: 1,
+            campaignPhotoURL: 1,
+        },
     });
     yield (0, exports.setPostAsUnreadToUserService)(createdPost._id);
     return result;
@@ -147,8 +135,35 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
             },
         },
         {
+            $lookup: {
+                from: "brands",
+                localField: "brand",
+                foreignField: "_id",
+                as: "brandPopulated",
+            },
+        },
+        {
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "categoryPopulated",
+            },
+        },
+        {
+            $lookup: {
+                from: "campaigns",
+                localField: "campaign",
+                foreignField: "_id",
+                as: "campaignPopulated",
+            },
+        },
+        {
             $addFields: {
                 store: { $arrayElemAt: ["$storePopulated", 0] },
+                brand: { $arrayElemAt: ["$brandPopulated", 0] },
+                category: { $arrayElemAt: ["$categoryPopulated", 0] },
+                campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
             },
         },
         {
@@ -156,6 +171,14 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
                 "store._id": 1,
                 "store.storeName": 1,
                 "store.storePhotoURL": 1,
+                "brand._id": 1,
+                "brand.brandName": 1,
+                "brand.brandPhotoURL": 1,
+                "category._id": 1,
+                "category.categoryName": 1,
+                "campaign._id": 1,
+                "campaign.campaignName": 1,
+                "campaign.campaignPhotoURL": 1,
                 postTitle: 1,
                 postType: 1,
                 externalLink: 1,
@@ -241,3 +264,40 @@ const deleteManyPostService = (PostId) => __awaiter(void 0, void 0, void 0, func
     return result;
 });
 exports.deleteManyPostService = deleteManyPostService;
+// based on special ids====================
+//== get Post by store Id
+const getPostByStoreIdService = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ store: storeId }).populate("store", {
+        storeName: 1,
+        photoURL: 1,
+    });
+    return result;
+});
+exports.getPostByStoreIdService = getPostByStoreIdService;
+//== get Post by brand Id
+const getPostByBrandIdService = (brandId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ brand: brandId }).populate("brand", {
+        brandName: 1,
+        photoURL: 1,
+    });
+    return result;
+});
+exports.getPostByBrandIdService = getPostByBrandIdService;
+//== get Post by brand Id
+const getPostByCampaignIdService = (campaignId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ campaign: campaignId });
+    return result;
+});
+exports.getPostByCampaignIdService = getPostByCampaignIdService;
+//== get Post by brand Id
+const getPostByCategoryIdService = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ category: categoryId });
+    return result;
+});
+exports.getPostByCategoryIdService = getPostByCategoryIdService;
+//== get Post by brand Id
+const getPostByNetworkIdService = (networkId) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.find({ network: networkId });
+    return result;
+});
+exports.getPostByNetworkIdService = getPostByNetworkIdService;

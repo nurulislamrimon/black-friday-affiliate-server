@@ -29,13 +29,13 @@ const search_filter_and_queries_1 = require("../../utils/search_filter_and_queri
 const constants_1 = require("../../utils/constants");
 //== get Brand by name
 const getBrandByBrandNameService = (brandName) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield brand_model_1.default.findOne({ brandName: brandName });
+    const result = yield brand_model_1.default.findOne({ brandName: brandName }, "-postBy -updateBy");
     return result;
 });
 exports.getBrandByBrandNameService = getBrandByBrandNameService;
 //== get Brand by objectId
 const getBrandByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield brand_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+    const result = yield brand_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
     return result;
 });
 exports.getBrandByIdService = getBrandByIdService;
@@ -163,7 +163,7 @@ const getAllActiveBrands = (query) => __awaiter(void 0, void 0, void 0, function
         {
             $lookup: {
                 from: "posts",
-                foreignField: "Brand",
+                foreignField: "brand",
                 localField: "_id",
                 as: "existPosts",
             },

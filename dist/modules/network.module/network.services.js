@@ -29,13 +29,13 @@ const search_filter_and_queries_1 = require("../../utils/search_filter_and_queri
 const constants_1 = require("../../utils/constants");
 //== get Network by name
 const getNetworkByNetworkNameService = (networkName) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield network_model_1.default.findOne({ networkName: networkName });
+    const result = yield network_model_1.default.findOne({ networkName: networkName }, "-postBy -updateBy");
     return result;
 });
 exports.getNetworkByNetworkNameService = getNetworkByNetworkNameService;
 //== get Network by objectId
 const getNetworkByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield network_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
+    const result = yield network_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
     return result;
 });
 exports.getNetworkByIdService = getNetworkByIdService;
