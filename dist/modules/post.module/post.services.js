@@ -168,15 +168,11 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
         },
         {
             $project: {
-                "store._id": 1,
                 "store.storeName": 1,
                 "store.storePhotoURL": 1,
-                "brand._id": 1,
                 "brand.brandName": 1,
                 "brand.brandPhotoURL": 1,
-                "category._id": 1,
                 "category.categoryName": 1,
-                "campaign._id": 1,
                 "campaign.campaignName": 1,
                 "campaign.campaignPhotoURL": 1,
                 postTitle: 1,
@@ -214,15 +210,46 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
             },
         },
         {
+            $lookup: {
+                from: "brands",
+                localField: "brand",
+                foreignField: "_id",
+                as: "brandPopulated",
+            },
+        },
+        {
+            $lookup: {
+                from: "categories",
+                localField: "category",
+                foreignField: "_id",
+                as: "categoryPopulated",
+            },
+        },
+        {
+            $lookup: {
+                from: "campaigns",
+                localField: "campaign",
+                foreignField: "_id",
+                as: "campaignPopulated",
+            },
+        },
+        {
             $addFields: {
                 store: { $arrayElemAt: ["$storePopulated", 0] },
+                brand: { $arrayElemAt: ["$brandPopulated", 0] },
+                category: { $arrayElemAt: ["$categoryPopulated", 0] },
+                campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
             },
         },
         {
             $project: {
-                "store._id": 1,
                 "store.storeName": 1,
-                "store.photoURL": 1,
+                "store.storePhotoURL": 1,
+                "brand.brandName": 1,
+                "brand.brandPhotoURL": 1,
+                "category.categoryName": 1,
+                "campaign.campaignName": 1,
+                "campaign.campaignPhotoURL": 1,
                 postTitle: 1,
                 postType: 1,
                 expireDate: 1,
@@ -264,12 +291,12 @@ const deleteManyPostService = (PostId) => __awaiter(void 0, void 0, void 0, func
     return result;
 });
 exports.deleteManyPostService = deleteManyPostService;
-// based on special ids====================
+// ===========================based on special ids====================
 //== get Post by store Id
 const getPostByStoreIdService = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield post_model_1.default.find({ store: storeId }).populate("store", {
         storeName: 1,
-        photoURL: 1,
+        storePhotoURL: 1,
     });
     return result;
 });
@@ -278,26 +305,33 @@ exports.getPostByStoreIdService = getPostByStoreIdService;
 const getPostByBrandIdService = (brandId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield post_model_1.default.find({ brand: brandId }).populate("brand", {
         brandName: 1,
-        photoURL: 1,
+        brandPhotoURL: 1,
     });
     return result;
 });
 exports.getPostByBrandIdService = getPostByBrandIdService;
-//== get Post by brand Id
+//== get Post by campaign Id
 const getPostByCampaignIdService = (campaignId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ campaign: campaignId });
+    const result = yield post_model_1.default.find({ campaign: campaignId }).populate("campaign", {
+        campaignName: 1,
+        campaignPhotoURL: 1,
+    });
     return result;
 });
 exports.getPostByCampaignIdService = getPostByCampaignIdService;
 //== get Post by brand Id
 const getPostByCategoryIdService = (categoryId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ category: categoryId });
+    const result = yield post_model_1.default.find({ category: categoryId }).populate("category", {
+        categoryName: 1,
+    });
     return result;
 });
 exports.getPostByCategoryIdService = getPostByCategoryIdService;
 //== get Post by brand Id
 const getPostByNetworkIdService = (networkId) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.find({ network: networkId });
+    const result = yield post_model_1.default.find({ network: networkId }).populate("network", {
+        networkName: 1,
+    });
     return result;
 });
 exports.getPostByNetworkIdService = getPostByNetworkIdService;
