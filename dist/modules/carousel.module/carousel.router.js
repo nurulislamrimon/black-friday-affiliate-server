@@ -56,4 +56,28 @@ carouselRouter.get("/", carouselController.getCarouselController);
  *@apiError 401, 403 unauthorized & forbidden
  */
 carouselRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), carouselController.addNewCarouselController);
+/**
+ *@api{patch}/carousel/update add new carousel
+ *@apiDescription add new carousel for the first time
+ *@apiPermission admin and manager
+ *@apiHeader token in headers with bearer
+ *@apiBody full carousel
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} carousel
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+carouselRouter.patch("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), carouselController.updateCarouselController);
+/**
+ *@api{delete}/carousel/:id add new carousel
+ *@apiDescription add new carousel for the first time
+ *@apiPermission admin and manager
+ *@apiHeader token in headers with bearer
+ *@apiBody full carousel
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} carousel
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+carouselRouter.delete("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), carouselController.updateCarouselController);
 exports.default = carouselRouter;

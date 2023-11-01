@@ -2,16 +2,23 @@ import { Schema, model } from "mongoose";
 import { Types } from "mongoose";
 import validator from "validator";
 import ICarousel from "./carousel.interface";
+import { countries } from "../../utils/constants/countries.enum";
 
 const carouselSchema = new Schema<ICarousel>(
   {
-    carousel: [
+    country: { type: String, enum: countries, required: true },
+    items: [
       {
-        photoURL: { type: String, required: true, validate: validator.isURL },
+        photoURL: {
+          type: String,
+          required: true,
+          validate: validator.isURL,
+        },
         couponCode: String,
         externalLink: { type: String, validate: validator.isURL },
       },
     ],
+
     postBy: {
       name: String,
       email: String,

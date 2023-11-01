@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
 
 export default interface ICarousel {
-  carousel: [{ photoURL: string; couponCode?: string; externalLink?: string }];
+  country: string;
+  items: [{ photoURL: string; couponCode?: string; externalLink?: string }];
   postBy: {
     name: string;
     email: string;

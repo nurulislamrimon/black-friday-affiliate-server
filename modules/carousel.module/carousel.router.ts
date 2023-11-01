@@ -18,6 +18,7 @@ const carouselRouter = express.Router();
  *@apiError not found
  */
 carouselRouter.get("/", carouselController.getCarouselController);
+
 /**
  *@api{put}/carousel/add add new carousel
  *@apiDescription add new carousel for the first time
@@ -34,6 +35,42 @@ carouselRouter.post(
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
   carouselController.addNewCarouselController
+);
+
+/**
+ *@api{patch}/carousel/update add new carousel
+ *@apiDescription add new carousel for the first time
+ *@apiPermission admin and manager
+ *@apiHeader token in headers with bearer
+ *@apiBody full carousel
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} carousel
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+carouselRouter.patch(
+  "/:id",
+  verify_token,
+  verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
+  carouselController.updateCarouselController
+);
+
+/**
+ *@api{delete}/carousel/:id add new carousel
+ *@apiDescription add new carousel for the first time
+ *@apiPermission admin and manager
+ *@apiHeader token in headers with bearer
+ *@apiBody full carousel
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} carousel
+ *@apiError 401, 403 unauthorized & forbidden
+ */
+carouselRouter.delete(
+  "/:id",
+  verify_token,
+  verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
+  carouselController.updateCarouselController
 );
 
 export default carouselRouter;
