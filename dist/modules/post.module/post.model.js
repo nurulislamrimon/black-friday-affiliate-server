@@ -18,7 +18,7 @@ const validator_1 = __importDefault(require("validator"));
 const countries_enum_1 = require("../../utils/constants/countries.enum");
 const postSchema = new mongoose_1.Schema({
     postTitle: String,
-    postPhotoUrl: { type: String, validate: validator_1.default.isURL },
+    postPhotoURL: { type: String, validate: validator_1.default.isURL },
     productPreviewLink: { type: String, validate: validator_1.default.isURL },
     expireDate: { type: Date, validate: validator_1.default.isDate },
     postType: {

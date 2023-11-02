@@ -1,1055 +1,1034 @@
 {
-	"info": {
-		"_postman_id": "5b1b6291-25a9-496b-b5be-1a83c53729e0",
-		"name": "BF-Affiliate",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "22663141"
-	},
-	"item": [
-		{
-			"name": "User",
-			"item": [
-				{
-					"name": "home",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}"
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/login"
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh user",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/refresh"
-					},
-					"response": []
-				},
-				{
-					"name": "verify user",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/verify/sharif@gmail.com"
-					},
-					"response": []
-				},
-				{
-					"name": "about me",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/user/me"
-					},
-					"response": []
-				},
-				{
-					"name": "update me",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Nurul Islam Rimon\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/user/me"
-					},
-					"response": []
-				},
-				{
-					"name": "get all users",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user"
-					},
-					"response": []
-				},
-				{
-					"name": "Get favourite stores",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/favourite/store"
-					},
-					"response": []
-				},
-				{
-					"name": "Get favourite posts",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/favourite/post"
-					},
-					"response": []
-				},
-				{
-					"name": "favourite store add & remove",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/favourite/store/64aac9d99505ef872dea273a"
-					},
-					"response": []
-				},
-				{
-					"name": "favourite post add & remove",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/favourite/post/6496a1a3c87971d6fba72fd8"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Store",
-			"item": [
-				{
-					"name": "get all stores client",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store"
-					},
-					"response": []
-				},
-				{
-					"name": "get a store by storeName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/name/canada store erro"
-					},
-					"response": []
-				},
-				{
-					"name": "get a store by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/653fbd7613563e20e1dacb9f"
-					},
-					"response": []
-				},
-				{
-					"name": "get all stores admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/all"
-					},
-					"response": []
-				},
-				{
-					"name": "add new store",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"storeName\": \"Oman store\",\r\n    \"storePhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"storeLink\": \"mena-coupon.netlify.app\",\r\n    \"howToUse\":[[{\"id\":\"ad-1\",\"type\":\"h3\",\"content\":\"Hey there\"}]]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/store/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a store",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"storeDescription\":\"This is the description\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a store",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Brand",
-			"item": [
-				{
-					"name": "get all brands client",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand"
-					},
-					"response": []
-				},
-				{
-					"name": "get a brand by brandName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/name/united state brand"
-					},
-					"response": []
-				},
-				{
-					"name": "get a brand by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/6540fbd1dda9f41467d001f2"
-					},
-					"response": []
-				},
-				{
-					"name": "get all brands admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/all"
-					},
-					"response": []
-				},
-				{
-					"name": "add new brand",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"brandName\": \"Poraner Brand\",\r\n    \"brandPhotoURL\": \"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\",\r\n    \"brandLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ],\r\n    \"howToUse\":[[{\"id\":\"b-1\",\"type\":\"p\",\"content\":\"This is a description.\"}]]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/brand/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a brand",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"countries\": [\r\n        \"Netherlands\"\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/brand/6540a3f0b21cdae95b3b6e5a"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a brand",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/6540a30eb21cdae95b3b6e4e"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Category",
-			"item": [
-				{
-					"name": "get a category by categoryName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/name/Men Fashion"
-					},
-					"response": []
-				},
-				{
-					"name": "get a category by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/653faae27447e968e1407d9c"
-					},
-					"response": []
-				},
-				{
-					"name": "get all categories",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category"
-					},
-					"response": []
-				},
-				{
-					"name": "add new category",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\": \"oman category\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/category/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a category",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\":\"Misti\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/category/6540a513b21cdae95b3b6e78"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a category",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/6540af1f27bedc1aa6f4ac8a"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Campaign",
-			"item": [
-				{
-					"name": "get all campaigns client",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign"
-					},
-					"response": []
-				},
-				{
-					"name": "get a campaign by campaignName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/name/united state campaign"
-					},
-					"response": []
-				},
-				{
-					"name": "get a campaign by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/6540ee463dbcde687d8d2b48"
-					},
-					"response": []
-				},
-				{
-					"name": "get all campaigns admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/all"
-					},
-					"response": []
-				},
-				{
-					"name": "add new campaign",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"campaignName\": \"Black Friday Campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/campaign/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a campaign",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"campaignName\":\"Squad campaign\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a campaign",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Network",
-			"item": [
-				{
-					"name": "get all networks",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network"
-					},
-					"response": []
-				},
-				{
-					"name": "get a network by networkName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/name/Alpha network f"
-					},
-					"response": []
-				},
-				{
-					"name": "get a network by Id",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/6540dd8752921d6ccbaded5e"
-					},
-					"response": []
-				},
-				{
-					"name": "add new network",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"networkName\":\"Alpha network\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/network/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a network",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"networkName\":\"ExpertSquad\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/network/653e8cd866dd90a2976e117a"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a network",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/6540dcc447c5662f6ad4dfbc"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Post",
-			"item": [
-				{
-					"name": "search globally client",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post/search?searchTerm=canada store erro",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"post",
-								"search"
-							],
-							"query": [
-								{
-									"key": "searchTerm",
-									"value": "canada store erro"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "search globally admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post/search/all?searchTerm=canada store erro",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"post",
-								"search",
-								"all"
-							],
-							"query": [
-								{
-									"key": "searchTerm",
-									"value": "canada store erro"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all posts client",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post?category=united state category",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"post"
-							],
-							"query": [
-								{
-									"key": "category",
-									"value": "united state category"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all posts admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/all"
-					},
-					"response": []
-				},
-				{
-					"name": "get a post",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/653e8e828912eabf0c0f8eab"
-					},
-					"response": []
-				},
-				{
-					"name": "add new post",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"postTitle\":\"united state post1\",\r\n    \"storeName\":\"canada store erro\",\r\n    \"brandName\":\"united state brand\",\r\n    \"categoryName\":\"united state category\",\r\n    \"campaignName\":\"united state campaign\",\r\n    \"networkName\":\"ExpertSquad\",\r\n    \"expireDate\":\"10/10/2024\",\r\n    \"countries\":[\"Canada\"],\r\n    \"postType\":\"Coupon\",\r\n    \"couponCode\":\"ALPHA1\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/post/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a post",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"postTitle\":\"Best offer upto 1% off😁\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/post/6540a8c9b21cdae95b3b6ec4"
-					},
-					"response": []
-				},
-				{
-					"name": "revealed post",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/revealed/6540a8c9b21cdae95b3b6ec4"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a post",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/6540eebb2b76adcaf1eb8b71"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Notification",
-			"item": [
-				{
-					"name": "get notification amount",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/notification"
-					},
-					"response": []
-				},
-				{
-					"name": "get notification amount Copy",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/notification/all"
-					},
-					"response": []
-				},
-				{
-					"name": "update a post",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/user/notification/readed/64787233c6db631a4268b74b"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Carousel",
-			"item": [
-				{
-					"name": "add carousel",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/carousel/add"
-					},
-					"response": []
-				},
-				{
-					"name": "update a carousel by id",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{bfaffiliate}}/api/v1/carousel/65425a59a8b055504402a58e"
-					},
-					"response": []
-				},
-				{
-					"name": "get carousel",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/carousel"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Contact",
-			"item": [
-				{
-					"name": "add Contact",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/contact/add"
-					},
-					"response": []
-				},
-				{
-					"name": "get Contact",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/contact"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Administrator",
-			"item": [
-				{
-					"name": "add administrator",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators/add"
-					},
-					"response": []
-				},
-				{
-					"name": "get all admin and managers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators"
-					},
-					"response": []
-				},
-				{
-					"name": "get me admin and managers",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pcmltb25wY0BnbWFpbC5jb20iLCJpYXQiOjE2OTc2MzkyMDEsImV4cCI6MTY5NzcyNTYwMX0.zW5sq_8Z1enL2uZkSQ4Ubh5HMbs6n_ZGcBtt9h8ufmU"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators/me"
-					},
-					"response": []
-				},
-				{
-					"name": "update a role",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators/65030401dc3d20c655e3ce35"
-					},
-					"response": []
-				},
-				{
-					"name": "delete a role",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "DELETE",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators/6540b0c8036863efc77c6a3e"
-					},
-					"response": []
-				}
-			]
-		}
-	]
+  "info": {
+    "_postman_id": "5b1b6291-25a9-496b-b5be-1a83c53729e0",
+    "name": "BF-Affiliate",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "_exporter_id": "22663141"
+  },
+  "item": [
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "home",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}"
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/login"
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh user",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/refresh"
+          },
+          "response": []
+        },
+        {
+          "name": "verify user",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/verify/sharif@gmail.com"
+          },
+          "response": []
+        },
+        {
+          "name": "about me",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/user/me"
+          },
+          "response": []
+        },
+        {
+          "name": "update me",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"Nurul Islam Rimon\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/user/me"
+          },
+          "response": []
+        },
+        {
+          "name": "get all users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user"
+          },
+          "response": []
+        },
+        {
+          "name": "Get favourite stores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/favourite/store"
+          },
+          "response": []
+        },
+        {
+          "name": "Get favourite posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/favourite/post"
+          },
+          "response": []
+        },
+        {
+          "name": "favourite store add & remove",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/favourite/store/64aac9d99505ef872dea273a"
+          },
+          "response": []
+        },
+        {
+          "name": "favourite post add & remove",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/favourite/post/6496a1a3c87971d6fba72fd8"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Store",
+      "item": [
+        {
+          "name": "get all stores client",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/store"
+          },
+          "response": []
+        },
+        {
+          "name": "get a store by storeName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/store/name/canada store erro"
+          },
+          "response": []
+        },
+        {
+          "name": "get a store by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/store/653fbd7613563e20e1dacb9f"
+          },
+          "response": []
+        },
+        {
+          "name": "get all stores admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/store/all"
+          },
+          "response": []
+        },
+        {
+          "name": "add new store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"storeName\": \"Oman store\",\r\n    \"storePhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"storeLink\": \"mena-coupon.netlify.app\",\r\n    \"howToUse\":[[{\"id\":\"ad-1\",\"type\":\"h3\",\"content\":\"Hey there\"}]]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/store/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"storeDescription\":\"This is the description\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a store",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Brand",
+      "item": [
+        {
+          "name": "get all brands client",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/brand"
+          },
+          "response": []
+        },
+        {
+          "name": "get a brand by brandName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/brand/name/united state brand"
+          },
+          "response": []
+        },
+        {
+          "name": "get a brand by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/brand/6540fbd1dda9f41467d001f2"
+          },
+          "response": []
+        },
+        {
+          "name": "get all brands admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/brand/all"
+          },
+          "response": []
+        },
+        {
+          "name": "add new brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"brandName\": \"Poraner Brand\",\r\n    \"brandPhotoURL\": \"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\",\r\n    \"brandLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ],\r\n    \"howToUse\":[[{\"id\":\"b-1\",\"type\":\"p\",\"content\":\"This is a description.\"}]]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/brand/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"countries\": [\r\n        \"Netherlands\"\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/brand/6540a3f0b21cdae95b3b6e5a"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/brand/6540a30eb21cdae95b3b6e4e"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Category",
+      "item": [
+        {
+          "name": "get a category by categoryName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/category/name/Men Fashion"
+          },
+          "response": []
+        },
+        {
+          "name": "get a category by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/category/653faae27447e968e1407d9c"
+          },
+          "response": []
+        },
+        {
+          "name": "get all categories",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/category"
+          },
+          "response": []
+        },
+        {
+          "name": "add new category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categoryName\": \"oman category\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/category/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"categoryName\":\"Misti\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/category/6540a513b21cdae95b3b6e78"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/category/6540af1f27bedc1aa6f4ac8a"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Campaign",
+      "item": [
+        {
+          "name": "get all campaigns client",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/campaign"
+          },
+          "response": []
+        },
+        {
+          "name": "get a campaign by campaignName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/campaign/name/united state campaign"
+          },
+          "response": []
+        },
+        {
+          "name": "get a campaign by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/campaign/6540ee463dbcde687d8d2b48"
+          },
+          "response": []
+        },
+        {
+          "name": "get all campaigns admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/campaign/all"
+          },
+          "response": []
+        },
+        {
+          "name": "add new campaign",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"campaignName\": \"Black Friday Campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/campaign/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a campaign",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"campaignName\":\"Squad campaign\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a campaign",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Network",
+      "item": [
+        {
+          "name": "get all networks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/network"
+          },
+          "response": []
+        },
+        {
+          "name": "get a network by networkName",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/network/name/Alpha network f"
+          },
+          "response": []
+        },
+        {
+          "name": "get a network by Id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/network/6540dd8752921d6ccbaded5e"
+          },
+          "response": []
+        },
+        {
+          "name": "add new network",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"networkName\":\"Alpha network\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/network/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a network",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"networkName\":\"ExpertSquad\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/network/653e8cd866dd90a2976e117a"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a network",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/network/6540dcc447c5662f6ad4dfbc"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Post",
+      "item": [
+        {
+          "name": "search globally client",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{bfaffiliate}}/api/v1/post/search?searchTerm=canada store erro",
+              "host": ["{{bfaffiliate}}"],
+              "path": ["api", "v1", "post", "search"],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "canada store erro"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search globally admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{bfaffiliate}}/api/v1/post/search/all?searchTerm=canada store erro",
+              "host": ["{{bfaffiliate}}"],
+              "path": ["api", "v1", "post", "search", "all"],
+              "query": [
+                {
+                  "key": "searchTerm",
+                  "value": "canada store erro"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all posts client",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{bfaffiliate}}/api/v1/post?category=united state category",
+              "host": ["{{bfaffiliate}}"],
+              "path": ["api", "v1", "post"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "united state category"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all posts admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/post/all"
+          },
+          "response": []
+        },
+        {
+          "name": "get a post",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/post/653e8e828912eabf0c0f8eab"
+          },
+          "response": []
+        },
+        {
+          "name": "add new post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"postTitle\":\"united state post1\",\r\n    \"storeName\":\"canada store erro\",\r\n    \"brandName\":\"united state brand\",\r\n    \"categoryName\":\"united state category\",\r\n    \"campaignName\":\"united state campaign\",\r\n    \"networkName\":\"ExpertSquad\",\r\n    \"expireDate\":\"10/10/2024\",\r\n    \"countries\":[\"Canada\"],\r\n    \"postType\":\"Coupon\",\r\n    \"couponCode\":\"ALPHA1\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/post/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"postTitle\":\"Best offer upto 1% off😁\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/post/6540a8c9b21cdae95b3b6ec4"
+          },
+          "response": []
+        },
+        {
+          "name": "revealed post",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/post/revealed/6540a8c9b21cdae95b3b6ec4"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/post/6540eebb2b76adcaf1eb8b71"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notification",
+      "item": [
+        {
+          "name": "get notification amount",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/notification"
+          },
+          "response": []
+        },
+        {
+          "name": "get notification amount Copy",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/notification/all"
+          },
+          "response": []
+        },
+        {
+          "name": "update a post",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/user/notification/readed/64787233c6db631a4268b74b"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Carousel",
+      "item": [
+        {
+          "name": "add carousel",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/carousel/add"
+          },
+          "response": []
+        },
+        {
+          "name": "update a carousel by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": "{{bfaffiliate}}/api/v1/carousel/65425a59a8b055504402a58e"
+          },
+          "response": []
+        },
+        {
+          "name": "get carousel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/carousel"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Contact",
+      "item": [
+        {
+          "name": "add Contact",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/contact/add"
+          },
+          "response": []
+        },
+        {
+          "name": "get Contact",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/contact"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Administrator",
+      "item": [
+        {
+          "name": "add administrator",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/administrators/add"
+          },
+          "response": []
+        },
+        {
+          "name": "get all admin and managers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/administrators"
+          },
+          "response": []
+        },
+        {
+          "name": "get me admin and managers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5pcmltb25wY0BnbWFpbC5jb20iLCJpYXQiOjE2OTc2MzkyMDEsImV4cCI6MTY5NzcyNTYwMX0.zW5sq_8Z1enL2uZkSQ4Ubh5HMbs6n_ZGcBtt9h8ufmU"
+              }
+            },
+            "method": "GET",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/administrators/me"
+          },
+          "response": []
+        },
+        {
+          "name": "update a role",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/administrators/65030401dc3d20c655e3ce35"
+          },
+          "response": []
+        },
+        {
+          "name": "delete a role",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": {
+                "token": "{{ADMINTOKEN}}"
+              }
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": "{{bfaffiliate}}/api/v1/administrators/6540b0c8036863efc77c6a3e"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

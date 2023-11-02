@@ -7,7 +7,7 @@ import { countries } from "../../utils/constants/countries.enum";
 const postSchema = new Schema<IPost>(
   {
     postTitle: String,
-    postPhotoUrl: { type: String, validate: validator.isURL },
+    postPhotoURL: { type: String, validate: validator.isURL },
     productPreviewLink: { type: String, validate: validator.isURL },
     expireDate: { type: Date, validate: validator.isDate },
     postType: {

@@ -2,7 +2,7 @@ import { ObjectId, Types } from "mongoose";
 
 export default interface IPost {
   postTitle?: string;
-  postPhotoUrl?: string;
+  postPhotoURL?: string;
   expireDate?: Date;
   postType: string;
   discountPercentage?: Number;
