@@ -30,6 +30,12 @@
 				{
 					"name": "Refresh user",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "POST",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/user/refresh"
@@ -39,7 +45,7 @@
 				{
 					"name": "verify user",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/user/verify/sharif@gmail.com"
 					},
@@ -47,6 +53,9 @@
 				},
 				{
 					"name": "about me",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -56,6 +65,15 @@
 						},
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": "{{bfaffiliate}}/api/v1/user/me"
 					},
 					"response": []
@@ -63,8 +81,23 @@
 				{
 					"name": "update me",
 					"request": {
-						"method": "PUT",
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Nurul Islam Rimon\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": "{{bfaffiliate}}/api/v1/user/me"
 					},
 					"response": []
@@ -105,7 +138,7 @@
 				{
 					"name": "favourite store add & remove",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/user/favourite/store/64aac9d99505ef872dea273a"
 					},
@@ -114,7 +147,7 @@
 				{
 					"name": "favourite post add & remove",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/user/favourite/post/6496a1a3c87971d6fba72fd8"
 					},
@@ -139,7 +172,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/name/Noon Food"
+						"url": "{{bfaffiliate}}/api/v1/store/name/canada store erro"
 					},
 					"response": []
 				},
@@ -148,7 +181,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/store/653fbd7613563e20e1dacb9f"
 					},
 					"response": []
 				},
@@ -180,7 +213,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"storeName\": \"united state store\",\r\n    \"storePhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"storeLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"storeName\": \"Oman store\",\r\n    \"storePhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"storeLink\": \"mena-coupon.netlify.app\",\r\n    \"howToUse\":[[{\"id\":\"ad-1\",\"type\":\"h3\",\"content\":\"Hey there\"}]]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -204,23 +237,29 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"raw": "{\r\n    \"storeDescription\":\"This is the description\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{bfaffiliate}}/api/v1/store/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a store",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/store/64ae9e11fbb41a9c5a2bbc65"
+						"url": "{{bfaffiliate}}/api/v1/store/653d1393f0e5c07fb4117ce8"
 					},
 					"response": []
 				}
@@ -239,11 +278,11 @@
 					"response": []
 				},
 				{
-					"name": "get a brand by storeName",
+					"name": "get a brand by brandName",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/name/Noon Food"
+						"url": "{{bfaffiliate}}/api/v1/brand/name/united state brand"
 					},
 					"response": []
 				},
@@ -252,7 +291,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/brand/6540fbd1dda9f41467d001f2"
 					},
 					"response": []
 				},
@@ -267,24 +306,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/brand/all?storeName=adidas",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"brand",
-								"all"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "adidas"
-								}
-							]
-						}
+						"url": "{{bfaffiliate}}/api/v1/brand/all"
 					},
 					"response": []
 				},
@@ -301,7 +323,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"brandName\": \"united state brand\",\r\n    \"brandPhotoURL\": \"http://mena-coupon.netlify.app\",\r\n    \"brandLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ]\r\n}",
+							"raw": "{\r\n    \"brandName\": \"Poraner Brand\",\r\n    \"brandPhotoURL\": \"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\",\r\n    \"brandLink\": \"mena-coupon.netlify.app\",\r\n    \"countries\": [\r\n        \"United State\"\r\n    ],\r\n    \"howToUse\":[[{\"id\":\"b-1\",\"type\":\"p\",\"content\":\"This is a description.\"}]]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -321,27 +343,33 @@
 								"token": "{{ADMINTOKEN}}"
 							}
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"raw": "{\r\n    \"countries\": [\r\n        \"Netherlands\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{bfaffiliate}}/api/v1/brand/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/brand/6540a3f0b21cdae95b3b6e5a"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a brand",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/brand/64ae9e11fbb41a9c5a2bbc65"
+						"url": "{{bfaffiliate}}/api/v1/brand/6540a30eb21cdae95b3b6e4e"
 					},
 					"response": []
 				}
@@ -351,20 +379,11 @@
 			"name": "Category",
 			"item": [
 				{
-					"name": "get all categories client",
+					"name": "get a category by categoryName",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category"
-					},
-					"response": []
-				},
-				{
-					"name": "get a category by storeName",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/name/Noon Food"
+						"url": "{{bfaffiliate}}/api/v1/category/name/Men Fashion"
 					},
 					"response": []
 				},
@@ -373,12 +392,12 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/category/653faae27447e968e1407d9c"
 					},
 					"response": []
 				},
 				{
-					"name": "get all categories admin",
+					"name": "get all categories",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -388,24 +407,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/category/all?storeName=adidas",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"category",
-								"all"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "adidas"
-								}
-							]
-						}
+						"url": "{{bfaffiliate}}/api/v1/category"
 					},
 					"response": []
 				},
@@ -422,7 +424,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\": \"united state category\"\r\n}",
+							"raw": "{\r\n    \"categoryName\": \"oman category\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -442,27 +444,33 @@
 								"token": "{{ADMINTOKEN}}"
 							}
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"Misti\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{bfaffiliate}}/api/v1/category/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/category/6540a513b21cdae95b3b6e78"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a category",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/category/64ae9e11fbb41a9c5a2bbc65"
+						"url": "{{bfaffiliate}}/api/v1/category/6540af1f27bedc1aa6f4ac8a"
 					},
 					"response": []
 				}
@@ -485,7 +493,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/name/Noon Food"
+						"url": "{{bfaffiliate}}/api/v1/campaign/name/united state campaign"
 					},
 					"response": []
 				},
@@ -494,7 +502,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/campaign/6540ee463dbcde687d8d2b48"
 					},
 					"response": []
 				},
@@ -509,24 +517,7 @@
 						},
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/campaign/all?storeName=adidas",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"campaign",
-								"all"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "adidas"
-								}
-							]
-						}
+						"url": "{{bfaffiliate}}/api/v1/campaign/all"
 					},
 					"response": []
 				},
@@ -543,7 +534,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"campaignName\": \"united state campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
+							"raw": "{\r\n    \"campaignName\": \"Black Friday Campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -563,27 +554,33 @@
 								"token": "{{ADMINTOKEN}}"
 							}
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"raw": "{\r\n    \"campaignName\":\"Squad campaign\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{bfaffiliate}}/api/v1/campaign/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a campaign",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/campaign/64ae9e11fbb41a9c5a2bbc65"
+						"url": "{{bfaffiliate}}/api/v1/campaign/6540a6d2b21cdae95b3b6e98"
 					},
 					"response": []
 				}
@@ -593,7 +590,7 @@
 			"name": "Network",
 			"item": [
 				{
-					"name": "get all networks client",
+					"name": "get all networks",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -606,7 +603,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/name/Noon Food"
+						"url": "{{bfaffiliate}}/api/v1/network/name/Alpha network f"
 					},
 					"response": []
 				},
@@ -615,39 +612,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/6533adb2f843da5b1da10063"
-					},
-					"response": []
-				},
-				{
-					"name": "get all network admin",
-					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": {
-								"token": "{{ADMINTOKEN}}"
-							}
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/network/all?storeName=adidas",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"network",
-								"all"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "adidas"
-								}
-							]
-						}
+						"url": "{{bfaffiliate}}/api/v1/network/6540dd8752921d6ccbaded5e"
 					},
 					"response": []
 				},
@@ -664,7 +629,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"campaignName\": \"united state campaign\",\r\n    \"campaignPhotoURL\":\"mena-coupon.netlify.app\",\r\n    \"countries\":[\"Canada\",\"United State\"],\r\n    \"endPeriod\":\"10/10/2024\"\r\n}",
+							"raw": "{\r\n    \"networkName\":\"Alpha network\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -684,27 +649,33 @@
 								"token": "{{ADMINTOKEN}}"
 							}
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"description\":\"This is the description\"\r\n}",
+							"raw": "{\r\n    \"networkName\":\"ExpertSquad\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "{{bfaffiliate}}/api/v1/network/6533adb2f843da5b1da10063"
+						"url": "{{bfaffiliate}}/api/v1/network/653e8cd866dd90a2976e117a"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a network",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/network/64ae9e11fbb41a9c5a2bbc65"
+						"url": "{{bfaffiliate}}/api/v1/network/6540dcc447c5662f6ad4dfbc"
 					},
 					"response": []
 				}
@@ -725,7 +696,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post/search?searchTerm=ad",
+							"raw": "{{bfaffiliate}}/api/v1/post/search?searchTerm=canada store erro",
 							"host": [
 								"{{bfaffiliate}}"
 							],
@@ -738,7 +709,7 @@
 							"query": [
 								{
 									"key": "searchTerm",
-									"value": "ad"
+									"value": "canada store erro"
 								}
 							]
 						}
@@ -757,7 +728,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post/search/all?searchTerm=un",
+							"raw": "{{bfaffiliate}}/api/v1/post/search/all?searchTerm=canada store erro",
 							"host": [
 								"{{bfaffiliate}}"
 							],
@@ -771,10 +742,59 @@
 							"query": [
 								{
 									"key": "searchTerm",
-									"value": "un"
+									"value": "canada store erro"
 								}
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts client",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{bfaffiliate}}/api/v1/post?category=united state category",
+							"host": [
+								"{{bfaffiliate}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"post"
+							],
+							"query": [
+								{
+									"key": "category",
+									"value": "united state category"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all posts admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/all"
+					},
+					"response": []
+				},
+				{
+					"name": "get a post",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{bfaffiliate}}/api/v1/post/653e8e828912eabf0c0f8eab"
 					},
 					"response": []
 				},
@@ -791,7 +811,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"postTitle\":\"united state post1\",\r\n    \"storeName\":\"united state store\",\r\n    \"brandName\":\"united state brand\",\r\n    \"categoryName\":\"united state category\",\r\n    \"campaignName\":\"united state campaign\",\r\n    \"expireDate\":\"10/10/2024\",\r\n    \"countries\":[\"Canada\"],\r\n    \"postType\":\"Coupon\",\r\n    \"couponCode\":\"ALPHA1\"\r\n}",
+							"raw": "{\r\n    \"postTitle\":\"united state post1\",\r\n    \"storeName\":\"canada store erro\",\r\n    \"brandName\":\"united state brand\",\r\n    \"categoryName\":\"united state category\",\r\n    \"campaignName\":\"united state campaign\",\r\n    \"networkName\":\"ExpertSquad\",\r\n    \"expireDate\":\"10/10/2024\",\r\n    \"countries\":[\"Canada\"],\r\n    \"postType\":\"Coupon\",\r\n    \"couponCode\":\"ALPHA1\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -803,89 +823,50 @@
 					"response": []
 				},
 				{
-					"name": "get all posts client",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post?storeName=Noon",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"post"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "Noon"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get all posts admin",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{bfaffiliate}}/api/v1/post/all?storeName=Adidas",
-							"host": [
-								"{{bfaffiliate}}"
-							],
-							"path": [
-								"api",
-								"v1",
-								"post",
-								"all"
-							],
-							"query": [
-								{
-									"key": "storeName",
-									"value": "Adidas"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "get a post",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/6533c6a8f267b27489641dbc"
-					},
-					"response": []
-				},
-				{
 					"name": "update a post",
 					"request": {
-						"method": "PUT",
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PATCH",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/6474d29ad48d9031937af9dc"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"postTitle\":\"Best offer upto 1% off😁\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/post/6540a8c9b21cdae95b3b6ec4"
 					},
 					"response": []
 				},
 				{
 					"name": "revealed post",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/revealed/64aea20be235d356c7c7e574"
+						"url": "{{bfaffiliate}}/api/v1/post/revealed/6540a8c9b21cdae95b3b6ec4"
 					},
 					"response": []
 				},
 				{
 					"name": "delete a post",
 					"request": {
-						"method": "PUT",
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/post/6474d8392f4a47a40d4932af"
+						"url": "{{bfaffiliate}}/api/v1/post/6540eebb2b76adcaf1eb8b71"
 					},
 					"response": []
 				}
@@ -915,7 +896,7 @@
 				{
 					"name": "update a post",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/user/notification/readed/64787233c6db631a4268b74b"
 					},
@@ -929,16 +910,55 @@
 				{
 					"name": "add carousel",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": "{{bfaffiliate}}/api/v1/carousel/add"
+					},
+					"response": []
+				},
+				{
+					"name": "update a carousel by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"country\":\"United State\",\r\n    \"items\":[\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        },\r\n        {\r\n            \"photoURL\":\"https://c.saavncdn.com/580/Poraner-Poran-Pakhi-re-Bengali-2022-20220610163840-500x500.jpg\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{bfaffiliate}}/api/v1/carousel/65425a59a8b055504402a58e"
 					},
 					"response": []
 				},
 				{
 					"name": "get carousel",
 					"request": {
-						"method": "POST",
+						"method": "GET",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/carousel"
 					},
@@ -1008,7 +1028,7 @@
 				{
 					"name": "update a role",
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"url": "{{bfaffiliate}}/api/v1/administrators/65030401dc3d20c655e3ce35"
 					},
@@ -1017,9 +1037,15 @@
 				{
 					"name": "delete a role",
 					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMINTOKEN}}"
+							}
+						},
 						"method": "DELETE",
 						"header": [],
-						"url": "{{bfaffiliate}}/api/v1/administrators/6503042ddc3d20c655e3ce3a"
+						"url": "{{bfaffiliate}}/api/v1/administrators/6540b0c8036863efc77c6a3e"
 					},
 					"response": []
 				}
