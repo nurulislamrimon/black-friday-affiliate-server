@@ -278,6 +278,7 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
         ? totalDocuments[0].totalDocuments
         : 0,
     },
+    // data: filters,
     data: result,
   };
 };

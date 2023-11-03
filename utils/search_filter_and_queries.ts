@@ -25,6 +25,16 @@ export const search_filter_and_queries = (
       $or: searchableFields.map((field) => {
         if (modelName === "post" && field === "storeName") {
           return { "store.storeName": { $regex: searchTerm, $options: "i" } };
+        } else if (modelName === "post" && field === "brandName") {
+          return { "brand.brandName": { $regex: searchTerm, $options: "i" } };
+        } else if (modelName === "post" && field === "categoryName") {
+          return {
+            "category.categoryName": { $regex: searchTerm, $options: "i" },
+          };
+        } else if (modelName === "post" && field === "campaignName") {
+          return {
+            "campaign.campaignName": { $regex: searchTerm, $options: "i" },
+          };
         } else {
           return {
             [field]: { $regex: searchTerm, $options: "i" },
@@ -41,6 +51,12 @@ export const search_filter_and_queries = (
           if (modelName === "post" && field === "storeName") {
             return { "store.storeName": value };
             // return { "store.storeName": { $regex: value, $options: "i" } };
+          } else if (modelName === "post" && field === "brandName") {
+            return { "brand.brandName": value };
+          } else if (modelName === "post" && field === "categoryName") {
+            return { "category.categoryName": value };
+          } else if (modelName === "post" && field === "campaignName") {
+            return { "campaign.campaignName": value };
           } else {
             return {
               [field]: { $regex: value, $options: "i" },

@@ -278,6 +278,7 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
                 ? totalDocuments[0].totalDocuments
                 : 0,
         },
+        // data: filters,
         data: result,
     };
 });
