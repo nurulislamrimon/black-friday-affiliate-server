@@ -39,61 +39,22 @@ exports.deleteManyPostController = exports.deleteAPostController = exports.revea
 const PostServices = __importStar(require("./post.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
-const store_services_1 = require("../store.module/store.services");
-const brand_services_1 = require("../brand.module/brand.services");
-const category_services_1 = require("../category.module/category.services");
-const campaign_services_1 = require("../campaign.module/campaign.services");
-const network_services_1 = require("../network.module/network.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // add new Post controller
 exports.addNewPostController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { postTitle, storeName, brandName, categoryName, campaignName, networkName, expireDate, countries, postType, } = req.body;
-    if (!postTitle ||
-        !storeName ||
-        !brandName ||
-        !categoryName ||
-        !campaignName ||
-        !expireDate ||
-        !countries ||
-        !postType) {
-        throw new Error("Please enter required information:  postTitle, storeName, brandName, categoryName, campaignName, expireDate, countries, postType!");
+    const { postTitle, expireDate, countries, postType } = req.body;
+    if (!postTitle || !expireDate || !countries || !postType) {
+        throw new Error("Please enter required information:  postTitle, expireDate, countries, postType!");
     }
     else {
         const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const isStoreExist = yield (0, store_services_1.getStoreByStoreNameService)(storeName);
-        const isBrandExist = yield (0, brand_services_1.getBrandByBrandNameService)(brandName);
-        const isCategoryExist = yield (0, category_services_1.getCategoryByCategoryNameService)(categoryName);
-        const isCampaignExist = yield (0, campaign_services_1.getCampaignByCampaignNameService)(campaignName);
-        if (!isStoreExist) {
-            throw new Error("Invalid store name!");
-        }
-        else if (!isBrandExist) {
-            throw new Error("Invalid brand name!");
-        }
-        else if (!isCategoryExist) {
-            throw new Error("Invalid category name!");
-        }
-        else if (!isCampaignExist) {
-            throw new Error("Invalid Campaign name!");
-        }
-        else {
-            const newPost = Object.assign(Object.assign({}, req.body), { store: isStoreExist._id, brand: isBrandExist._id, category: isCategoryExist._id, campaign: isCampaignExist._id, postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) });
-            if (networkName) {
-                const isNetworkExist = yield (0, network_services_1.getNetworkByNetworkNameService)(networkName);
-                if (!isNetworkExist) {
-                    throw new Error("Invalid network name!");
-                }
-                else {
-                    newPost.network = isNetworkExist._id;
-                }
-            }
-            const result = yield PostServices.addNewPostService(newPost);
-            res.send({
-                success: true,
-                data: result,
-            });
-            console.log(`Post ${result._id} is added!`);
-        }
+        const newPost = Object.assign(Object.assign({}, req.body), { store: { storeName: req.body.storeName }, brand: { brandName: req.body.brandName }, category: { categoryName: req.body.categoryName }, network: { networkName: req.body.networkName }, campaign: { campaignName: req.body.brandName }, postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) });
+        const result = yield PostServices.addNewPostService(newPost);
+        res.send({
+            success: true,
+            data: result,
+        });
+        console.log(`Post ${result._id} is added!`);
     }
 }));
 // add new Post controller

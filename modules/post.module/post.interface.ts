@@ -14,11 +14,25 @@ export default interface IPost {
   isVerified: boolean;
   revealed: number;
 
-  store: ObjectId;
-  brand: ObjectId;
-  category: ObjectId;
-  campaign: ObjectId;
-  network?: ObjectId;
+  store: { storeName: string; storePhotoURL: string; moreAboutStore: ObjectId };
+  brand?: {
+    brandName: string;
+    brandPhotoURL: string;
+    moreAboutBrand: ObjectId;
+  };
+  category?: {
+    categoryName: string;
+    moreAboutCategory: ObjectId;
+  };
+  campaign?: {
+    campaignName: string;
+    campaignPhotoURL: string;
+    moreAboutCampaign: ObjectId;
+  };
+  network?: {
+    networkName: string;
+    moreAboutNetwork: ObjectId;
+  };
 
   postBy: {
     name: string;
