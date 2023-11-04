@@ -114,8 +114,8 @@ postSchema.pre("validate", async function (next) {
         (this.postType === "Voucher" && !this.dealLink) ||
         (this.postType === "Voucher" && !this.network?.networkName)
       ) {
-        throw new Error("Please provide voucher link and Influencer Network!");
-      } else if (this.network?.networkName) {
+        throw new Error("Please provide dealLink and Influencer Network!");
+      } else if (this.postType !== "Deal" && this.network?.networkName) {
         // for coupon and voucher network
         const isNetworkExist = await getNetworkByNetworkNameService(
           this.network?.networkName
@@ -124,7 +124,6 @@ postSchema.pre("validate", async function (next) {
           throw new Error("Please enter a valid network name!");
         } else {
           this.network.moreAboutNetwork = isNetworkExist._id as any;
-          next();
         }
       } else if (this.postType === "Deal") {
         // for products
@@ -154,7 +153,6 @@ postSchema.pre("validate", async function (next) {
                 this.brand.moreAboutBrand = isBrandExist._id as any;
                 this.brand.brandPhotoURL = isBrandExist.brandPhotoURL;
               }
-              next();
             }
           }
         }

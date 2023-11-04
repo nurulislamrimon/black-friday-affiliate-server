@@ -45,54 +45,20 @@ const searchGloballyAdminService = (query) => __awaiter(void 0, void 0, void 0, 
 exports.searchGloballyAdminService = searchGloballyAdminService;
 //== get Post by name
 const getPostByPostTitleService = (postTitle) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.findOne({ postTitle: postTitle }).populate({
-        path: "store brand category campaign",
-        select: {
-            storeName: 1,
-            storePhotoURL: 1,
-            brandName: 1,
-            brandPhotoURL: 1,
-            categoryName: 1,
-            campaignName: 1,
-            campaignPhotoURL: 1,
-        },
-    });
+    const result = yield post_model_1.default.findOne({ postTitle: postTitle });
     return result;
 });
 exports.getPostByPostTitleService = getPostByPostTitleService;
 //== get Post by objectId
 const getPostByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield post_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 }).populate({
-        path: "store brand category campaign",
-        select: {
-            storeName: 1,
-            storePhotoURL: 1,
-            brandName: 1,
-            brandPhotoURL: 1,
-            categoryName: 1,
-            campaignName: 1,
-            campaignPhotoURL: 1,
-        },
-    });
+    const result = yield post_model_1.default.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
     return result;
 });
 exports.getPostByIdService = getPostByIdService;
 //== create new Post
 const addNewPostService = (post) => __awaiter(void 0, void 0, void 0, function* () {
-    const createdPost = yield post_model_1.default.create(post);
-    const result = yield createdPost.populate({
-        path: "store brand category campaign",
-        select: {
-            storeName: 1,
-            storePhotoURL: 1,
-            brandName: 1,
-            brandPhotoURL: 1,
-            categoryName: 1,
-            campaignName: 1,
-            campaignPhotoURL: 1,
-        },
-    });
-    yield (0, exports.setPostAsUnreadToUserService)(createdPost._id);
+    const result = yield post_model_1.default.create(post);
+    yield (0, exports.setPostAsUnreadToUserService)(result._id);
     return result;
 });
 exports.addNewPostService = addNewPostService;
@@ -125,160 +91,17 @@ const getAllPosts = (query, isActivePostOnly) => __awaiter(void 0, void 0, void 
     };
     // client side only
     isActivePostOnly && filters.$and.push(validityCheck);
-    const result = yield post_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "stores",
-                localField: "store",
-                foreignField: "_id",
-                as: "storePopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "brands",
-                localField: "brand",
-                foreignField: "_id",
-                as: "brandPopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "categories",
-                localField: "category",
-                foreignField: "_id",
-                as: "categoryPopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "campaigns",
-                localField: "campaign",
-                foreignField: "_id",
-                as: "campaignPopulated",
-            },
-        },
-        {
-            $addFields: {
-                store: { $arrayElemAt: ["$storePopulated", 0] },
-                brand: { $arrayElemAt: ["$brandPopulated", 0] },
-                category: { $arrayElemAt: ["$categoryPopulated", 0] },
-                campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
-            },
-        },
-        {
-            $project: {
-                "store.storeName": 1,
-                "store.storePhotoURL": 1,
-                "brand.brandName": 1,
-                "brand.brandPhotoURL": 1,
-                "category.categoryName": 1,
-                "campaign.campaignName": 1,
-                "campaign.campaignPhotoURL": 1,
-                postTitle: 1,
-                postPhotoURL: 1,
-                productPreviewLink: 1,
-                postType: 1,
-                dealLink: 1,
-                discountPercentage: 1,
-                expireDate: 1,
-                countries: 1,
-                isVerified: 1,
-                revealed: 1,
-                postDescription: 1,
-                couponCode: 1,
-                createdAt: 1,
-            },
-        },
-        {
-            $match: filters,
-        },
-        {
-            $sort: { [sortBy]: sortOrder },
-        },
-        {
-            $skip: skip,
-        },
-        {
-            $limit: limit,
-        },
-    ]);
-    const totalDocuments = yield post_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "stores",
-                localField: "store",
-                foreignField: "_id",
-                as: "storePopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "brands",
-                localField: "brand",
-                foreignField: "_id",
-                as: "brandPopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "categories",
-                localField: "category",
-                foreignField: "_id",
-                as: "categoryPopulated",
-            },
-        },
-        {
-            $lookup: {
-                from: "campaigns",
-                localField: "campaign",
-                foreignField: "_id",
-                as: "campaignPopulated",
-            },
-        },
-        {
-            $addFields: {
-                store: { $arrayElemAt: ["$storePopulated", 0] },
-                brand: { $arrayElemAt: ["$brandPopulated", 0] },
-                category: { $arrayElemAt: ["$categoryPopulated", 0] },
-                campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
-            },
-        },
-        {
-            $project: {
-                "store.storeName": 1,
-                "store.storePhotoURL": 1,
-                "brand.brandName": 1,
-                "brand.brandPhotoURL": 1,
-                "category.categoryName": 1,
-                "campaign.campaignName": 1,
-                "campaign.campaignPhotoURL": 1,
-                postTitle: 1,
-                postType: 1,
-                expireDate: 1,
-                countries: 1,
-                isVerified: 1,
-                revealed: 1,
-                couponCode: 1,
-                createdAt: 1,
-            },
-        },
-        {
-            $match: filters,
-        },
-        {
-            $count: "totalDocuments",
-        },
-    ]);
+    const result = yield post_model_1.default.find(filters)
+        .sort({ [sortBy]: sortOrder })
+        .skip(skip)
+        .limit(limit);
+    const totalDocuments = yield post_model_1.default.countDocuments(filters);
     return {
         meta: {
             page,
             limit,
-            totalDocuments: totalDocuments.length
-                ? totalDocuments[0].totalDocuments
-                : 0,
+            totalDocuments: totalDocuments,
         },
-        // data: filters,
         data: result,
     };
 });

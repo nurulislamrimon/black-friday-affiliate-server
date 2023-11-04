@@ -22,56 +22,19 @@ export const searchGloballyAdminService = async (query: object) => {
 };
 //== get Post by name
 export const getPostByPostTitleService = async (postTitle: string) => {
-  const result = await Post.findOne({ postTitle: postTitle }).populate({
-    path: "store brand category campaign",
-    select: {
-      storeName: 1,
-      storePhotoURL: 1,
-      brandName: 1,
-      brandPhotoURL: 1,
-      categoryName: 1,
-      campaignName: 1,
-      campaignPhotoURL: 1,
-    },
-  });
+  const result = await Post.findOne({ postTitle: postTitle });
   return result;
 };
 //== get Post by objectId
 export const getPostByIdService = async (id: Types.ObjectId) => {
-  const result = await Post.findOne(
-    { _id: id },
-    { postBy: 0, updateBy: 0 }
-  ).populate({
-    path: "store brand category campaign",
-    select: {
-      storeName: 1,
-      storePhotoURL: 1,
-      brandName: 1,
-      brandPhotoURL: 1,
-      categoryName: 1,
-      campaignName: 1,
-      campaignPhotoURL: 1,
-    },
-  });
+  const result = await Post.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
   return result;
 };
 
 //== create new Post
 export const addNewPostService = async (post: object) => {
-  const createdPost = await Post.create(post);
-  const result = await createdPost.populate({
-    path: "store brand category campaign",
-    select: {
-      storeName: 1,
-      storePhotoURL: 1,
-      brandName: 1,
-      brandPhotoURL: 1,
-      categoryName: 1,
-      campaignName: 1,
-      campaignPhotoURL: 1,
-    },
-  });
-  await setPostAsUnreadToUserService(createdPost._id);
+  const result = await Post.create(post);
+  await setPostAsUnreadToUserService(result._id);
   return result;
 };
 
@@ -124,161 +87,18 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
   // client side only
   isActivePostOnly && filters.$and.push(validityCheck);
 
-  const result = await Post.aggregate([
-    {
-      $lookup: {
-        from: "stores",
-        localField: "store",
-        foreignField: "_id",
-        as: "storePopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "brands",
-        localField: "brand",
-        foreignField: "_id",
-        as: "brandPopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "categoryPopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "campaigns",
-        localField: "campaign",
-        foreignField: "_id",
-        as: "campaignPopulated",
-      },
-    },
-    {
-      $addFields: {
-        store: { $arrayElemAt: ["$storePopulated", 0] },
-        brand: { $arrayElemAt: ["$brandPopulated", 0] },
-        category: { $arrayElemAt: ["$categoryPopulated", 0] },
-        campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
-      },
-    },
-    {
-      $project: {
-        "store.storeName": 1,
-        "store.storePhotoURL": 1,
-        "brand.brandName": 1,
-        "brand.brandPhotoURL": 1,
-        "category.categoryName": 1,
-        "campaign.campaignName": 1,
-        "campaign.campaignPhotoURL": 1,
-        postTitle: 1,
-        postPhotoURL: 1,
-        productPreviewLink: 1,
-        postType: 1,
-        dealLink: 1,
-        discountPercentage: 1,
-        expireDate: 1,
-        countries: 1,
-        isVerified: 1,
-        revealed: 1,
-        postDescription: 1,
-        couponCode: 1,
-        createdAt: 1,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-  ]);
+  const result = await Post.find(filters)
+    .sort({ [sortBy]: sortOrder })
+    .skip(skip)
+    .limit(limit);
 
-  const totalDocuments = await Post.aggregate([
-    {
-      $lookup: {
-        from: "stores",
-        localField: "store",
-        foreignField: "_id",
-        as: "storePopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "brands",
-        localField: "brand",
-        foreignField: "_id",
-        as: "brandPopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        localField: "category",
-        foreignField: "_id",
-        as: "categoryPopulated",
-      },
-    },
-    {
-      $lookup: {
-        from: "campaigns",
-        localField: "campaign",
-        foreignField: "_id",
-        as: "campaignPopulated",
-      },
-    },
-    {
-      $addFields: {
-        store: { $arrayElemAt: ["$storePopulated", 0] },
-        brand: { $arrayElemAt: ["$brandPopulated", 0] },
-        category: { $arrayElemAt: ["$categoryPopulated", 0] },
-        campaign: { $arrayElemAt: ["$campaignPopulated", 0] },
-      },
-    },
-    {
-      $project: {
-        "store.storeName": 1,
-        "store.storePhotoURL": 1,
-        "brand.brandName": 1,
-        "brand.brandPhotoURL": 1,
-        "category.categoryName": 1,
-        "campaign.campaignName": 1,
-        "campaign.campaignPhotoURL": 1,
-        postTitle: 1,
-        postType: 1,
-        expireDate: 1,
-        countries: 1,
-        isVerified: 1,
-        revealed: 1,
-        couponCode: 1,
-        createdAt: 1,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $count: "totalDocuments",
-    },
-  ]);
+  const totalDocuments = await Post.countDocuments(filters);
   return {
     meta: {
       page,
       limit,
-      totalDocuments: totalDocuments.length
-        ? totalDocuments[0].totalDocuments
-        : 0,
+      totalDocuments: totalDocuments,
     },
-    // data: filters,
     data: result,
   };
 };

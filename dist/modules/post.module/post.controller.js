@@ -31,6 +31,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -40,6 +51,8 @@ const PostServices = __importStar(require("./post.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = require("mongoose");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
+const store_services_1 = require("../store.module/store.services");
+const checkIsExistAndGetFields_1 = require("../../utils/checkIsExistAndGetFields");
 // add new Post controller
 exports.addNewPostController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { postTitle, expireDate, countries, postType } = req.body;
@@ -48,7 +61,7 @@ exports.addNewPostController = (0, catchAsync_1.default)((req, res, next) => __a
     }
     else {
         const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const newPost = Object.assign(Object.assign({}, req.body), { store: { storeName: req.body.storeName }, brand: { brandName: req.body.brandName }, category: { categoryName: req.body.categoryName }, network: { networkName: req.body.networkName }, campaign: { campaignName: req.body.brandName }, postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) });
+        const newPost = Object.assign(Object.assign({}, req.body), { store: { storeName: req.body.storeName }, brand: { brandName: req.body.brandName }, category: { categoryName: req.body.categoryName }, network: { networkName: req.body.networkName }, campaign: { campaignName: req.body.campaignName }, postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) });
         const result = yield PostServices.addNewPostService(newPost);
         res.send({
             success: true,
@@ -105,6 +118,7 @@ exports.getAllActivePostsController = (0, catchAsync_1.default)((req, res, next)
 }));
 // update a Post controller
 exports.updateAPostController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const _c = req.body, { storeName, brandName, categoryName, campaignName, networkName } = _c, rest = __rest(_c, ["storeName", "brandName", "categoryName", "campaignName", "networkName"]);
     const postId = new mongoose_1.Types.ObjectId(req.params.id);
     const existPost = yield PostServices.getPostByIdService(postId);
     if (!existPost) {
@@ -112,7 +126,21 @@ exports.updateAPostController = (0, catchAsync_1.default)((req, res, next) => __
     }
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield PostServices.updateAPostService(postId, Object.assign(Object.assign({}, req.body), { existPost, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
+        const updateData = Object.assign(Object.assign({}, rest), { existPost, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) });
+        // if (storeName) {
+        //   const isStoreExist = await getStoreByStoreNameService(storeName);
+        //   if (!isStoreExist) {
+        //     throw new Error("Invalid store name!");
+        //   } else {
+        //     updateData.store = {
+        //       storeName,
+        //       storePhotoURL: isStoreExist.storePhotoURL,
+        //       moreAboutStore: isStoreExist._id,
+        //     };
+        //   }
+        // }
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndGetFields)(storeName, store_services_1.getStoreByStoreNameService, updateData);
+        const result = yield PostServices.updateAPostService(postId, updateData);
         res.send({
             success: true,
             data: result,

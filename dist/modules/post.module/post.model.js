@@ -120,9 +120,9 @@ postSchema.pre("validate", function (next) {
                 }
                 else if ((this.postType === "Voucher" && !this.dealLink) ||
                     (this.postType === "Voucher" && !((_c = this.network) === null || _c === void 0 ? void 0 : _c.networkName))) {
-                    throw new Error("Please provide voucher link and Influencer Network!");
+                    throw new Error("Please provide dealLink and Influencer Network!");
                 }
-                else if ((_d = this.network) === null || _d === void 0 ? void 0 : _d.networkName) {
+                else if (this.postType !== "Deal" && ((_d = this.network) === null || _d === void 0 ? void 0 : _d.networkName)) {
                     // for coupon and voucher network
                     const isNetworkExist = yield (0, network_services_1.getNetworkByNetworkNameService)((_e = this.network) === null || _e === void 0 ? void 0 : _e.networkName);
                     if (!isNetworkExist) {
@@ -130,7 +130,6 @@ postSchema.pre("validate", function (next) {
                     }
                     else {
                         this.network.moreAboutNetwork = isNetworkExist._id;
-                        next();
                     }
                 }
                 else if (this.postType === "Deal") {
@@ -156,7 +155,6 @@ postSchema.pre("validate", function (next) {
                                     this.brand.moreAboutBrand = isBrandExist._id;
                                     this.brand.brandPhotoURL = isBrandExist.brandPhotoURL;
                                 }
-                                next();
                             }
                         }
                     }

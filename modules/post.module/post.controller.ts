@@ -3,6 +3,8 @@ import * as PostServices from "./post.services";
 import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import catchAsync from "../../Shared/catchAsync";
+import { getStoreByStoreNameService } from "../store.module/store.services";
+import { checkIsExistAndGetFields } from "../../utils/checkIsExistAndGetFields";
 
 // add new Post controller
 export const addNewPostController = catchAsync(
@@ -22,7 +24,7 @@ export const addNewPostController = catchAsync(
         brand: { brandName: req.body.brandName },
         category: { categoryName: req.body.categoryName },
         network: { networkName: req.body.networkName },
-        campaign: { campaignName: req.body.brandName },
+        campaign: { campaignName: req.body.campaignName },
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       };
 
@@ -101,18 +103,46 @@ export const getAllActivePostsController = catchAsync(
 // update a Post controller
 export const updateAPostController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
+    const {
+      storeName,
+      brandName,
+      categoryName,
+      campaignName,
+      networkName,
+      ...rest
+    } = req.body;
+
     const postId = new Types.ObjectId(req.params.id);
     const existPost = await PostServices.getPostByIdService(postId);
-
     if (!existPost) {
       throw new Error("Post doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await PostServices.updateAPostService(postId, {
-        ...req.body,
+      const updateData = {
+        ...rest,
         existPost,
         updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
-      });
+      };
+      // if (storeName) {
+      //   const isStoreExist = await getStoreByStoreNameService(storeName);
+      //   if (!isStoreExist) {
+      //     throw new Error("Invalid store name!");
+      //   } else {
+      //     updateData.store = {
+      //       storeName,
+      //       storePhotoURL: isStoreExist.storePhotoURL,
+      //       moreAboutStore: isStoreExist._id,
+      //     };
+      //   }
+      // }
+
+      await checkIsExistAndGetFields(
+        storeName,
+        getStoreByStoreNameService,
+        updateData
+      );
+
+      const result = await PostServices.updateAPostService(postId, updateData);
 
       res.send({
         success: true,
