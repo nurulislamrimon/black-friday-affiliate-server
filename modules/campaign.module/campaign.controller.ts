@@ -53,13 +53,13 @@ export const getAllActiveCampaignsController = catchAsync(
 // add new Campaign controller
 export const addNewCampaignController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { campaignPhotoURL, campaignName, countries } = req.body;
+    const { campaignPhotoURL, campaignName } = req.body;
     const existCampaign =
       await campaignServices.getCampaignByCampaignNameService(campaignName);
 
-    if (!campaignPhotoURL || !campaignName || !countries) {
+    if (!campaignPhotoURL || !campaignName) {
       throw new Error(
-        "Please enter required information:  campaignName, campaignPhotoURL, countries!"
+        "Please enter required information:  campaignName, campaignPhotoURL!"
       );
     } else if (existCampaign?.campaignName === campaignName) {
       throw new Error("Campaign already exist!");

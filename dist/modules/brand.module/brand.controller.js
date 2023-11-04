@@ -78,10 +78,10 @@ exports.getAllActiveBrandsController = (0, catchAsync_1.default)((req, res, next
 }));
 // add new Brand controller
 exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { brandPhotoURL, brandName, countries } = req.body;
+    const { brandPhotoURL, brandName } = req.body;
     const existBrand = yield brandServices.getBrandByBrandNameService(brandName);
-    if (!brandPhotoURL || !brandName || !countries) {
-        throw new Error("Please enter required information: brandPhotoURL, brandName, countries!");
+    if (!brandPhotoURL || !brandName) {
+        throw new Error("Please enter required information: brandPhotoURL, brandName!");
     }
     else if ((existBrand === null || existBrand === void 0 ? void 0 : existBrand.brandName) === brandName) {
         throw new Error("Brand already exist!");

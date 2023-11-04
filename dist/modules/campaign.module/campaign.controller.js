@@ -78,10 +78,10 @@ exports.getAllActiveCampaignsController = (0, catchAsync_1.default)((req, res, n
 }));
 // add new Campaign controller
 exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const { campaignPhotoURL, campaignName, countries } = req.body;
+    const { campaignPhotoURL, campaignName } = req.body;
     const existCampaign = yield campaignServices.getCampaignByCampaignNameService(campaignName);
-    if (!campaignPhotoURL || !campaignName || !countries) {
-        throw new Error("Please enter required information:  campaignName, campaignPhotoURL, countries!");
+    if (!campaignPhotoURL || !campaignName) {
+        throw new Error("Please enter required information:  campaignName, campaignPhotoURL!");
     }
     else if ((existCampaign === null || existCampaign === void 0 ? void 0 : existCampaign.campaignName) === campaignName) {
         throw new Error("Campaign already exist!");

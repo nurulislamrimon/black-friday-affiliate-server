@@ -37,7 +37,7 @@ const postRouter = express_1.default.Router();
  *@apiDescription add a new Post
  *@apiPermission admin and manager
  *@apiHeader token
- *@apiBody postTitle, storeName, postType, expireDate, countries, isVerified, couponCode, externalLink, postDescription,
+ *@apiBody postTitle, storeName, postType, expireDate, isVerified, couponCode, externalLink, postDescription,
  *@apiParam none
  *@apiQuery none
  *@apiSuccess {Object} added Post.

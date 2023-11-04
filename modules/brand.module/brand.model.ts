@@ -9,7 +9,6 @@ const brandSchema = new Schema<IBrand>(
     brandName: { type: String, required: true },
     brandPhotoURL: { type: String, validate: validator.isURL, required: true },
     brandLink: { type: String },
-    countries: [{ type: String, required: true, enum: countries }],
     brandDescription: String,
     howToUse: [
       [

@@ -3,7 +3,6 @@ import { Types } from "mongoose";
 export default interface ICampaign {
   campaignName: string;
   campaignPhotoURL: string;
-  countries: string[];
   startPeriod: Date;
   endPeriod: Date;
 

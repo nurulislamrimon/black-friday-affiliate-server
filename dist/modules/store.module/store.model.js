@@ -9,6 +9,7 @@ const mongoose_2 = require("mongoose");
 const storeSchema = new mongoose_1.Schema({
     storeName: { type: String, required: true },
     storeLink: { type: String, required: true, validate: validator_1.default.isURL },
+    storePhotoURL: { type: String, required: true, validate: validator_1.default.isURL },
     storeDescription: String,
     howToUse: [
         [

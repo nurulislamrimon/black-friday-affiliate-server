@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
-const countries_enum_1 = require("../../utils/constants/countries.enum");
 const campaignSchema = new mongoose_1.Schema({
     campaignName: { type: String, required: true },
     campaignPhotoURL: {
@@ -14,7 +13,6 @@ const campaignSchema = new mongoose_1.Schema({
         validate: validator_1.default.isURL,
         required: true,
     },
-    countries: [{ type: String, required: true, enum: countries_enum_1.countries }],
     startPeriod: { type: Date, default: Date.now() },
     endPeriod: { type: Date, required: true },
     postBy: {

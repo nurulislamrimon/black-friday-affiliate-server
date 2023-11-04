@@ -53,7 +53,7 @@ categoryRouter.get("/:id", categoryController.getACategoryByIdController);
  *@apiDescription add a new category
  *@apiPermission admin and manager
  *@apiHeader token
- *@apiBody photoURL, categoryName, countries,categoryExternalLink, description, howToUse
+ *@apiBody photoURL, categoryName, categoryExternalLink, description, howToUse
  *@apiParam none
  *@apiQuery none
  *@apiSuccess {Object} added category.

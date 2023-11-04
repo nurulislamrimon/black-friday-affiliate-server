@@ -53,7 +53,7 @@ networkRouter.get("/:id", networkController.getANetworkByIdController);
  *@apiDescription add a new Network
  *@apiPermission admin and manager
  *@apiHeader token
- *@apiBody photoURL, NetworkName, countries,NetworkExternalLink, description, howToUse
+ *@apiBody photoURL, NetworkName, NetworkExternalLink, description, howToUse
  *@apiParam none
  *@apiQuery none
  *@apiSuccess {Object} added Network.

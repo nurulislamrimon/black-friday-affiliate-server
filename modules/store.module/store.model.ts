@@ -7,6 +7,7 @@ const storeSchema = new Schema<IStore>(
   {
     storeName: { type: String, required: true },
     storeLink: { type: String, required: true, validate: validator.isURL },
+    storePhotoURL: { type: String, required: true, validate: validator.isURL },
     storeDescription: String,
     howToUse: [
       [

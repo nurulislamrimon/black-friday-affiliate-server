@@ -4,7 +4,6 @@ export default interface IBrand {
   brandName: string;
   brandPhotoURL: string;
   brandLink: string;
-  countries: string[];
 
   brandDescription?: string;
   howToUse?: {

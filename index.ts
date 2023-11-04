@@ -20,4 +20,4 @@ async function server() {
 
 server().catch((e) => console.log("Error:::::::", e));
 
-process.on("unhandledRejection", (e) => console.log(e));
+process.on("unhandledRejection", (e) => console.log("Promise rejected: ", e));

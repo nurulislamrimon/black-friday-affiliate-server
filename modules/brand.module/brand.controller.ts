@@ -51,14 +51,14 @@ export const getAllActiveBrandsController = catchAsync(
 // add new Brand controller
 export const addNewBrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { brandPhotoURL, brandName, countries } = req.body;
+    const { brandPhotoURL, brandName } = req.body;
     const existBrand = await brandServices.getBrandByBrandNameService(
       brandName
     );
 
-    if (!brandPhotoURL || !brandName || !countries) {
+    if (!brandPhotoURL || !brandName) {
       throw new Error(
-        "Please enter required information: brandPhotoURL, brandName, countries!"
+        "Please enter required information: brandPhotoURL, brandName!"
       );
     } else if (existBrand?.brandName === brandName) {
       throw new Error("Brand already exist!");

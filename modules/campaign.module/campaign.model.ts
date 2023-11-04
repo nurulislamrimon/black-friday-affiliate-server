@@ -12,7 +12,6 @@ const campaignSchema = new Schema<ICampaign>(
       validate: validator.isURL,
       required: true,
     },
-    countries: [{ type: String, required: true, enum: countries }],
     startPeriod: { type: Date, default: Date.now() },
     endPeriod: { type: Date, required: true },
 
