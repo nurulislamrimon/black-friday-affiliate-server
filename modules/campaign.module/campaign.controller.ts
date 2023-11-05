@@ -39,17 +39,6 @@ export const getACampaignByCampaignNameController = catchAsync(
     }
   }
 );
-// get all active Campaigns
-export const getAllActiveCampaignsController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await campaignServices.getAllActiveCampaigns(req.query);
-    res.send({
-      success: true,
-      ...result,
-    });
-    console.log(`${result?.data?.length} Campaigns are responsed!`);
-  }
-);
 // add new Campaign controller
 export const addNewCampaignController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -76,6 +65,17 @@ export const addNewCampaignController = catchAsync(
       });
       console.log(`Campaign ${result._id} is added!`);
     }
+  }
+);
+// get all active Campaigns
+export const getAllActiveCampaignsController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await campaignServices.getAllActiveCampaigns(req.query);
+    res.send({
+      success: true,
+      ...result,
+    });
+    console.log(`${result?.data?.length} Campaigns are responsed!`);
   }
 );
 // get all Campaigns
