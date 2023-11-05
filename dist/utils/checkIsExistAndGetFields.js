@@ -9,20 +9,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.checkIsExistAndGetFields = void 0;
-const checkIsExistAndGetFields = (fieldName, fn, existPayload) => __awaiter(void 0, void 0, void 0, function* () {
-    if (fieldName) {
-        const isExist = yield fn(fieldName);
+exports.checkIsExistAndAddFields = void 0;
+const checkIsExistAndAddFields = (dbName, fieldName, fn, existPayload) => __awaiter(void 0, void 0, void 0, function* () {
+    const key = Object.keys(fieldName)[0];
+    const value = fieldName[key];
+    if (value) {
+        const isExist = yield fn(value);
         if (!isExist) {
-            throw new Error(`Invalid ${[fieldName]} name ${fieldName}!`);
+            throw new Error(`Invalid ${key} name ${value}!`);
         }
         else {
-            existPayload.store = {
-                [fieldName]: fieldName,
-                storePhotoURL: isExist.storePhotoURL,
-                moreAboutStore: isExist._id,
+            const photoURL = `${dbName}PhotoURL`;
+            const moreAbout = `moreAbout${dbName
+                .slice(0, 1)
+                .toLocaleUpperCase()
+                .concat(dbName.slice(1))}`;
+            existPayload[dbName] = {
+                [key]: value,
+                [photoURL]: isExist[photoURL],
+                [moreAbout]: isExist._id,
             };
         }
     }
 });
-exports.checkIsExistAndGetFields = checkIsExistAndGetFields;
+exports.checkIsExistAndAddFields = checkIsExistAndAddFields;

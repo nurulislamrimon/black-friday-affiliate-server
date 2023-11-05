@@ -53,6 +53,10 @@ const mongoose_1 = require("mongoose");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 const store_services_1 = require("../store.module/store.services");
 const checkIsExistAndGetFields_1 = require("../../utils/checkIsExistAndGetFields");
+const brand_services_1 = require("../brand.module/brand.services");
+const category_services_1 = require("../category.module/category.services");
+const campaign_services_1 = require("../campaign.module/campaign.services");
+const network_services_1 = require("../network.module/network.services");
 // add new Post controller
 exports.addNewPostController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { postTitle, expireDate, countries, postType } = req.body;
@@ -127,25 +131,17 @@ exports.updateAPostController = (0, catchAsync_1.default)((req, res, next) => __
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
         const updateData = Object.assign(Object.assign({}, rest), { existPost, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) });
-        // if (storeName) {
-        //   const isStoreExist = await getStoreByStoreNameService(storeName);
-        //   if (!isStoreExist) {
-        //     throw new Error("Invalid store name!");
-        //   } else {
-        //     updateData.store = {
-        //       storeName,
-        //       storePhotoURL: isStoreExist.storePhotoURL,
-        //       moreAboutStore: isStoreExist._id,
-        //     };
-        //   }
-        // }
-        yield (0, checkIsExistAndGetFields_1.checkIsExistAndGetFields)(storeName, store_services_1.getStoreByStoreNameService, updateData);
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndAddFields)("store", { storeName }, store_services_1.getStoreByStoreNameService, updateData);
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndAddFields)("brand", { brandName }, brand_services_1.getBrandByBrandNameService, updateData);
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndAddFields)("category", { categoryName }, category_services_1.getCategoryByCategoryNameService, updateData);
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndAddFields)("campaign", { campaignName }, campaign_services_1.getCampaignByCampaignNameService, updateData);
+        yield (0, checkIsExistAndGetFields_1.checkIsExistAndAddFields)("network", { networkName }, network_services_1.getNetworkByNetworkNameService, updateData);
         const result = yield PostServices.updateAPostService(postId, updateData);
         res.send({
             success: true,
             data: result,
         });
-        console.log(`Post ${result} is added!`);
+        console.log(`Post is updated!`);
     }
 }));
 // revealed a Post controller

@@ -4,7 +4,11 @@ import { getUserByEmailService } from "../user.module/user.services";
 import { Types } from "mongoose";
 import catchAsync from "../../Shared/catchAsync";
 import { getStoreByStoreNameService } from "../store.module/store.services";
-import { checkIsExistAndGetFields } from "../../utils/checkIsExistAndGetFields";
+import { checkIsExistAndAddFields } from "../../utils/checkIsExistAndGetFields";
+import { getBrandByBrandNameService } from "../brand.module/brand.services";
+import { getCategoryByCategoryNameService } from "../category.module/category.services";
+import { getCampaignByCampaignNameService } from "../campaign.module/campaign.services";
+import { getNetworkByNetworkNameService } from "../network.module/network.services";
 
 // add new Post controller
 export const addNewPostController = catchAsync(
@@ -123,22 +127,35 @@ export const updateAPostController = catchAsync(
         existPost,
         updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
       };
-      // if (storeName) {
-      //   const isStoreExist = await getStoreByStoreNameService(storeName);
-      //   if (!isStoreExist) {
-      //     throw new Error("Invalid store name!");
-      //   } else {
-      //     updateData.store = {
-      //       storeName,
-      //       storePhotoURL: isStoreExist.storePhotoURL,
-      //       moreAboutStore: isStoreExist._id,
-      //     };
-      //   }
-      // }
 
-      await checkIsExistAndGetFields(
-        storeName,
+      await checkIsExistAndAddFields(
+        "store",
+        { storeName },
         getStoreByStoreNameService,
+        updateData
+      );
+      await checkIsExistAndAddFields(
+        "brand",
+        { brandName },
+        getBrandByBrandNameService,
+        updateData
+      );
+      await checkIsExistAndAddFields(
+        "category",
+        { categoryName },
+        getCategoryByCategoryNameService,
+        updateData
+      );
+      await checkIsExistAndAddFields(
+        "campaign",
+        { campaignName },
+        getCampaignByCampaignNameService,
+        updateData
+      );
+      await checkIsExistAndAddFields(
+        "network",
+        { networkName },
+        getNetworkByNetworkNameService,
         updateData
       );
 
@@ -148,7 +165,7 @@ export const updateAPostController = catchAsync(
         success: true,
         data: result,
       });
-      console.log(`Post ${result} is added!`);
+      console.log(`Post is updated!`);
     }
   }
 );
