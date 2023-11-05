@@ -6,7 +6,7 @@ import { countries } from "../../utils/constants/countries.enum";
 
 const brandSchema = new Schema<IBrand>(
   {
-    brandName: { type: String, required: true },
+    brandName: { type: String, required: true, unique: true, trim: true },
     brandPhotoURL: { type: String, validate: validator.isURL, required: true },
     brandLink: { type: String },
     brandDescription: String,

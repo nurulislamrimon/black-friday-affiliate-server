@@ -1,7 +1,9 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Network from "./network.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { network_query_fields } from "../../utils/constants";
+import INetwork from "./network.interface";
+import Post from "../post.module/post.model";
 
 //== get Network by name
 export const getNetworkByNetworkNameService = async (networkName: string) => {
@@ -24,20 +26,40 @@ export const addNewNetworkService = async (network: object) => {
   return result;
 };
 
-//== update a Network
+//== update a network
 export const updateANetworkService = async (
-  NetworkId: Types.ObjectId,
-  newData: any
+  networkId: Types.ObjectId,
+  newData: any,
+  session: mongoose.mongo.ClientSession
 ) => {
-  // add updator info
+  // add updater info
   let { updateBy, existNetwork, ...updateData } = newData;
 
   updateBy = { ...existNetwork.updateBy, ...updateBy };
 
-  const result = await Network.updateOne(
-    { _id: NetworkId },
+  const result = await Network.findByIdAndUpdate(
+    networkId,
     { $set: updateData, $push: { updateBy: updateBy } },
-    { runValidators: true, upsert: true }
+    { runValidators: true, new: true, upsert: true, session }
+  );
+
+  return result;
+};
+
+// update posts thats are reffered to the network
+export const updateRefferencePosts = async (
+  networkId: Types.ObjectId,
+  payload: INetwork | null,
+  session: mongoose.mongo.ClientSession
+) => {
+  const result = await Post.updateMany(
+    { "network.moreAboutNetwork": networkId },
+    {
+      $set: {
+        "network.networkName": payload?.networkName,
+      },
+    },
+    { session }
   );
 
   return result;

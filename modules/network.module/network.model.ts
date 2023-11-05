@@ -5,7 +5,7 @@ import INetwork from "./network.interface";
 
 const networkSchema = new Schema<INetwork>(
   {
-    networkName: { type: String, required: true },
+    networkName: { type: String, required: true, unique: true, trim: true },
 
     postBy: {
       name: { type: String, required: true },

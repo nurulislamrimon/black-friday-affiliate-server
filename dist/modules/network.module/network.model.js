@@ -7,7 +7,7 @@ const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
 const networkSchema = new mongoose_1.Schema({
-    networkName: { type: String, required: true },
+    networkName: { type: String, required: true, unique: true, trim: true },
     postBy: {
         name: { type: String, required: true },
         email: { type: String, required: true, validate: validator_1.default.isEmail },

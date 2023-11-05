@@ -2,11 +2,10 @@ import { Schema, model } from "mongoose";
 import validator from "validator";
 import { Types } from "mongoose";
 import ICampaign from "./campaign.interface";
-import { countries } from "../../utils/constants/countries.enum";
 
 const campaignSchema = new Schema<ICampaign>(
   {
-    campaignName: { type: String, required: true },
+    campaignName: { type: String, required: true, unique: true, trim: true },
     campaignPhotoURL: {
       type: String,
       validate: validator.isURL,

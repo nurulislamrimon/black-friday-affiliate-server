@@ -4,7 +4,7 @@ import { verify_token } from "../../middlewares/verify_token";
 import { verify_authorization } from "../../middlewares/verify_authorization";
 import { roles } from "../../utils/constants/authorization_roles";
 
-const CampaignRouter = express.Router();
+const campaignRouter = express.Router();
 
 /**
  *@api{get}/ get all Campaign
@@ -17,7 +17,7 @@ const CampaignRouter = express.Router();
  *@apiSuccess {Array of Object} all Campaigns.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.get("/", campaignController.getAllActiveCampaignsController);
+campaignRouter.get("/", campaignController.getAllActiveCampaignsController);
 
 /**
  *@api{get}/all get all Campaign
@@ -30,7 +30,7 @@ CampaignRouter.get("/", campaignController.getAllActiveCampaignsController);
  *@apiSuccess {Array of Object} all Campaigns.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.get(
+campaignRouter.get(
   "/all",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
@@ -47,7 +47,7 @@ CampaignRouter.get(
  *@apiSuccess {Object} Campaign.
  *@apiError Campaign not found
  */
-CampaignRouter.get(
+campaignRouter.get(
   "/name/:CampaignName",
   campaignController.getACampaignByCampaignNameController
 );
@@ -63,7 +63,7 @@ CampaignRouter.get(
  *@apiSuccess {Object} Campaign.
  *@apiError Campaign not found
  */
-CampaignRouter.get("/:id", campaignController.getACampaignController);
+campaignRouter.get("/:id", campaignController.getACampaignController);
 
 /**
  *@api{post}/add add new Campaign
@@ -76,7 +76,7 @@ CampaignRouter.get("/:id", campaignController.getACampaignController);
  *@apiSuccess {Object} added Campaign.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.post(
+campaignRouter.post(
   "/add",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
@@ -94,7 +94,7 @@ CampaignRouter.post(
  *@apiSuccess {Object} update info of the Campaign.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.patch(
+campaignRouter.patch(
   "/:id",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
@@ -111,11 +111,11 @@ CampaignRouter.patch(
  *@apiSuccess {Object} delete confirmation.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.delete(
+campaignRouter.delete(
   "/:id",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
   campaignController.deleteACampaignController
 );
 
-export default CampaignRouter;
+export default campaignRouter;

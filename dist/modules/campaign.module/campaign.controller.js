@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteACampaignController = exports.updateACampaignController = exports.getAllCampaignsController = exports.addNewCampaignController = exports.getAllActiveCampaignsController = exports.getACampaignByCampaignNameController = exports.getACampaignController = void 0;
 const campaignServices = __importStar(require("./campaign.services"));
 const user_services_1 = require("../user.module/user.services");
-const mongoose_1 = require("mongoose");
+const mongoose_1 = __importStar(require("mongoose"));
 const post_services_1 = require("../post.module/post.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Campaign by Id controller
@@ -103,21 +103,39 @@ exports.getAllCampaignsController = (0, catchAsync_1.default)((req, res, next) =
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Campaigns are responsed!`);
 }));
-// update a Campaign controller
+// update a campaign controller
 exports.updateACampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const postId = new mongoose_1.Types.ObjectId(req.params.id);
-    const existCampaign = yield campaignServices.getCampaignByIdService(postId);
+    const { campaignName, campaignPhotoURL } = req.body;
+    const campaignId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existCampaign = yield campaignServices.getCampaignByIdService(campaignId);
     if (!existCampaign) {
         throw new Error("Campaign doesn't exist!");
     }
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield campaignServices.updateACampaignService(postId, Object.assign(Object.assign({}, req.body), { existCampaign, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`Campaign ${result} is added!`);
+        const session = yield mongoose_1.default.startSession();
+        session.startTransaction();
+        try {
+            // update the campaign
+            const result = yield campaignServices.updateACampaignService(campaignId, Object.assign(Object.assign({}, req.body), { existCampaign, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }), session);
+            // update all posts that uses refference of the campaign
+            if (campaignName || campaignPhotoURL) {
+                yield campaignServices.updateRefferencePosts(campaignId, result, session);
+            }
+            res.send({
+                success: true,
+                data: result,
+            });
+            console.log(`Campaign is updated!`);
+            yield session.commitTransaction();
+        }
+        catch (error) {
+            session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
     }
 }));
 // update a Campaign controller

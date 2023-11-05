@@ -1,7 +1,9 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Campaign from "./campaign.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { campaign_query_fields } from "../../utils/constants";
+import ICampaign from "./campaign.interface";
+import Post from "../post.module/post.model";
 
 //== get Campaign by name
 export const getCampaignByCampaignNameService = async (
@@ -24,20 +26,41 @@ export const addNewCampaignService = async (campaign: object) => {
   const result = await Campaign.create(campaign);
   return result;
 };
-//== update a Campaign
+
+//== update a campaign
 export const updateACampaignService = async (
-  CampaignId: Types.ObjectId,
-  newData: any
+  campaignId: Types.ObjectId,
+  newData: any,
+  session: mongoose.mongo.ClientSession
 ) => {
-  // add updator info
+  // add updater info
   let { updateBy, existCampaign, ...updateData } = newData;
 
   updateBy = { ...existCampaign.updateBy, ...updateBy };
 
-  const result = await Campaign.updateOne(
-    { _id: CampaignId },
+  const result = await Campaign.findByIdAndUpdate(
+    campaignId,
     { $set: updateData, $push: { updateBy: updateBy } },
-    { runValidators: true, upsert: true }
+    { runValidators: true, new: true, upsert: true, session }
+  );
+
+  return result;
+};
+// update posts thats are reffered to the campaign
+export const updateRefferencePosts = async (
+  campaignId: Types.ObjectId,
+  payload: ICampaign | null,
+  session: mongoose.mongo.ClientSession
+) => {
+  const result = await Post.updateMany(
+    { "campaign.moreAboutCampaign": campaignId },
+    {
+      $set: {
+        "campaign.campaignName": payload?.campaignName,
+        "campaign.campaignPhotoURL": payload?.campaignPhotoURL,
+      },
+    },
+    { session }
   );
 
   return result;

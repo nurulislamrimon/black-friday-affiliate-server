@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteACategoryService = exports.getAllCategorys = exports.updateACategoryService = exports.addNewCategoryService = exports.getCategoryByIdService = exports.getCategoryByCategoryNameService = void 0;
+exports.deleteACategoryService = exports.getAllCategorys = exports.updateRefferencePosts = exports.updateACategoryService = exports.addNewCategoryService = exports.getCategoryByIdService = exports.getCategoryByCategoryNameService = void 0;
 const category_model_1 = __importDefault(require("./category.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+const post_model_1 = __importDefault(require("../post.module/post.model"));
 //== get Category by name
 const getCategoryByCategoryNameService = (categoryName) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield category_model_1.default.findOne({ categoryName: categoryName }, "-postBy -updateBy");
@@ -45,15 +46,25 @@ const addNewCategoryService = (category) => __awaiter(void 0, void 0, void 0, fu
     return result;
 });
 exports.addNewCategoryService = addNewCategoryService;
-//== update a Category
-const updateACategoryService = (CategoryId, newData) => __awaiter(void 0, void 0, void 0, function* () {
-    // add updator info
+//== update a category
+const updateACategoryService = (categoryId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
+    // add updater info
     let { updateBy, existCategory } = newData, updateData = __rest(newData, ["updateBy", "existCategory"]);
     updateBy = Object.assign(Object.assign({}, existCategory.updateBy), updateBy);
-    const result = yield category_model_1.default.updateOne({ _id: CategoryId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield category_model_1.default.findByIdAndUpdate(categoryId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, new: true, upsert: true, session });
     return result;
 });
 exports.updateACategoryService = updateACategoryService;
+// update posts thats are reffered to the category
+const updateRefferencePosts = (categoryId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.updateMany({ "category.moreAboutCategory": categoryId }, {
+        $set: {
+            "category.categoryName": payload === null || payload === void 0 ? void 0 : payload.categoryName,
+        },
+    }, { session });
+    return result;
+});
+exports.updateRefferencePosts = updateRefferencePosts;
 // get all Categorys
 const getAllCategorys = (query) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

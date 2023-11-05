@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteANetworkService = exports.getAllNetworks = exports.updateANetworkService = exports.addNewNetworkService = exports.getNetworkByIdService = exports.getNetworkByNetworkNameService = void 0;
+exports.deleteANetworkService = exports.getAllNetworks = exports.updateRefferencePosts = exports.updateANetworkService = exports.addNewNetworkService = exports.getNetworkByIdService = exports.getNetworkByNetworkNameService = void 0;
 const network_model_1 = __importDefault(require("./network.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+const post_model_1 = __importDefault(require("../post.module/post.model"));
 //== get Network by name
 const getNetworkByNetworkNameService = (networkName) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield network_model_1.default.findOne({ networkName: networkName }, "-postBy -updateBy");
@@ -45,15 +46,25 @@ const addNewNetworkService = (network) => __awaiter(void 0, void 0, void 0, func
     return result;
 });
 exports.addNewNetworkService = addNewNetworkService;
-//== update a Network
-const updateANetworkService = (NetworkId, newData) => __awaiter(void 0, void 0, void 0, function* () {
-    // add updator info
+//== update a network
+const updateANetworkService = (networkId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
+    // add updater info
     let { updateBy, existNetwork } = newData, updateData = __rest(newData, ["updateBy", "existNetwork"]);
     updateBy = Object.assign(Object.assign({}, existNetwork.updateBy), updateBy);
-    const result = yield network_model_1.default.updateOne({ _id: NetworkId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield network_model_1.default.findByIdAndUpdate(networkId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, new: true, upsert: true, session });
     return result;
 });
 exports.updateANetworkService = updateANetworkService;
+// update posts thats are reffered to the network
+const updateRefferencePosts = (networkId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.updateMany({ "network.moreAboutNetwork": networkId }, {
+        $set: {
+            "network.networkName": payload === null || payload === void 0 ? void 0 : payload.networkName,
+        },
+    }, { session });
+    return result;
+});
+exports.updateRefferencePosts = updateRefferencePosts;
 // get all Networks
 const getAllNetworks = (query) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as networkServices from "./network.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { getPostByNetworkIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
@@ -81,31 +81,56 @@ export const getAllNetworksController = catchAsync(
   }
 );
 
-// update a Network controller
+// update a network controller
 export const updateANetworkController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const postId = new Types.ObjectId(req.params.id);
-    const existNetwork = await networkServices.getNetworkByIdService(postId);
+    const { networkName, networkPhotoURL } = req.body;
+    const networkId = new Types.ObjectId(req.params.id);
+    const existNetwork = await networkServices.getNetworkByIdService(networkId);
 
     if (!existNetwork) {
       throw new Error("Network doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await networkServices.updateANetworkService(postId, {
-        ...req.body,
-        existNetwork,
-        updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
-      });
 
-      res.send({
-        success: true,
-        data: result,
-      });
-      console.log(`Network ${result} is added!`);
+      const session = await mongoose.startSession();
+
+      session.startTransaction();
+      try {
+        // update the network
+        const result = await networkServices.updateANetworkService(
+          networkId,
+          {
+            ...req.body,
+            existNetwork,
+            updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
+          },
+          session
+        );
+        // update all posts that uses refference of the network
+        if (networkName) {
+          await networkServices.updateRefferencePosts(
+            networkId,
+            result,
+            session
+          );
+        }
+
+        res.send({
+          success: true,
+          data: result,
+        });
+        console.log(`network is updated!`);
+        await session.commitTransaction();
+      } catch (error) {
+        session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
+      }
     }
   }
 );
-
 // Delete a Network controller
 export const deleteANetworkController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as campaignServices from "./campaign.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { getPostByCampaignIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
@@ -89,27 +89,56 @@ export const getAllCampaignsController = catchAsync(
     console.log(`${result?.data?.length} Campaigns are responsed!`);
   }
 );
-// update a Campaign controller
+
+// update a campaign controller
 export const updateACampaignController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const postId = new Types.ObjectId(req.params.id);
-    const existCampaign = await campaignServices.getCampaignByIdService(postId);
+    const { campaignName, campaignPhotoURL } = req.body;
+    const campaignId = new Types.ObjectId(req.params.id);
+    const existCampaign = await campaignServices.getCampaignByIdService(
+      campaignId
+    );
 
     if (!existCampaign) {
       throw new Error("Campaign doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await campaignServices.updateACampaignService(postId, {
-        ...req.body,
-        existCampaign,
-        updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
-      });
 
-      res.send({
-        success: true,
-        data: result,
-      });
-      console.log(`Campaign ${result} is added!`);
+      const session = await mongoose.startSession();
+
+      session.startTransaction();
+      try {
+        // update the campaign
+        const result = await campaignServices.updateACampaignService(
+          campaignId,
+          {
+            ...req.body,
+            existCampaign,
+            updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
+          },
+          session
+        );
+        // update all posts that uses refference of the campaign
+        if (campaignName || campaignPhotoURL) {
+          await campaignServices.updateRefferencePosts(
+            campaignId,
+            result,
+            session
+          );
+        }
+
+        res.send({
+          success: true,
+          data: result,
+        });
+        console.log(`Campaign is updated!`);
+        await session.commitTransaction();
+      } catch (error) {
+        session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
+      }
     }
   }
 );

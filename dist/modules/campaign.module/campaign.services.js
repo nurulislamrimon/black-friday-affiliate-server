@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteACampaignService = exports.getAllActiveCampaigns = exports.getAllCampaigns = exports.updateACampaignService = exports.addNewCampaignService = exports.getCampaignByIdService = exports.getCampaignByCampaignNameService = void 0;
+exports.deleteACampaignService = exports.getAllActiveCampaigns = exports.getAllCampaigns = exports.updateRefferencePosts = exports.updateACampaignService = exports.addNewCampaignService = exports.getCampaignByIdService = exports.getCampaignByCampaignNameService = void 0;
 const campaign_model_1 = __importDefault(require("./campaign.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+const post_model_1 = __importDefault(require("../post.module/post.model"));
 //== get Campaign by name
 const getCampaignByCampaignNameService = (campaignName) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield campaign_model_1.default.findOne({ campaignName: campaignName }, "-postBy -updateBy");
@@ -45,15 +46,26 @@ const addNewCampaignService = (campaign) => __awaiter(void 0, void 0, void 0, fu
     return result;
 });
 exports.addNewCampaignService = addNewCampaignService;
-//== update a Campaign
-const updateACampaignService = (CampaignId, newData) => __awaiter(void 0, void 0, void 0, function* () {
-    // add updator info
+//== update a campaign
+const updateACampaignService = (campaignId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
+    // add updater info
     let { updateBy, existCampaign } = newData, updateData = __rest(newData, ["updateBy", "existCampaign"]);
     updateBy = Object.assign(Object.assign({}, existCampaign.updateBy), updateBy);
-    const result = yield campaign_model_1.default.updateOne({ _id: CampaignId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield campaign_model_1.default.findByIdAndUpdate(campaignId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, new: true, upsert: true, session });
     return result;
 });
 exports.updateACampaignService = updateACampaignService;
+// update posts thats are reffered to the campaign
+const updateRefferencePosts = (campaignId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.updateMany({ "campaign.moreAboutCampaign": campaignId }, {
+        $set: {
+            "campaign.campaignName": payload === null || payload === void 0 ? void 0 : payload.campaignName,
+            "campaign.campaignPhotoURL": payload === null || payload === void 0 ? void 0 : payload.campaignPhotoURL,
+        },
+    }, { session });
+    return result;
+});
+exports.updateRefferencePosts = updateRefferencePosts;
 // get all Campaigns
 const getAllCampaigns = (query) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

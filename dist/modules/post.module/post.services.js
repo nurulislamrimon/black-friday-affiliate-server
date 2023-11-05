@@ -73,7 +73,7 @@ const updateAPostService = (PostId, newData) => __awaiter(void 0, void 0, void 0
     // add updator info
     let { updateBy, existPost } = newData, updateData = __rest(newData, ["updateBy", "existPost"]);
     updateBy = Object.assign(Object.assign({}, existPost.updateBy), updateBy);
-    const result = yield post_model_1.default.updateOne({ _id: PostId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield post_model_1.default.findByIdAndUpdate(PostId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true, new: true });
     return result;
 });
 exports.updateAPostService = updateAPostService;

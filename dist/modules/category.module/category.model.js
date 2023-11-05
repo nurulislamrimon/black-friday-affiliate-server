@@ -7,7 +7,7 @@ const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
 const categorySchema = new mongoose_1.Schema({
-    categoryName: { type: String, required: true },
+    categoryName: { type: String, required: true, unique: true, trim: true },
     postBy: {
         name: { type: String, required: true },
         email: { type: String, required: true, validate: validator_1.default.isEmail },

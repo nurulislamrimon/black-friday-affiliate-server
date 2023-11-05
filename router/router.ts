@@ -7,7 +7,7 @@ import postRouter from "../modules/post.module/post.router";
 import carouselRouter from "../modules/carousel.module/carousel.router";
 import contactRouter from "../modules/Contact.module/Contact.router";
 import administratorRouter from "../modules/administrators.module/administrators.router";
-import CampaignRouter from "../modules/campaign.module/campaign.router";
+import campaignRouter from "../modules/campaign.module/campaign.router";
 import networkRouter from "../modules/network.module/network.router";
 
 const router = express.Router();
@@ -30,7 +30,7 @@ const routesArray = [
   },
   {
     path: "/campaign",
-    element: CampaignRouter,
+    element: campaignRouter,
   },
   {
     path: "/network",

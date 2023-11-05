@@ -60,7 +60,7 @@ export const updateAPostService = async (
   const result = await Post.findByIdAndUpdate(
     PostId,
     { $set: updateData, $push: { updateBy: updateBy } },
-    { runValidators: true, upsert: true }
+    { runValidators: true, upsert: true, new: true }
   );
 
   return result;

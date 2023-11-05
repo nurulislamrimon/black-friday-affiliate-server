@@ -55,6 +55,7 @@ const updateAStoreService = (storeId, newData, session) => __awaiter(void 0, voi
     return result;
 });
 exports.updateAStoreService = updateAStoreService;
+// update posts thats are reffered to the store
 const updateRefferencePosts = (storeId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield post_model_1.default.updateMany({ "store.moreAboutStore": storeId }, {
         $set: {

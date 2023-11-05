@@ -31,7 +31,7 @@ const campaignController = __importStar(require("./campaign.controller"));
 const verify_token_1 = require("../../middlewares/verify_token");
 const verify_authorization_1 = require("../../middlewares/verify_authorization");
 const authorization_roles_1 = require("../../utils/constants/authorization_roles");
-const CampaignRouter = express_1.default.Router();
+const campaignRouter = express_1.default.Router();
 /**
  *@api{get}/ get all Campaign
  *@apiDescription get all Campaigns
@@ -43,7 +43,7 @@ const CampaignRouter = express_1.default.Router();
  *@apiSuccess {Array of Object} all Campaigns.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.get("/", campaignController.getAllActiveCampaignsController);
+campaignRouter.get("/", campaignController.getAllActiveCampaignsController);
 /**
  *@api{get}/all get all Campaign
  *@apiDescription get all Campaigns
@@ -55,7 +55,7 @@ CampaignRouter.get("/", campaignController.getAllActiveCampaignsController);
  *@apiSuccess {Array of Object} all Campaigns.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.getAllCampaignsController);
+campaignRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.getAllCampaignsController);
 /**
  *@api{get}/:id get a Campaign by id
  *@apiDescription get a Campaign by id
@@ -67,7 +67,7 @@ CampaignRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization
  *@apiSuccess {Object} Campaign.
  *@apiError Campaign not found
  */
-CampaignRouter.get("/name/:CampaignName", campaignController.getACampaignByCampaignNameController);
+campaignRouter.get("/name/:CampaignName", campaignController.getACampaignByCampaignNameController);
 /**
  *@api{get}/:id get a Campaign by id
  *@apiDescription get a Campaign by id
@@ -79,7 +79,7 @@ CampaignRouter.get("/name/:CampaignName", campaignController.getACampaignByCampa
  *@apiSuccess {Object} Campaign.
  *@apiError Campaign not found
  */
-CampaignRouter.get("/:id", campaignController.getACampaignController);
+campaignRouter.get("/:id", campaignController.getACampaignController);
 /**
  *@api{post}/add add new Campaign
  *@apiDescription add a new Campaign
@@ -91,7 +91,7 @@ CampaignRouter.get("/:id", campaignController.getACampaignController);
  *@apiSuccess {Object} added Campaign.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.addNewCampaignController);
+campaignRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.addNewCampaignController);
 /**
  *@api{put}/:id update a Campaign
  *@apiDescription update a Campaign by id with validation
@@ -103,7 +103,7 @@ CampaignRouter.post("/add", verify_token_1.verify_token, (0, verify_authorizatio
  *@apiSuccess {Object} update info of the Campaign.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.patch("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.updateACampaignController);
+campaignRouter.patch("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.updateACampaignController);
 /**
  *@api{delete}/:id delete a Campaign
  *@apiDescription delete a Campaign by id
@@ -115,5 +115,5 @@ CampaignRouter.patch("/:id", verify_token_1.verify_token, (0, verify_authorizati
  *@apiSuccess {Object} delete confirmation.
  *@apiError 401, 403 unauthorized & forbidden
  */
-CampaignRouter.delete("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.deleteACampaignController);
-exports.default = CampaignRouter;
+campaignRouter.delete("/:id", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), campaignController.deleteACampaignController);
+exports.default = campaignRouter;

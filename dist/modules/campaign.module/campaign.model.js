@@ -7,7 +7,7 @@ const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
 const campaignSchema = new mongoose_1.Schema({
-    campaignName: { type: String, required: true },
+    campaignName: { type: String, required: true, unique: true, trim: true },
     campaignPhotoURL: {
         type: String,
         validate: validator_1.default.isURL,

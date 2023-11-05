@@ -5,7 +5,7 @@ import ICategory from "./category.interface";
 
 const categorySchema = new Schema<ICategory>(
   {
-    categoryName: { type: String, required: true },
+    categoryName: { type: String, required: true, unique: true, trim: true },
 
     postBy: {
       name: { type: String, required: true },

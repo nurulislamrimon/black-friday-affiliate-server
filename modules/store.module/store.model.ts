@@ -5,7 +5,7 @@ import { Types } from "mongoose";
 
 const storeSchema = new Schema<IStore>(
   {
-    storeName: { type: String, required: true },
+    storeName: { type: String, required: true, unique: true, trim: true },
     storeLink: { type: String, required: true, validate: validator.isURL },
     storePhotoURL: { type: String, required: true, validate: validator.isURL },
     storeDescription: String,
