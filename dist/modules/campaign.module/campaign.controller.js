@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteACampaignController = exports.updateACampaignController = exports.getAllCampaignsController = exports.addNewCampaignController = exports.getAllActiveCampaignsController = exports.getACampaignByCampaignNameController = exports.getACampaignController = void 0;
+exports.deleteACampaignController = exports.updateACampaignController = exports.getAllCampaignsController = exports.getAllActiveCampaignsController = exports.addNewCampaignController = exports.getACampaignByCampaignNameController = exports.getACampaignController = void 0;
 const campaignServices = __importStar(require("./campaign.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = __importStar(require("mongoose"));
@@ -69,13 +69,6 @@ exports.getACampaignByCampaignNameController = (0, catchAsync_1.default)((req, r
         });
     }
 }));
-// get all active Campaigns
-exports.getAllActiveCampaignsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a;
-    const result = yield campaignServices.getAllActiveCampaigns(req.query);
-    res.send(Object.assign({ success: true }, result));
-    console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Campaigns are responsed!`);
-}));
 // add new Campaign controller
 exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { campaignPhotoURL, campaignName } = req.body;
@@ -95,6 +88,13 @@ exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) =>
         });
         console.log(`Campaign ${result._id} is added!`);
     }
+}));
+// get all active Campaigns
+exports.getAllActiveCampaignsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a;
+    const result = yield campaignServices.getAllActiveCampaigns(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Campaigns are responsed!`);
 }));
 // get all Campaigns
 exports.getAllCampaignsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

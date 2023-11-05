@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteACategoryController = exports.updateACategoryController = exports.getAllCategorysController = exports.addNewCategoryController = exports.getACategoryByIdController = exports.getACategoryByCategoryNameController = void 0;
+exports.deleteACategoryController = exports.updateACategoryController = exports.getActiveCategoriesController = exports.getAllCategoriesController = exports.addNewCategoryController = exports.getACategoryByIdController = exports.getACategoryByCategoryNameController = void 0;
 const categoryServices = __importStar(require("./category.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = __importStar(require("mongoose"));
@@ -90,11 +90,18 @@ exports.addNewCategoryController = (0, catchAsync_1.default)((req, res, next) =>
     }
 }));
 // get all Categorys
-exports.getAllCategorysController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllCategoriesController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield categoryServices.getAllCategorys(req.query);
+    const result = yield categoryServices.getAllCategories(req.query);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Categorys are responsed!`);
+}));
+// get all Categorys
+exports.getActiveCategoriesController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const result = yield categoryServices.getActiveCategories(req.query);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Categorys are responsed!`);
 }));
 // update a Category controller
 exports.updateACategoryController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

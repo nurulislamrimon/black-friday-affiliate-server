@@ -74,7 +74,7 @@ const getAllCampaigns = (query) => __awaiter(void 0, void 0, void 0, function* (
         {
             $lookup: {
                 from: "posts",
-                foreignField: "campaign",
+                foreignField: "campaign.moreAboutCampaign",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -107,7 +107,7 @@ const getAllCampaigns = (query) => __awaiter(void 0, void 0, void 0, function* (
         {
             $lookup: {
                 from: "posts",
-                foreignField: "campaign",
+                foreignField: "campaign.moreAboutCampaign",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -137,7 +137,7 @@ const getAllActiveCampaigns = (query) => __awaiter(void 0, void 0, void 0, funct
         {
             $lookup: {
                 from: "posts",
-                foreignField: "campaign",
+                foreignField: "campaign.moreAboutCampaign",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -175,7 +175,7 @@ const getAllActiveCampaigns = (query) => __awaiter(void 0, void 0, void 0, funct
         {
             $lookup: {
                 from: "posts",
-                foreignField: "campaign",
+                foreignField: "campaign.moreAboutCampaign",
                 localField: "_id",
                 as: "existPosts",
             },

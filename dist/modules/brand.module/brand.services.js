@@ -74,7 +74,7 @@ const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
         {
             $lookup: {
                 from: "posts",
-                foreignField: "Brand",
+                foreignField: "brand.moreAboutBrand",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -107,7 +107,7 @@ const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
         {
             $lookup: {
                 from: "posts",
-                foreignField: "Brand",
+                foreignField: "brand.moreAboutBrand",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -137,7 +137,7 @@ const getAllActiveBrands = (query) => __awaiter(void 0, void 0, void 0, function
         {
             $lookup: {
                 from: "posts",
-                foreignField: "brand",
+                foreignField: "brand.moreAboutBrand",
                 localField: "_id",
                 as: "existPosts",
             },
@@ -175,7 +175,7 @@ const getAllActiveBrands = (query) => __awaiter(void 0, void 0, void 0, function
         {
             $lookup: {
                 from: "posts",
-                foreignField: "brand",
+                foreignField: "brand.moreAboutBrand",
                 localField: "_id",
                 as: "existPosts",
             },
