@@ -1,7 +1,8 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Store from "./store.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { store_query_fields } from "../../utils/constants";
+import Post from "../post.module/post.model";
 
 //== create new Store
 export const addNewStoreService = async (store: object) => {
@@ -26,7 +27,8 @@ export const getStoreByIdService = async (id: Types.ObjectId) => {
 //== update a Store
 export const updateAStoreService = async (
   storeId: Types.ObjectId,
-  newData: any
+  newData: any,
+  session: mongoose.mongo.ClientSession
 ) => {
   // add updator info
   let { updateBy, existStore, ...updateData } = newData;
@@ -36,7 +38,29 @@ export const updateAStoreService = async (
   const result = await Store.updateOne(
     { _id: storeId },
     { $set: updateData, $push: { updateBy: updateBy } },
-    { runValidators: true, upsert: true }
+    { runValidators: true, upsert: true, session }
+  );
+
+  return result;
+};
+
+export const updateRefferencePosts = async (
+  storeId: Types.ObjectId,
+  session: mongoose.mongo.ClientSession
+) => {
+  const store = await getStoreByIdService(storeId);
+  if (!store) {
+    throw new Error("Store not found!");
+  }
+  const result = await Post.updateMany(
+    { "store.moreAboutStore": storeId },
+    {
+      $set: {
+        "store.storeName": store.storeName,
+        "store.storePhotoURL": store.storePhotoURL,
+      },
+    },
+    { session }
   );
 
   return result;

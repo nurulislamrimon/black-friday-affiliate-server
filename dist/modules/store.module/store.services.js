@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAStoreService = exports.getAllActiveStores = exports.getAllStores = exports.updateAStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = exports.addNewStoreService = void 0;
+exports.deleteAStoreService = exports.getAllActiveStores = exports.getAllStores = exports.updateRefferencePosts = exports.updateAStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = exports.addNewStoreService = void 0;
 const store_model_1 = __importDefault(require("./store.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+const post_model_1 = __importDefault(require("../post.module/post.model"));
 //== create new Store
 const addNewStoreService = (store) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield store_model_1.default.create(store);
@@ -46,14 +47,28 @@ const getStoreByIdService = (id) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.getStoreByIdService = getStoreByIdService;
 //== update a Store
-const updateAStoreService = (storeId, newData) => __awaiter(void 0, void 0, void 0, function* () {
+const updateAStoreService = (storeId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
     // add updator info
     let { updateBy, existStore } = newData, updateData = __rest(newData, ["updateBy", "existStore"]);
     updateBy = Object.assign(Object.assign({}, existStore.updateBy), updateBy);
-    const result = yield store_model_1.default.updateOne({ _id: storeId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield store_model_1.default.updateOne({ _id: storeId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true, session });
     return result;
 });
 exports.updateAStoreService = updateAStoreService;
+const updateRefferencePosts = (storeId, session) => __awaiter(void 0, void 0, void 0, function* () {
+    const store = yield (0, exports.getStoreByIdService)(storeId);
+    if (!store) {
+        throw new Error("Store not found!");
+    }
+    const result = yield post_model_1.default.updateMany({ "store.moreAboutStore": storeId }, {
+        $set: {
+            "store.storeName": store.storeName,
+            "store.storePhotoURL": store.storePhotoURL,
+        },
+    }, { session });
+    return result;
+});
+exports.updateRefferencePosts = updateRefferencePosts;
 // get all stores
 const getAllStores = (query) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

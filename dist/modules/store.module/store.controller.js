@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteAStoreController = exports.updateAStoreController = exports.getAllStoresController = exports.getAllActiveStoresController = exports.getAStoreByStoreNameController = exports.getAStoreController = exports.addNewStoreController = void 0;
 const storeServices = __importStar(require("./store.services"));
 const user_services_1 = require("../user.module/user.services");
-const mongoose_1 = require("mongoose");
+const mongoose_1 = __importStar(require("mongoose"));
 const post_services_1 = require("../post.module/post.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // add new store controller
@@ -111,19 +111,37 @@ exports.getAllStoresController = (0, catchAsync_1.default)((req, res, next) => _
 }));
 // update a store controller
 exports.updateAStoreController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const postId = new mongoose_1.Types.ObjectId(req.params.id);
-    const existStore = yield storeServices.getStoreByIdService(postId);
+    const { storeName, storePhotoURL } = req.body;
+    const storeId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existStore = yield storeServices.getStoreByIdService(storeId);
     if (!existStore) {
         throw new Error("Store doesn't exist!");
     }
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield storeServices.updateAStoreService(postId, Object.assign(Object.assign({}, req.body), { existStore, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`Store is updated!`);
+        const session = yield mongoose_1.default.startSession();
+        session.startTransaction();
+        try {
+            // update the store
+            const result = yield storeServices.updateAStoreService(storeId, Object.assign(Object.assign({}, req.body), { existStore, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }), session);
+            // update all posts that uses refference of the store
+            if (storeName || storePhotoURL) {
+                yield storeServices.updateRefferencePosts(storeId, session);
+            }
+            res.send({
+                success: true,
+                data: result,
+            });
+            console.log(`Store is updated!`);
+            yield session.commitTransaction();
+        }
+        catch (error) {
+            session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
     }
 }));
 // update a store controller
