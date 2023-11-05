@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import * as CategoryServices from "./category.services";
+import * as categoryServices from "./category.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { getPostByCategoryIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
@@ -10,7 +10,7 @@ export const getACategoryByCategoryNameController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const categoryName = req.params.categoryName;
 
-    const result = await CategoryServices.getCategoryByCategoryNameService(
+    const result = await categoryServices.getCategoryByCategoryNameService(
       categoryName
     );
     if (!result) {
@@ -29,7 +29,7 @@ export const getACategoryByIdController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const CategoryId = new Types.ObjectId(req.params.id);
 
-    const result = await CategoryServices.getCategoryByIdService(CategoryId);
+    const result = await categoryServices.getCategoryByIdService(CategoryId);
     if (!result) {
       throw new Error("Category not found!");
     } else {
@@ -46,7 +46,7 @@ export const addNewCategoryController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { categoryName } = req.body;
     const existCategory =
-      await CategoryServices.getCategoryByCategoryNameService(categoryName);
+      await categoryServices.getCategoryByCategoryNameService(categoryName);
 
     if (!categoryName) {
       throw new Error("Please enter required information: categoryName!");
@@ -55,7 +55,7 @@ export const addNewCategoryController = catchAsync(
     } else {
       const postBy = await getUserByEmailService(req.body.decoded.email);
 
-      const result = await CategoryServices.addNewCategoryService({
+      const result = await categoryServices.addNewCategoryService({
         ...req.body,
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       });
@@ -71,7 +71,7 @@ export const addNewCategoryController = catchAsync(
 // get all Categorys
 export const getAllCategorysController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await CategoryServices.getAllCategorys(req.query);
+    const result = await categoryServices.getAllCategorys(req.query);
     res.send({
       success: true,
       ...result,
@@ -83,33 +83,61 @@ export const getAllCategorysController = catchAsync(
 // update a Category controller
 export const updateACategoryController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const postId = new Types.ObjectId(req.params.id);
-    const existCategory = await CategoryServices.getCategoryByIdService(postId);
+    const { categoryName } = req.body;
+    const categoryId = new Types.ObjectId(req.params.id);
+    const existCategory = await categoryServices.getCategoryByIdService(
+      categoryId
+    );
 
     if (!existCategory) {
       throw new Error("Category doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await CategoryServices.updateACategoryService(postId, {
-        ...req.body,
-        existCategory,
-        updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
-      });
 
-      res.send({
-        success: true,
-        data: result,
-      });
-      console.log(`Category ${result} is added!`);
+      const session = await mongoose.startSession();
+
+      session.startTransaction();
+      try {
+        // update the category
+        const result = await categoryServices.updateACategoryService(
+          categoryId,
+          {
+            ...req.body,
+            existCategory,
+            updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
+          },
+          session
+        );
+        // update all posts that uses refference of the category
+        if (categoryName) {
+          await categoryServices.updateRefferencePosts(
+            categoryId,
+            result,
+            session
+          );
+        }
+
+        res.send({
+          success: true,
+          data: result,
+        });
+        console.log(`category is updated!`);
+        await session.commitTransaction();
+      } catch (error) {
+        session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
+      }
     }
   }
 );
 
-// update a Category controller
+// Delete a Category controller
 export const deleteACategoryController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const CategoryId = new Types.ObjectId(req.params.id);
-    const existCategory = await CategoryServices.getCategoryByIdService(
+    const existCategory = await categoryServices.getCategoryByIdService(
       CategoryId
     );
 
@@ -122,7 +150,7 @@ export const deleteACategoryController = catchAsync(
         "Sorry! This Category has some posts, You can't delete the Category!"
       );
     } else {
-      const result = await CategoryServices.deleteACategoryService(CategoryId);
+      const result = await categoryServices.deleteACategoryService(CategoryId);
 
       res.send({
         success: true,

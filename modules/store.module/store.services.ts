@@ -44,7 +44,7 @@ export const updateAStoreService = async (
 
   return result;
 };
-
+// update posts thats are reffered to the store
 export const updateRefferencePosts = async (
   storeId: Types.ObjectId,
   payload: IStore | null,

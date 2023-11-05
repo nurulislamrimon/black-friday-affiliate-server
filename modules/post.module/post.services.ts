@@ -57,8 +57,8 @@ export const updateAPostService = async (
 
   updateBy = { ...existPost.updateBy, ...updateBy };
 
-  const result = await Post.updateOne(
-    { _id: PostId },
+  const result = await Post.findByIdAndUpdate(
+    PostId,
     { $set: updateData, $push: { updateBy: updateBy } },
     { runValidators: true, upsert: true }
   );
