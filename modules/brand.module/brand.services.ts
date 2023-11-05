@@ -72,7 +72,7 @@ export const getAllBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Brand",
+        foreignField: "brand.moreAboutBrand",
         localField: "_id",
         as: "existPosts",
       },
@@ -106,7 +106,7 @@ export const getAllBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Brand",
+        foreignField: "brand.moreAboutBrand",
         localField: "_id",
         as: "existPosts",
       },
@@ -137,7 +137,7 @@ export const getAllActiveBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "brand",
+        foreignField: "brand.moreAboutBrand",
         localField: "_id",
         as: "existPosts",
       },
@@ -176,7 +176,7 @@ export const getAllActiveBrands = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "brand",
+        foreignField: "brand.moreAboutBrand",
         localField: "_id",
         as: "existPosts",
       },

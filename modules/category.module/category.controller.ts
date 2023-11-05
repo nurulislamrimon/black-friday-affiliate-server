@@ -69,9 +69,20 @@ export const addNewCategoryController = catchAsync(
 );
 
 // get all Categorys
-export const getAllCategorysController = catchAsync(
+export const getAllCategoriesController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await categoryServices.getAllCategorys(req.query);
+    const result = await categoryServices.getAllCategories(req.query);
+    res.send({
+      success: true,
+      ...result,
+    });
+    console.log(`${result?.data?.length} Categorys are responsed!`);
+  }
+);
+// get all Categorys
+export const getActiveCategoriesController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await categoryServices.getActiveCategories(req.query);
     res.send({
       success: true,
       ...result,

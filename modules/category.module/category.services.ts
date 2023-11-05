@@ -66,8 +66,8 @@ export const updateRefferencePosts = async (
   return result;
 };
 
-// get all Categorys
-export const getAllCategorys = async (query: any) => {
+// get all active Brands
+export const getActiveCategories = async (query: any) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
     search_filter_and_queries(
       "Category",
@@ -79,7 +79,86 @@ export const getAllCategorys = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "category",
+        foreignField: "category.moreAboutCategory",
+        localField: "_id",
+        as: "existPosts",
+      },
+    },
+    {
+      $match: {
+        existPosts: { $ne: [] },
+      },
+    },
+    {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $project: {
+        existPosts: 0,
+        postBy: 0,
+        updateBy: 0,
+        howToUse: 0,
+      },
+    },
+    {
+      $match: filters,
+    },
+    {
+      $sort: { [sortBy]: sortOrder },
+    },
+    {
+      $skip: skip,
+    },
+    {
+      $limit: limit,
+    },
+  ]);
+
+  const totalDocuments = await Category.aggregate([
+    {
+      $lookup: {
+        from: "posts",
+        foreignField: "category.moreAboutCategory",
+        localField: "_id",
+        as: "existPosts",
+      },
+    },
+    {
+      $match: {
+        existPosts: { $ne: [] },
+      },
+    },
+    {
+      $match: filters,
+    },
+    { $count: "totalDocs" },
+  ]);
+  return {
+    meta: {
+      page,
+      limit,
+      totalDocuments: Object.keys(totalDocuments).length
+        ? totalDocuments[0]?.totalDocs
+        : 0,
+    },
+    data: result,
+  };
+};
+
+// get all Categorys
+export const getAllCategories = async (query: any) => {
+  const { filters, skip, page, limit, sortBy, sortOrder } =
+    search_filter_and_queries(
+      "Category",
+      query,
+      ...category_query_fields
+    ) as any;
+
+  const result = await Category.aggregate([
+    {
+      $lookup: {
+        from: "posts",
+        foreignField: "category.moreAboutCategory",
         localField: "_id",
         as: "existPosts",
       },
@@ -113,7 +192,7 @@ export const getAllCategorys = async (query: any) => {
     {
       $lookup: {
         from: "posts",
-        foreignField: "Category",
+        foreignField: "category.moreAboutCategory",
         localField: "_id",
         as: "existPosts",
       },
