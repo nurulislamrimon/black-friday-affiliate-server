@@ -126,7 +126,7 @@ exports.updateAStoreController = (0, catchAsync_1.default)((req, res, next) => _
             const result = yield storeServices.updateAStoreService(storeId, Object.assign(Object.assign({}, req.body), { existStore, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }), session);
             // update all posts that uses refference of the store
             if (storeName || storePhotoURL) {
-                yield storeServices.updateRefferencePosts(storeId, session);
+                yield storeServices.updateRefferencePosts(storeId, result, session);
             }
             res.send({
                 success: true,

@@ -126,7 +126,7 @@ export const updateAStoreController = catchAsync(
         );
         // update all posts that uses refference of the store
         if (storeName || storePhotoURL) {
-          await storeServices.updateRefferencePosts(storeId, session);
+          await storeServices.updateRefferencePosts(storeId, result, session);
         }
 
         res.send({

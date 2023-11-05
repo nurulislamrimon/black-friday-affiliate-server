@@ -48,22 +48,18 @@ const getStoreByIdService = (id) => __awaiter(void 0, void 0, void 0, function* 
 exports.getStoreByIdService = getStoreByIdService;
 //== update a Store
 const updateAStoreService = (storeId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
-    // add updator info
+    // add updater info
     let { updateBy, existStore } = newData, updateData = __rest(newData, ["updateBy", "existStore"]);
     updateBy = Object.assign(Object.assign({}, existStore.updateBy), updateBy);
-    const result = yield store_model_1.default.updateOne({ _id: storeId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true, session });
+    const result = yield store_model_1.default.findByIdAndUpdate(storeId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, new: true, upsert: true, session });
     return result;
 });
 exports.updateAStoreService = updateAStoreService;
-const updateRefferencePosts = (storeId, session) => __awaiter(void 0, void 0, void 0, function* () {
-    const store = yield (0, exports.getStoreByIdService)(storeId);
-    if (!store) {
-        throw new Error("Store not found!");
-    }
+const updateRefferencePosts = (storeId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield post_model_1.default.updateMany({ "store.moreAboutStore": storeId }, {
         $set: {
-            "store.storeName": store.storeName,
-            "store.storePhotoURL": store.storePhotoURL,
+            "store.storeName": payload === null || payload === void 0 ? void 0 : payload.storeName,
+            "store.storePhotoURL": payload === null || payload === void 0 ? void 0 : payload.storePhotoURL,
         },
     }, { session });
     return result;
