@@ -23,10 +23,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteABrandService = exports.getAllActiveBrands = exports.getAllBrands = exports.updateABrandService = exports.addNewBrandService = exports.getBrandByIdService = exports.getBrandByBrandNameService = void 0;
+exports.deleteABrandService = exports.getAllActiveBrands = exports.getAllBrands = exports.updateRefferencePosts = exports.updateABrandService = exports.addNewBrandService = exports.getBrandByIdService = exports.getBrandByBrandNameService = void 0;
 const brand_model_1 = __importDefault(require("./brand.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
+const post_model_1 = __importDefault(require("../post.module/post.model"));
 //== get Brand by name
 const getBrandByBrandNameService = (brandName) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield brand_model_1.default.findOne({ brandName: brandName }, "-postBy -updateBy");
@@ -45,15 +46,26 @@ const addNewBrandService = (brand) => __awaiter(void 0, void 0, void 0, function
     return result;
 });
 exports.addNewBrandService = addNewBrandService;
-//== update a Brand
-const updateABrandService = (BrandId, newData) => __awaiter(void 0, void 0, void 0, function* () {
-    // add updator info
+// update a brand
+const updateABrandService = (brandId, newData, session) => __awaiter(void 0, void 0, void 0, function* () {
+    // add updater info
     let { updateBy, existBrand } = newData, updateData = __rest(newData, ["updateBy", "existBrand"]);
     updateBy = Object.assign(Object.assign({}, existBrand.updateBy), updateBy);
-    const result = yield brand_model_1.default.updateOne({ _id: BrandId }, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, upsert: true });
+    const result = yield brand_model_1.default.findByIdAndUpdate(brandId, { $set: updateData, $push: { updateBy: updateBy } }, { runValidators: true, new: true, upsert: true, session });
     return result;
 });
 exports.updateABrandService = updateABrandService;
+// update those posts that reffers to the brand
+const updateRefferencePosts = (brandId, payload, session) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield post_model_1.default.updateMany({ "brand.moreAboutBrand": brandId }, {
+        $set: {
+            "brand.brandName": payload === null || payload === void 0 ? void 0 : payload.brandName,
+            "brand.brandPhotoURL": payload === null || payload === void 0 ? void 0 : payload.brandPhotoURL,
+        },
+    }, { session });
+    return result;
+});
+exports.updateRefferencePosts = updateRefferencePosts;
 // get all Brands
 const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;

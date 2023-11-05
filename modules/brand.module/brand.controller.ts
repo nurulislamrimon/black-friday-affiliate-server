@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as brandServices from "./brand.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { getPostByBrandIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
@@ -88,30 +88,54 @@ export const getAllBrandsController = catchAsync(
     console.log(`${result?.data?.length} Brands are responsed!`);
   }
 );
-// update a Brand controller
+
+// update a brand
 export const updateABrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const postId = new Types.ObjectId(req.params.id);
-    const existBrand = await brandServices.getBrandByIdService(postId);
+    const { brandName, brandPhotoURL } = req.body;
+    const brandId = new Types.ObjectId(req.params.id);
+    const existBrand = await brandServices.getBrandByIdService(brandId);
 
     if (!existBrand) {
       throw new Error("Brand doesn't exist!");
     } else {
       const updateBy = await getUserByEmailService(req.body.decoded.email);
-      const result = await brandServices.updateABrandService(postId, {
-        ...req.body,
-        existBrand,
-        updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
-      });
 
-      res.send({
-        success: true,
-        data: result,
-      });
-      console.log(`Brand ${result} is added!`);
+      const session = await mongoose.startSession();
+
+      session.startTransaction();
+      try {
+        // update the brand
+        const result = await brandServices.updateABrandService(
+          brandId,
+          {
+            ...req.body,
+            existBrand: existBrand,
+            updateBy: { ...updateBy?.toObject(), moreAboutUser: updateBy?._id },
+          },
+          session
+        );
+        // update all posts that uses refference of the brand
+        if (brandName || brandPhotoURL) {
+          await brandServices.updateRefferencePosts(brandId, result, session);
+        }
+
+        res.send({
+          success: true,
+          data: result,
+        });
+        console.log(`brand is updated!`);
+        await session.commitTransaction();
+      } catch (error) {
+        session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
+      }
     }
   }
 );
+
 // update a Brand controller
 export const deleteABrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {

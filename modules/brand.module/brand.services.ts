@@ -1,7 +1,9 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Brand from "./brand.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { brand_query_fields } from "../../utils/constants";
+import IBrand from "./brand.interface";
+import Post from "../post.module/post.model";
 
 //== get Brand by name
 export const getBrandByBrandNameService = async (brandName: string) => {
@@ -22,25 +24,45 @@ export const addNewBrandService = async (brand: object) => {
   const result = await Brand.create(brand);
   return result;
 };
-//== update a Brand
+
+// update a brand
 export const updateABrandService = async (
-  BrandId: Types.ObjectId,
-  newData: any
+  brandId: Types.ObjectId,
+  newData: any,
+  session: mongoose.mongo.ClientSession
 ) => {
-  // add updator info
+  // add updater info
   let { updateBy, existBrand, ...updateData } = newData;
 
   updateBy = { ...existBrand.updateBy, ...updateBy };
 
-  const result = await Brand.updateOne(
-    { _id: BrandId },
+  const result = await Brand.findByIdAndUpdate(
+    brandId,
     { $set: updateData, $push: { updateBy: updateBy } },
-    { runValidators: true, upsert: true }
+    { runValidators: true, new: true, upsert: true, session }
   );
 
   return result;
 };
+// update those posts that reffers to the brand
+export const updateRefferencePosts = async (
+  brandId: Types.ObjectId,
+  payload: IBrand | null,
+  session: mongoose.mongo.ClientSession
+) => {
+  const result = await Post.updateMany(
+    { "brand.moreAboutBrand": brandId },
+    {
+      $set: {
+        "brand.brandName": payload?.brandName,
+        "brand.brandPhotoURL": payload?.brandPhotoURL,
+      },
+    },
+    { session }
+  );
 
+  return result;
+};
 // get all Brands
 export const getAllBrands = async (query: any) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =

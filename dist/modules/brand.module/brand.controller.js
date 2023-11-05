@@ -38,7 +38,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteABrandController = exports.updateABrandController = exports.getAllBrandsController = exports.addNewBrandController = exports.getAllActiveBrandsController = exports.getABrandByBrandNameController = exports.getABrandController = void 0;
 const brandServices = __importStar(require("./brand.services"));
 const user_services_1 = require("../user.module/user.services");
-const mongoose_1 = require("mongoose");
+const mongoose_1 = __importStar(require("mongoose"));
 const post_services_1 = require("../post.module/post.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Brand by Id controller
@@ -103,21 +103,39 @@ exports.getAllBrandsController = (0, catchAsync_1.default)((req, res, next) => _
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Brands are responsed!`);
 }));
-// update a Brand controller
+// update a brand
 exports.updateABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const postId = new mongoose_1.Types.ObjectId(req.params.id);
-    const existBrand = yield brandServices.getBrandByIdService(postId);
+    const { brandName, brandPhotoURL } = req.body;
+    const brandId = new mongoose_1.Types.ObjectId(req.params.id);
+    const existBrand = yield brandServices.getBrandByIdService(brandId);
     if (!existBrand) {
         throw new Error("Brand doesn't exist!");
     }
     else {
         const updateBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
-        const result = yield brandServices.updateABrandService(postId, Object.assign(Object.assign({}, req.body), { existBrand, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }));
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`Brand ${result} is added!`);
+        const session = yield mongoose_1.default.startSession();
+        session.startTransaction();
+        try {
+            // update the brand
+            const result = yield brandServices.updateABrandService(brandId, Object.assign(Object.assign({}, req.body), { existBrand: existBrand, updateBy: Object.assign(Object.assign({}, updateBy === null || updateBy === void 0 ? void 0 : updateBy.toObject()), { moreAboutUser: updateBy === null || updateBy === void 0 ? void 0 : updateBy._id }) }), session);
+            // update all posts that uses refference of the brand
+            if (brandName || brandPhotoURL) {
+                yield brandServices.updateRefferencePosts(brandId, result, session);
+            }
+            res.send({
+                success: true,
+                data: result,
+            });
+            console.log(`brand is updated!`);
+            yield session.commitTransaction();
+        }
+        catch (error) {
+            session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
     }
 }));
 // update a Brand controller
