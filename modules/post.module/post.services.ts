@@ -1,4 +1,4 @@
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import Post from "./post.model";
 import User from "../user.module/user.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
@@ -7,6 +7,13 @@ import {
   getAllActiveStores,
   getAllStores,
 } from "../store.module/store.services";
+import IPost from "./post.interface";
+import Store from "../store.module/store.model";
+import { countries } from "../../utils/constants/countries.enum";
+import Brand from "../brand.module/brand.model";
+import Category from "../category.module/category.model";
+import Campaign from "../campaign.module/campaign.model";
+import Network from "../network.module/network.model";
 
 //== get search client
 export const searchGloballyClientService = async (query: object) => {
@@ -169,4 +176,48 @@ export const getPostByNetworkIdService = async (networkId: Types.ObjectId) => {
     networkName: 1,
   });
   return result;
+};
+
+// update countries to all related fields
+export const updateCountriesToAllRelatedFields = async (
+  payload: IPost,
+  session: mongoose.mongo.ClientSession
+) => {
+  await Store.findOneAndUpdate(
+    { _id: payload.store.moreAboutStore },
+    { $addToSet: { storeCountries: { $each: payload.countries } } },
+    { upsert: true, new: true, session }
+  );
+
+  if (payload.brand?.moreAboutBrand) {
+    await Brand.findOneAndUpdate(
+      { _id: payload.brand.moreAboutBrand },
+      { $addToSet: { brandCountries: { $each: payload.countries } } },
+      { upsert: true, new: true, session }
+    );
+  }
+
+  if (payload.category?.moreAboutCategory) {
+    await Category.findOneAndUpdate(
+      { _id: payload.category.moreAboutCategory },
+      { $addToSet: { categoryCountries: { $each: payload.countries } } },
+      { upsert: true, new: true, session }
+    );
+  }
+
+  if (payload.campaign?.moreAboutCampaign) {
+    await Campaign.findOneAndUpdate(
+      { _id: payload.campaign.moreAboutCampaign },
+      { $addToSet: { campaignCountries: { $each: payload.countries } } },
+      { upsert: true, new: true, session }
+    );
+  }
+
+  if (payload.network?.moreAboutNetwork) {
+    await Network.findOneAndUpdate(
+      { _id: payload.network.moreAboutNetwork },
+      { $addToSet: { networkCountries: { $each: payload.countries } } },
+      { upsert: true, new: true, session }
+    );
+  }
 };

@@ -2,10 +2,12 @@ import { Schema, model } from "mongoose";
 import validator from "validator";
 import { Types } from "mongoose";
 import INetwork from "./network.interface";
+import { countries } from "../../utils/constants/countries.enum";
 
 const networkSchema = new Schema<INetwork>(
   {
     networkName: { type: String, required: true, unique: true, trim: true },
+    networkCountries: { type: String, enum: countries },
 
     postBy: {
       name: { type: String, required: true },

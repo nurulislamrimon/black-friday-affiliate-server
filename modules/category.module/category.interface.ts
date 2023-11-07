@@ -2,6 +2,7 @@ import { Types } from "mongoose";
 
 export default interface ICategory {
   categoryName: string;
+  categoryCountries?: string[];
 
   postBy: {
     name: string;

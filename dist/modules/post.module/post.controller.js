@@ -49,7 +49,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteManyPostController = exports.deleteAPostController = exports.revealedAPostController = exports.updateAPostController = exports.getAllActivePostsController = exports.getAllPostsByAdminController = exports.getAPostController = exports.searchGloballyAdminController = exports.searchGloballyClientController = exports.addNewPostController = void 0;
 const PostServices = __importStar(require("./post.services"));
 const user_services_1 = require("../user.module/user.services");
-const mongoose_1 = require("mongoose");
+const mongoose_1 = __importStar(require("mongoose"));
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 const store_services_1 = require("../store.module/store.services");
 const checkIsExistAndGetFields_1 = require("../../utils/checkIsExistAndGetFields");
@@ -66,12 +66,27 @@ exports.addNewPostController = (0, catchAsync_1.default)((req, res, next) => __a
     else {
         const postBy = yield (0, user_services_1.getUserByEmailService)(req.body.decoded.email);
         const newPost = Object.assign(Object.assign({}, req.body), { store: { storeName: req.body.storeName }, brand: { brandName: req.body.brandName }, category: { categoryName: req.body.categoryName }, network: { networkName: req.body.networkName }, campaign: { campaignName: req.body.campaignName }, postBy: Object.assign(Object.assign({}, postBy === null || postBy === void 0 ? void 0 : postBy.toObject()), { moreAboutUser: postBy === null || postBy === void 0 ? void 0 : postBy._id }) });
-        const result = yield PostServices.addNewPostService(newPost);
-        res.send({
-            success: true,
-            data: result,
-        });
-        console.log(`Post ${result._id} is added!`);
+        const session = yield mongoose_1.default.startSession();
+        session.startTransaction();
+        try {
+            const result = yield PostServices.addNewPostService(newPost);
+            if (result) {
+                yield PostServices.updateCountriesToAllRelatedFields(result, session);
+            }
+            res.send({
+                success: true,
+                data: result,
+            });
+            console.log(`Post is added!`);
+            yield session.commitTransaction();
+        }
+        catch (error) {
+            session.abortTransaction();
+            throw error;
+        }
+        finally {
+            session.endSession();
+        }
     }
 }));
 // add new Post controller

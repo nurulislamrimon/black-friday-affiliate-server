@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 import validator from "validator";
 import { Types } from "mongoose";
 import ICampaign from "./campaign.interface";
+import { countries } from "../../utils/constants/countries.enum";
 
 const campaignSchema = new Schema<ICampaign>(
   {
@@ -13,6 +14,7 @@ const campaignSchema = new Schema<ICampaign>(
     },
     startPeriod: { type: Date, default: Date.now() },
     endPeriod: { type: Date, required: true },
+    campaignCountries: [{ type: String, enum: countries }],
 
     postBy: {
       name: { type: String, required: true },

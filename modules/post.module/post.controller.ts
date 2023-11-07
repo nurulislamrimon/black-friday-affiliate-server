@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import * as PostServices from "./post.services";
 import { getUserByEmailService } from "../user.module/user.services";
-import { Types } from "mongoose";
+import mongoose, { Types } from "mongoose";
 import catchAsync from "../../Shared/catchAsync";
 import { getStoreByStoreNameService } from "../store.module/store.services";
 import { checkIsExistAndAddFields } from "../../utils/checkIsExistAndGetFields";
@@ -31,13 +31,26 @@ export const addNewPostController = catchAsync(
         campaign: { campaignName: req.body.campaignName },
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       };
+      const session = await mongoose.startSession();
+      session.startTransaction();
+      try {
+        const result = await PostServices.addNewPostService(newPost);
+        if (result) {
+          await PostServices.updateCountriesToAllRelatedFields(result, session);
+        }
 
-      const result = await PostServices.addNewPostService(newPost);
-      res.send({
-        success: true,
-        data: result,
-      });
-      console.log(`Post ${result._id} is added!`);
+        res.send({
+          success: true,
+          data: result,
+        });
+        console.log(`Post is added!`);
+        await session.commitTransaction();
+      } catch (error) {
+        session.abortTransaction();
+        throw error;
+      } finally {
+        session.endSession();
+      }
     }
   }
 );
