@@ -170,18 +170,19 @@ exports.getPostByNetworkIdService = getPostByNetworkIdService;
 // update countries to all related fields
 const updateCountriesToAllRelatedFields = (payload, session) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b, _c, _d;
-    yield store_model_1.default.findOneAndUpdate({ _id: payload.store.moreAboutStore }, { $addToSet: { storeCountries: { $each: payload.countries } } }, { upsert: true, new: true, session });
+    const postCountries = payload.countries;
+    yield store_model_1.default.findOneAndUpdate({ _id: payload.store.moreAboutStore }, { $addToSet: { storeCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
     if ((_a = payload.brand) === null || _a === void 0 ? void 0 : _a.moreAboutBrand) {
-        yield brand_model_1.default.findOneAndUpdate({ _id: payload.brand.moreAboutBrand }, { $addToSet: { brandCountries: { $each: payload.countries } } }, { upsert: true, new: true, session });
+        yield brand_model_1.default.findOneAndUpdate({ _id: payload.brand.moreAboutBrand }, { $addToSet: { brandCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
     }
     if ((_b = payload.category) === null || _b === void 0 ? void 0 : _b.moreAboutCategory) {
-        yield category_model_1.default.findOneAndUpdate({ _id: payload.category.moreAboutCategory }, { $addToSet: { categoryCountries: { $each: payload.countries } } }, { upsert: true, new: true, session });
+        yield category_model_1.default.findOneAndUpdate({ _id: payload.category.moreAboutCategory }, { $addToSet: { categoryCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
     }
     if ((_c = payload.campaign) === null || _c === void 0 ? void 0 : _c.moreAboutCampaign) {
-        yield campaign_model_1.default.findOneAndUpdate({ _id: payload.campaign.moreAboutCampaign }, { $addToSet: { campaignCountries: { $each: payload.countries } } }, { upsert: true, new: true, session });
+        yield campaign_model_1.default.findOneAndUpdate({ _id: payload.campaign.moreAboutCampaign }, { $addToSet: { campaignCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
     }
     if ((_d = payload.network) === null || _d === void 0 ? void 0 : _d.moreAboutNetwork) {
-        yield network_model_1.default.findOneAndUpdate({ _id: payload.network.moreAboutNetwork }, { $addToSet: { networkCountries: { $each: payload.countries } } }, { upsert: true, new: true, session });
+        yield network_model_1.default.findOneAndUpdate({ _id: payload.network.moreAboutNetwork }, { $addToSet: { networkCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
     }
 });
 exports.updateCountriesToAllRelatedFields = updateCountriesToAllRelatedFields;

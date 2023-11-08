@@ -9,7 +9,7 @@ const mongoose_2 = require("mongoose");
 const countries_enum_1 = require("../../utils/constants/countries.enum");
 const networkSchema = new mongoose_1.Schema({
     networkName: { type: String, required: true, unique: true, trim: true },
-    networkCountries: { type: String, enum: countries_enum_1.countries },
+    networkCountries: [{ type: String, enum: countries_enum_1.countries }],
     postBy: {
         name: { type: String, required: true },
         email: { type: String, required: true, validate: validator_1.default.isEmail },

@@ -183,16 +183,18 @@ export const updateCountriesToAllRelatedFields = async (
   payload: IPost,
   session: mongoose.mongo.ClientSession
 ) => {
+  const postCountries = payload.countries;
+
   await Store.findOneAndUpdate(
     { _id: payload.store.moreAboutStore },
-    { $addToSet: { storeCountries: { $each: payload.countries } } },
+    { $addToSet: { storeCountries: { $each: postCountries } } },
     { upsert: true, new: true, session }
   );
 
   if (payload.brand?.moreAboutBrand) {
     await Brand.findOneAndUpdate(
       { _id: payload.brand.moreAboutBrand },
-      { $addToSet: { brandCountries: { $each: payload.countries } } },
+      { $addToSet: { brandCountries: { $each: postCountries } } },
       { upsert: true, new: true, session }
     );
   }
@@ -200,7 +202,7 @@ export const updateCountriesToAllRelatedFields = async (
   if (payload.category?.moreAboutCategory) {
     await Category.findOneAndUpdate(
       { _id: payload.category.moreAboutCategory },
-      { $addToSet: { categoryCountries: { $each: payload.countries } } },
+      { $addToSet: { categoryCountries: { $each: postCountries } } },
       { upsert: true, new: true, session }
     );
   }
@@ -208,7 +210,7 @@ export const updateCountriesToAllRelatedFields = async (
   if (payload.campaign?.moreAboutCampaign) {
     await Campaign.findOneAndUpdate(
       { _id: payload.campaign.moreAboutCampaign },
-      { $addToSet: { campaignCountries: { $each: payload.countries } } },
+      { $addToSet: { campaignCountries: { $each: postCountries } } },
       { upsert: true, new: true, session }
     );
   }
@@ -216,7 +218,7 @@ export const updateCountriesToAllRelatedFields = async (
   if (payload.network?.moreAboutNetwork) {
     await Network.findOneAndUpdate(
       { _id: payload.network.moreAboutNetwork },
-      { $addToSet: { networkCountries: { $each: payload.countries } } },
+      { $addToSet: { networkCountries: { $each: postCountries } } },
       { upsert: true, new: true, session }
     );
   }
