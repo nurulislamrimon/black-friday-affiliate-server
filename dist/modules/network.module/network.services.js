@@ -90,17 +90,11 @@ const getAllNetworks = (query, isAdmin) => __awaiter(void 0, void 0, void 0, fun
                 countries: { $addToSet: "$existPosts.countries" },
                 totalPosts: { $first: "$totalPosts" },
                 networkName: { $first: "$networkName" },
-                networkLink: { $first: "$networkLink" },
-                networkPhotoURL: { $first: "$networkPhotoURL" },
-                networkDescription: { $first: "$networkDescription" },
             },
         },
         {
             $project: {
                 networkName: 1,
-                networkLink: 1,
-                networkPhotoURL: 1,
-                networkDescription: 1,
                 totalPosts: 1,
                 countries: {
                     $reduce: {
