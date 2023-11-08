@@ -66,11 +66,11 @@ export const updateRefferencePosts = async (
   return result;
 };
 
-// get all Campaigns
-export const getAllCampaigns = async (query: any) => {
+// get all campaigns
+export const getAllCampaigns = async (query: any, isAdmin: boolean) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
     search_filter_and_queries(
-      "Campaign",
+      "campaign",
       query,
       ...campaign_query_fields
     ) as any;
@@ -88,11 +88,33 @@ export const getAllCampaigns = async (query: any) => {
       $addFields: { totalPosts: { $size: "$existPosts" } },
     },
     {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        campaignName: { $first: "$campaignName" },
+        campaignLink: { $first: "$campaignLink" },
+        campaignPhotoURL: { $first: "$campaignPhotoURL" },
+        campaignDescription: { $first: "$campaignDescription" },
+      },
+    },
+    {
       $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
+        campaignName: 1,
+        campaignLink: 1,
+        campaignPhotoURL: 1,
+        campaignDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
       },
     },
     {
@@ -123,85 +145,7 @@ export const getAllCampaigns = async (query: any) => {
     },
     { $count: "totalDocs" },
   ]);
-  return {
-    meta: {
-      page,
-      limit,
-      totalDocuments: Object.keys(totalDocuments).length
-        ? totalDocuments[0]?.totalDocs
-        : 0,
-    },
-    data: result,
-  };
-};
 
-// get all active Campaigns
-export const getAllActiveCampaigns = async (query: any) => {
-  const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries(
-      "Campaign",
-      query,
-      ...campaign_query_fields
-    ) as any;
-
-  const result = await Campaign.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "campaign.moreAboutCampaign",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $addFields: { totalPosts: { $size: "$existPosts" } },
-    },
-    {
-      $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-  ]);
-
-  const totalDocuments = await Campaign.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "campaign.moreAboutCampaign",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $match: filters,
-    },
-    { $count: "totalDocs" },
-  ]);
   return {
     meta: {
       page,

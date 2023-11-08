@@ -71,7 +71,7 @@ export const addNewCategoryController = catchAsync(
 // get all Categorys
 export const getAllCategoriesAdminController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await categoryServices.getAllCategories(req.query);
+    const result = await categoryServices.getAllCategories(req.query, true);
     res.send({
       success: true,
       ...result,
@@ -83,7 +83,7 @@ export const getAllCategoriesAdminController = catchAsync(
 // get all Categorys
 export const getAllCategoriesClientController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await categoryServices.getActiveCategories(req.query);
+    const result = await categoryServices.getAllCategories(req.query, false);
     res.send({
       success: true,
       ...result,

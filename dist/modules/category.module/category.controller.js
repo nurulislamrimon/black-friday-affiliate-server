@@ -92,14 +92,14 @@ exports.addNewCategoryController = (0, catchAsync_1.default)((req, res, next) =>
 // get all Categorys
 exports.getAllCategoriesAdminController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield categoryServices.getAllCategories(req.query);
+    const result = yield categoryServices.getAllCategories(req.query, true);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Categorys are responsed!`);
 }));
 // get all Categorys
 exports.getAllCategoriesClientController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    const result = yield categoryServices.getActiveCategories(req.query);
+    const result = yield categoryServices.getAllCategories(req.query, false);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Categorys are responsed!`);
 }));

@@ -72,7 +72,7 @@ export const addNewNetworkController = catchAsync(
 // get all Networks
 export const getAllNetworksController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await networkServices.getAllNetworks(req.query);
+    const result = await networkServices.getAllNetworks(req.query, true);
     res.send({
       success: true,
       ...result,

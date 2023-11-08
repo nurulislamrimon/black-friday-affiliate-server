@@ -92,14 +92,14 @@ exports.addNewCampaignController = (0, catchAsync_1.default)((req, res, next) =>
 // get all active Campaigns
 exports.getAllCampaignsClientController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield campaignServices.getAllActiveCampaigns(req.query);
+    const result = yield campaignServices.getAllCampaigns(req.query, false);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Campaigns are responsed!`);
 }));
 // get all Campaigns
 exports.getAllCampaignsAdminController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    const result = yield campaignServices.getAllCampaigns(req.query);
+    const result = yield campaignServices.getAllCampaigns(req.query, true);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Campaigns are responsed!`);
 }));

@@ -92,7 +92,7 @@ exports.addNewNetworkController = (0, catchAsync_1.default)((req, res, next) => 
 // get all Networks
 exports.getAllNetworksController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield networkServices.getAllNetworks(req.query);
+    const result = yield networkServices.getAllNetworks(req.query, true);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Networks are responsed!`);
 }));

@@ -65,10 +65,10 @@ const updateRefferencePosts = (networkId, payload, session) => __awaiter(void 0,
     return result;
 });
 exports.updateRefferencePosts = updateRefferencePosts;
-// get all Networks
-const getAllNetworks = (query) => __awaiter(void 0, void 0, void 0, function* () {
+// get all networks
+const getAllNetworks = (query, isAdmin) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("Network", query, ...constants_1.network_query_fields);
+    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("network", query, ...constants_1.network_query_fields);
     const result = yield network_model_1.default.aggregate([
         {
             $lookup: {
@@ -82,11 +82,33 @@ const getAllNetworks = (query) => __awaiter(void 0, void 0, void 0, function* ()
             $addFields: { totalPosts: { $size: "$existPosts" } },
         },
         {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                networkName: { $first: "$networkName" },
+                networkLink: { $first: "$networkLink" },
+                networkPhotoURL: { $first: "$networkPhotoURL" },
+                networkDescription: { $first: "$networkDescription" },
+            },
+        },
+        {
             $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
+                networkName: 1,
+                networkLink: 1,
+                networkPhotoURL: 1,
+                networkDescription: 1,
+                totalPosts: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
             },
         },
         {

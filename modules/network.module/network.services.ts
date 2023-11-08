@@ -65,10 +65,10 @@ export const updateRefferencePosts = async (
   return result;
 };
 
-// get all Networks
-export const getAllNetworks = async (query: any) => {
+// get all networks
+export const getAllNetworks = async (query: any, isAdmin: boolean) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries("Network", query, ...network_query_fields) as any;
+    search_filter_and_queries("network", query, ...network_query_fields) as any;
 
   const result = await Network.aggregate([
     {
@@ -83,11 +83,33 @@ export const getAllNetworks = async (query: any) => {
       $addFields: { totalPosts: { $size: "$existPosts" } },
     },
     {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        networkName: { $first: "$networkName" },
+        networkLink: { $first: "$networkLink" },
+        networkPhotoURL: { $first: "$networkPhotoURL" },
+        networkDescription: { $first: "$networkDescription" },
+      },
+    },
+    {
       $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
+        networkName: 1,
+        networkLink: 1,
+        networkPhotoURL: 1,
+        networkDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
       },
     },
     {
@@ -118,6 +140,7 @@ export const getAllNetworks = async (query: any) => {
     },
     { $count: "totalDocs" },
   ]);
+
   return {
     meta: {
       page,

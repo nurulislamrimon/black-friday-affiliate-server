@@ -44,6 +44,7 @@ export const updateABrandService = async (
 
   return result;
 };
+
 // update those posts that reffers to the brand
 export const updateRefferencePosts = async (
   brandId: Types.ObjectId,

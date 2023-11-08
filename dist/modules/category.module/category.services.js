@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteACategoryService = exports.getAllCategories = exports.getActiveCategories = exports.updateRefferencePosts = exports.updateACategoryService = exports.addNewCategoryService = exports.getCategoryByIdService = exports.getCategoryByCategoryNameService = void 0;
+exports.deleteACategoryService = exports.getAllCategories = exports.updateRefferencePosts = exports.updateACategoryService = exports.addNewCategoryService = exports.getCategoryByIdService = exports.getCategoryByCategoryNameService = void 0;
 const category_model_1 = __importDefault(require("./category.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
@@ -65,10 +65,10 @@ const updateRefferencePosts = (categoryId, payload, session) => __awaiter(void 0
     return result;
 });
 exports.updateRefferencePosts = updateRefferencePosts;
-// get all active Brands
-const getActiveCategories = (query) => __awaiter(void 0, void 0, void 0, function* () {
+// get all Categories
+const getAllCategories = (query, isAdmin) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("Category", query, ...constants_1.category_query_fields);
+    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("category", query, ...constants_1.category_query_fields);
     const result = yield category_model_1.default.aggregate([
         {
             $lookup: {
@@ -79,19 +79,30 @@ const getActiveCategories = (query) => __awaiter(void 0, void 0, void 0, functio
             },
         },
         {
-            $match: {
-                existPosts: { $ne: [] },
-            },
-        },
-        {
             $addFields: { totalPosts: { $size: "$existPosts" } },
         },
         {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                categoryName: { $first: "$categoryName" },
+                totalPosts: { $first: "$totalPosts" },
+                countries: { $addToSet: "$existPosts.countries" },
+            },
+        },
+        {
             $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
+                categoryName: 1,
+                totalPosts: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
             },
         },
         {
@@ -114,11 +125,6 @@ const getActiveCategories = (query) => __awaiter(void 0, void 0, void 0, functio
                 foreignField: "category.moreAboutCategory",
                 localField: "_id",
                 as: "existPosts",
-            },
-        },
-        {
-            $match: {
-                existPosts: { $ne: [] },
             },
         },
         {
@@ -132,69 +138,6 @@ const getActiveCategories = (query) => __awaiter(void 0, void 0, void 0, functio
             limit,
             totalDocuments: Object.keys(totalDocuments).length
                 ? (_a = totalDocuments[0]) === null || _a === void 0 ? void 0 : _a.totalDocs
-                : 0,
-        },
-        data: result,
-    };
-});
-exports.getActiveCategories = getActiveCategories;
-// get all Categorys
-const getAllCategories = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("Category", query, ...constants_1.category_query_fields);
-    const result = yield category_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "category.moreAboutCategory",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $addFields: { totalPosts: { $size: "$existPosts" } },
-        },
-        {
-            $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
-            },
-        },
-        {
-            $match: filters,
-        },
-        {
-            $sort: { [sortBy]: sortOrder },
-        },
-        {
-            $skip: skip,
-        },
-        {
-            $limit: limit,
-        },
-    ]);
-    const totalDocuments = yield category_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "category.moreAboutCategory",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $match: filters,
-        },
-        { $count: "totalDocs" },
-    ]);
-    return {
-        meta: {
-            page,
-            limit,
-            totalDocuments: Object.keys(totalDocuments).length
-                ? (_b = totalDocuments[0]) === null || _b === void 0 ? void 0 : _b.totalDocs
                 : 0,
         },
         data: result,

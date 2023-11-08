@@ -66,90 +66,11 @@ export const updateRefferencePosts = async (
   return result;
 };
 
-// get all active Brands
-export const getActiveCategories = async (query: any) => {
+// get all Categories
+export const getAllCategories = async (query: any, isAdmin: boolean) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
     search_filter_and_queries(
-      "Category",
-      query,
-      ...category_query_fields
-    ) as any;
-
-  const result = await Category.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "category.moreAboutCategory",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $addFields: { totalPosts: { $size: "$existPosts" } },
-    },
-    {
-      $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-  ]);
-
-  const totalDocuments = await Category.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "category.moreAboutCategory",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $match: filters,
-    },
-    { $count: "totalDocs" },
-  ]);
-  return {
-    meta: {
-      page,
-      limit,
-      totalDocuments: Object.keys(totalDocuments).length
-        ? totalDocuments[0]?.totalDocs
-        : 0,
-    },
-    data: result,
-  };
-};
-
-// get all Categorys
-export const getAllCategories = async (query: any) => {
-  const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries(
-      "Category",
+      "category",
       query,
       ...category_query_fields
     ) as any;
@@ -167,11 +88,27 @@ export const getAllCategories = async (query: any) => {
       $addFields: { totalPosts: { $size: "$existPosts" } },
     },
     {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        categoryName: { $first: "$categoryName" },
+        totalPosts: { $first: "$totalPosts" },
+        countries: { $addToSet: "$existPosts.countries" },
+      },
+    },
+    {
       $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
+        categoryName: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
       },
     },
     {
@@ -202,6 +139,7 @@ export const getAllCategories = async (query: any) => {
     },
     { $count: "totalDocs" },
   ]);
+
   return {
     meta: {
       page,
