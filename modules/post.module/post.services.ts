@@ -1,19 +1,9 @@
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import Post from "./post.model";
 import User from "../user.module/user.model";
 import { search_filter_and_queries } from "../../utils/search_filter_and_queries";
 import { post_query_fields } from "../../utils/constants";
-import {
-  getAllActiveStores,
-  getAllStores,
-} from "../store.module/store.services";
-import IPost from "./post.interface";
-import Store from "../store.module/store.model";
-import { countries } from "../../utils/constants/countries.enum";
-import Brand from "../brand.module/brand.model";
-import Category from "../category.module/category.model";
-import Campaign from "../campaign.module/campaign.model";
-import Network from "../network.module/network.model";
+import { getAllStores } from "../store.module/store.services";
 
 //== get search client
 export const searchGloballyClientService = async (query: object) => {
@@ -21,17 +11,20 @@ export const searchGloballyClientService = async (query: object) => {
   const posts = await getAllPosts(query, true);
   return { stores, posts };
 };
+
 //== get search admin
 export const searchGloballyAdminService = async (query: object) => {
   const stores = await getAllStores(query);
   const posts = await getAllPosts(query, false);
   return { stores, posts };
 };
+
 //== get Post by name
 export const getPostByPostTitleService = async (postTitle: string) => {
   const result = await Post.findOne({ postTitle: postTitle });
   return result;
 };
+
 //== get Post by objectId
 export const getPostByIdService = async (id: Types.ObjectId) => {
   const result = await Post.findOne({ _id: id }, { postBy: 0, updateBy: 0 });
@@ -113,13 +106,12 @@ export const getAllPosts = async (query: any, isActivePostOnly: boolean) => {
 //== delete a Post
 export const deleteAPostService = async (PostId: Types.ObjectId) => {
   const result = await Post.deleteOne({ _id: PostId });
-
   return result;
 };
+
 //== delete a Post
 export const deleteManyPostService = async (PostId: Types.ObjectId[]) => {
   const result = await Post.deleteMany({ _id: PostId });
-
   return result;
 };
 
@@ -179,47 +171,47 @@ export const getPostByNetworkIdService = async (networkId: Types.ObjectId) => {
 };
 
 // update countries to all related fields
-export const updateCountriesToAllRelatedFields = async (
-  payload: IPost,
-  session: mongoose.mongo.ClientSession
-) => {
-  const postCountries = payload.countries;
+// export const createNewPostUpdateCountriesToAllRelatedFields = async (
+//   payload: IPost,
+//   session: mongoose.mongo.ClientSession
+// ) => {
+//   const postCountries = payload.countries;
 
-  await Store.findOneAndUpdate(
-    { _id: payload.store.moreAboutStore },
-    { $addToSet: { storeCountries: { $each: postCountries } } },
-    { upsert: true, new: true, session }
-  );
+//   await Store.findOneAndUpdate(
+//     { _id: payload.store.moreAboutStore },
+//     { $addToSet: { storeCountries: { $each: postCountries } } },
+//     { upsert: true, new: true, session }
+//   );
 
-  if (payload.brand?.moreAboutBrand) {
-    await Brand.findOneAndUpdate(
-      { _id: payload.brand.moreAboutBrand },
-      { $addToSet: { brandCountries: { $each: postCountries } } },
-      { upsert: true, new: true, session }
-    );
-  }
+//   if (payload.brand?.moreAboutBrand) {
+//     await Brand.findOneAndUpdate(
+//       { _id: payload.brand.moreAboutBrand },
+//       { $addToSet: { brandCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
 
-  if (payload.category?.moreAboutCategory) {
-    await Category.findOneAndUpdate(
-      { _id: payload.category.moreAboutCategory },
-      { $addToSet: { categoryCountries: { $each: postCountries } } },
-      { upsert: true, new: true, session }
-    );
-  }
+//   if (payload.category?.moreAboutCategory) {
+//     await Category.findOneAndUpdate(
+//       { _id: payload.category.moreAboutCategory },
+//       { $addToSet: { categoryCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
 
-  if (payload.campaign?.moreAboutCampaign) {
-    await Campaign.findOneAndUpdate(
-      { _id: payload.campaign.moreAboutCampaign },
-      { $addToSet: { campaignCountries: { $each: postCountries } } },
-      { upsert: true, new: true, session }
-    );
-  }
+//   if (payload.campaign?.moreAboutCampaign) {
+//     await Campaign.findOneAndUpdate(
+//       { _id: payload.campaign.moreAboutCampaign },
+//       { $addToSet: { campaignCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
 
-  if (payload.network?.moreAboutNetwork) {
-    await Network.findOneAndUpdate(
-      { _id: payload.network.moreAboutNetwork },
-      { $addToSet: { networkCountries: { $each: postCountries } } },
-      { upsert: true, new: true, session }
-    );
-  }
-};
+//   if (payload.network?.moreAboutNetwork) {
+//     await Network.findOneAndUpdate(
+//       { _id: payload.network.moreAboutNetwork },
+//       { $addToSet: { networkCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
+// };

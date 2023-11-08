@@ -68,7 +68,7 @@ export const addNewCampaignController = catchAsync(
   }
 );
 // get all active Campaigns
-export const getAllActiveCampaignsController = catchAsync(
+export const getAllCampaignsClientController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await campaignServices.getAllActiveCampaigns(req.query);
     res.send({
@@ -79,7 +79,7 @@ export const getAllActiveCampaignsController = catchAsync(
   }
 );
 // get all Campaigns
-export const getAllCampaignsController = catchAsync(
+export const getAllCampaignsAdminController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await campaignServices.getAllCampaigns(req.query);
     res.send({

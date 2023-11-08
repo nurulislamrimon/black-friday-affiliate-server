@@ -5,7 +5,7 @@ export default interface ICampaign {
   campaignPhotoURL: string;
   startPeriod: Date;
   endPeriod: Date;
-  campaignCountries?: string[];
+  // campaignCountries?: string[];
 
   postBy: {
     name: string;

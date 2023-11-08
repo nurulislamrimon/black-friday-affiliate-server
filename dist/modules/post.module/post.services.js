@@ -23,20 +23,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateCountriesToAllRelatedFields = exports.getPostByNetworkIdService = exports.getPostByCategoryIdService = exports.getPostByCampaignIdService = exports.getPostByBrandIdService = exports.getPostByStoreIdService = exports.deleteManyPostService = exports.deleteAPostService = exports.getAllPosts = exports.revealedAPostService = exports.updateAPostService = exports.setPostAsUnreadToUserService = exports.addNewPostService = exports.getPostByIdService = exports.getPostByPostTitleService = exports.searchGloballyAdminService = exports.searchGloballyClientService = void 0;
+exports.getPostByNetworkIdService = exports.getPostByCategoryIdService = exports.getPostByCampaignIdService = exports.getPostByBrandIdService = exports.getPostByStoreIdService = exports.deleteManyPostService = exports.deleteAPostService = exports.getAllPosts = exports.revealedAPostService = exports.updateAPostService = exports.setPostAsUnreadToUserService = exports.addNewPostService = exports.getPostByIdService = exports.getPostByPostTitleService = exports.searchGloballyAdminService = exports.searchGloballyClientService = void 0;
 const post_model_1 = __importDefault(require("./post.model"));
 const user_model_1 = __importDefault(require("../user.module/user.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
 const store_services_1 = require("../store.module/store.services");
-const store_model_1 = __importDefault(require("../store.module/store.model"));
-const brand_model_1 = __importDefault(require("../brand.module/brand.model"));
-const category_model_1 = __importDefault(require("../category.module/category.model"));
-const campaign_model_1 = __importDefault(require("../campaign.module/campaign.model"));
-const network_model_1 = __importDefault(require("../network.module/network.model"));
 //== get search client
 const searchGloballyClientService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const stores = yield (0, store_services_1.getAllActiveStores)(query);
+    const stores = yield getAllActiveStores(query);
     const posts = yield (0, exports.getAllPosts)(query, true);
     return { stores, posts };
 });
@@ -168,21 +163,42 @@ const getPostByNetworkIdService = (networkId) => __awaiter(void 0, void 0, void 
 });
 exports.getPostByNetworkIdService = getPostByNetworkIdService;
 // update countries to all related fields
-const updateCountriesToAllRelatedFields = (payload, session) => __awaiter(void 0, void 0, void 0, function* () {
-    var _a, _b, _c, _d;
-    const postCountries = payload.countries;
-    yield store_model_1.default.findOneAndUpdate({ _id: payload.store.moreAboutStore }, { $addToSet: { storeCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
-    if ((_a = payload.brand) === null || _a === void 0 ? void 0 : _a.moreAboutBrand) {
-        yield brand_model_1.default.findOneAndUpdate({ _id: payload.brand.moreAboutBrand }, { $addToSet: { brandCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
-    }
-    if ((_b = payload.category) === null || _b === void 0 ? void 0 : _b.moreAboutCategory) {
-        yield category_model_1.default.findOneAndUpdate({ _id: payload.category.moreAboutCategory }, { $addToSet: { categoryCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
-    }
-    if ((_c = payload.campaign) === null || _c === void 0 ? void 0 : _c.moreAboutCampaign) {
-        yield campaign_model_1.default.findOneAndUpdate({ _id: payload.campaign.moreAboutCampaign }, { $addToSet: { campaignCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
-    }
-    if ((_d = payload.network) === null || _d === void 0 ? void 0 : _d.moreAboutNetwork) {
-        yield network_model_1.default.findOneAndUpdate({ _id: payload.network.moreAboutNetwork }, { $addToSet: { networkCountries: { $each: postCountries } } }, { upsert: true, new: true, session });
-    }
-});
-exports.updateCountriesToAllRelatedFields = updateCountriesToAllRelatedFields;
+// export const createNewPostUpdateCountriesToAllRelatedFields = async (
+//   payload: IPost,
+//   session: mongoose.mongo.ClientSession
+// ) => {
+//   const postCountries = payload.countries;
+//   await Store.findOneAndUpdate(
+//     { _id: payload.store.moreAboutStore },
+//     { $addToSet: { storeCountries: { $each: postCountries } } },
+//     { upsert: true, new: true, session }
+//   );
+//   if (payload.brand?.moreAboutBrand) {
+//     await Brand.findOneAndUpdate(
+//       { _id: payload.brand.moreAboutBrand },
+//       { $addToSet: { brandCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
+//   if (payload.category?.moreAboutCategory) {
+//     await Category.findOneAndUpdate(
+//       { _id: payload.category.moreAboutCategory },
+//       { $addToSet: { categoryCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
+//   if (payload.campaign?.moreAboutCampaign) {
+//     await Campaign.findOneAndUpdate(
+//       { _id: payload.campaign.moreAboutCampaign },
+//       { $addToSet: { campaignCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
+//   if (payload.network?.moreAboutNetwork) {
+//     await Network.findOneAndUpdate(
+//       { _id: payload.network.moreAboutNetwork },
+//       { $addToSet: { networkCountries: { $each: postCountries } } },
+//       { upsert: true, new: true, session }
+//     );
+//   }
+// };

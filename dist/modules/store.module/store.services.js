@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAStoreService = exports.getAllActiveStores = exports.getAllStores = exports.updateRefferencePosts = exports.updateAStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = exports.addNewStoreService = void 0;
+exports.deleteAStoreService = exports.getAllStores = exports.updateRefferencePosts = exports.updateAStoreService = exports.getStoreByIdService = exports.getStoreByStoreNameService = exports.addNewStoreService = void 0;
 const store_model_1 = __importDefault(require("./store.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
@@ -67,7 +67,7 @@ const updateRefferencePosts = (storeId, payload, session) => __awaiter(void 0, v
 });
 exports.updateRefferencePosts = updateRefferencePosts;
 // get all stores
-const getAllStores = (query) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllStores = (query, isAdmin) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
     const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("store", query, ...constants_1.store_query_fields);
     const result = yield store_model_1.default.aggregate([
@@ -83,11 +83,33 @@ const getAllStores = (query) => __awaiter(void 0, void 0, void 0, function* () {
             $addFields: { totalPosts: { $size: "$existPosts" } },
         },
         {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                storeName: { $first: "$storeName" },
+                storeLink: { $first: "$storeLink" },
+                storePhotoURL: { $first: "$storePhotoURL" },
+                storeDescription: { $first: "$storeDescription" },
+            },
+        },
+        {
             $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
+                storeName: 1,
+                storeLink: 1,
+                storePhotoURL: 1,
+                storeDescription: 1,
+                totalPosts: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
             },
         },
         {
@@ -129,79 +151,6 @@ const getAllStores = (query) => __awaiter(void 0, void 0, void 0, function* () {
     };
 });
 exports.getAllStores = getAllStores;
-// get all active stores
-const getAllActiveStores = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("store", query, ...constants_1.store_query_fields);
-    const result = yield store_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "store.moreAboutStore",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $match: {
-                existPosts: { $ne: [] },
-            },
-        },
-        {
-            $addFields: { totalPosts: { $size: "$existPosts" } },
-        },
-        {
-            $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
-            },
-        },
-        {
-            $match: filters,
-        },
-        {
-            $sort: { [sortBy]: sortOrder },
-        },
-        {
-            $skip: skip,
-        },
-        {
-            $limit: limit,
-        },
-    ]);
-    const totalDocuments = yield store_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "store.moreAboutStore",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $match: {
-                existPosts: { $ne: [] },
-            },
-        },
-        {
-            $match: filters,
-        },
-        { $count: "totalDocs" },
-    ]);
-    return {
-        meta: {
-            page,
-            limit,
-            totalDocuments: Object.keys(totalDocuments).length
-                ? (_b = totalDocuments[0]) === null || _b === void 0 ? void 0 : _b.totalDocs
-                : 0,
-        },
-        data: result,
-    };
-});
-exports.getAllActiveStores = getAllActiveStores;
 //== delete a Store
 const deleteAStoreService = (storeId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield store_model_1.default.deleteOne({ _id: storeId });

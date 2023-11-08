@@ -17,7 +17,7 @@ const brandRouter = express.Router();
  *@apiSuccess {Array of Object} all Brands.
  *@apiError 401, 403 unauthorized & forbidden
  */
-brandRouter.get("/", brandController.getAllActiveBrandsController);
+brandRouter.get("/", brandController.getAllBrandsClientController);
 
 /**
  *@api{get}/all get all Brand
@@ -34,7 +34,7 @@ brandRouter.get(
   "/all",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
-  brandController.getAllBrandsController
+  brandController.getAllBrandsAdminController
 );
 /**
  *@api{get}/:id get a Brand by id

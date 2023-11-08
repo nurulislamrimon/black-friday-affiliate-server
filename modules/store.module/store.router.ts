@@ -35,7 +35,7 @@ storeRouter.post(
  *@apiSuccess {Array of Object} all stores.
  *@apiError 401, 403 unauthorized & forbidden
  */
-storeRouter.get("/", storeController.getAllActiveStoresController);
+storeRouter.get("/", storeController.getAllStoresClientController);
 
 /**
  *@api{get}/all get all store
@@ -52,7 +52,7 @@ storeRouter.get(
   "/all",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
-  storeController.getAllStoresController
+  storeController.getAllStoresAdminController
 );
 
 /**

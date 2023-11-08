@@ -23,7 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteABrandService = exports.getAllActiveBrands = exports.getAllBrands = exports.updateRefferencePosts = exports.updateABrandService = exports.addNewBrandService = exports.getBrandByIdService = exports.getBrandByBrandNameService = void 0;
+exports.deleteABrandService = exports.getAllBrands = exports.updateRefferencePosts = exports.updateABrandService = exports.addNewBrandService = exports.getBrandByIdService = exports.getBrandByBrandNameService = void 0;
 const brand_model_1 = __importDefault(require("./brand.model"));
 const search_filter_and_queries_1 = require("../../utils/search_filter_and_queries");
 const constants_1 = require("../../utils/constants");
@@ -66,10 +66,10 @@ const updateRefferencePosts = (brandId, payload, session) => __awaiter(void 0, v
     return result;
 });
 exports.updateRefferencePosts = updateRefferencePosts;
-// get all Brands
-const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
+// get all brands
+const getAllBrands = (query, isAdmin) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("Brand", query, ...constants_1.brand_query_fields);
+    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("brand", query, ...constants_1.brand_query_fields);
     const result = yield brand_model_1.default.aggregate([
         {
             $lookup: {
@@ -83,11 +83,33 @@ const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
             $addFields: { totalPosts: { $size: "$existPosts" } },
         },
         {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                brandName: { $first: "$brandName" },
+                brandLink: { $first: "$brandLink" },
+                brandPhotoURL: { $first: "$brandPhotoURL" },
+                brandDescription: { $first: "$brandDescription" },
+            },
+        },
+        {
             $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
+                brandName: 1,
+                brandLink: 1,
+                brandPhotoURL: 1,
+                brandDescription: 1,
+                totalPosts: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
             },
         },
         {
@@ -129,79 +151,6 @@ const getAllBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
     };
 });
 exports.getAllBrands = getAllBrands;
-// get all active Brands
-const getAllActiveBrands = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const { filters, skip, page, limit, sortBy, sortOrder } = (0, search_filter_and_queries_1.search_filter_and_queries)("Brand", query, ...constants_1.brand_query_fields);
-    const result = yield brand_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "brand.moreAboutBrand",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $match: {
-                existPosts: { $ne: [] },
-            },
-        },
-        {
-            $addFields: { totalPosts: { $size: "$existPosts" } },
-        },
-        {
-            $project: {
-                existPosts: 0,
-                postBy: 0,
-                updateBy: 0,
-                howToUse: 0,
-            },
-        },
-        {
-            $match: filters,
-        },
-        {
-            $sort: { [sortBy]: sortOrder },
-        },
-        {
-            $skip: skip,
-        },
-        {
-            $limit: limit,
-        },
-    ]);
-    const totalDocuments = yield brand_model_1.default.aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                foreignField: "brand.moreAboutBrand",
-                localField: "_id",
-                as: "existPosts",
-            },
-        },
-        {
-            $match: {
-                existPosts: { $ne: [] },
-            },
-        },
-        {
-            $match: filters,
-        },
-        { $count: "totalDocs" },
-    ]);
-    return {
-        meta: {
-            page,
-            limit,
-            totalDocuments: Object.keys(totalDocuments).length
-                ? (_b = totalDocuments[0]) === null || _b === void 0 ? void 0 : _b.totalDocs
-                : 0,
-        },
-        data: result,
-    };
-});
-exports.getAllActiveBrands = getAllActiveBrands;
 //== delete a Brand
 const deleteABrandService = (BrandId) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield brand_model_1.default.deleteOne({ _id: BrandId });

@@ -43,7 +43,7 @@ const brandRouter = express_1.default.Router();
  *@apiSuccess {Array of Object} all Brands.
  *@apiError 401, 403 unauthorized & forbidden
  */
-brandRouter.get("/", brandController.getAllActiveBrandsController);
+brandRouter.get("/", brandController.getAllBrandsClientController);
 /**
  *@api{get}/all get all Brand
  *@apiDescription get all Brands
@@ -55,7 +55,7 @@ brandRouter.get("/", brandController.getAllActiveBrandsController);
  *@apiSuccess {Array of Object} all Brands.
  *@apiError 401, 403 unauthorized & forbidden
  */
-brandRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), brandController.getAllBrandsController);
+brandRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), brandController.getAllBrandsAdminController);
 /**
  *@api{get}/:id get a Brand by id
  *@apiDescription get a Brand by id

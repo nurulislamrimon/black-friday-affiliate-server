@@ -17,7 +17,7 @@ const campaignRouter = express.Router();
  *@apiSuccess {Array of Object} all Campaigns.
  *@apiError 401, 403 unauthorized & forbidden
  */
-campaignRouter.get("/", campaignController.getAllActiveCampaignsController);
+campaignRouter.get("/", campaignController.getAllCampaignsClientController);
 
 /**
  *@api{get}/all get all Campaign
@@ -34,7 +34,7 @@ campaignRouter.get(
   "/all",
   verify_token,
   verify_authorization(roles.SUPER_ADMIN, roles.ADMIN, roles.MANAGER) as any,
-  campaignController.getAllCampaignsController
+  campaignController.getAllCampaignsAdminController
 );
 /**
  *@api{get}/:id get a Campaign by id

@@ -7,7 +7,7 @@ import { countries } from "../../utils/constants/countries.enum";
 const categorySchema = new Schema<ICategory>(
   {
     categoryName: { type: String, required: true, unique: true, trim: true },
-    categoryCountries: [{ type: String, enum: countries }],
+    // categoryCountries: [{ type: String, enum: countries }],
 
     postBy: {
       name: { type: String, required: true },

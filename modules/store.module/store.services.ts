@@ -19,6 +19,7 @@ export const getStoreByStoreNameService = async (storeName: string) => {
   );
   return result;
 };
+
 //== get Store by objectId
 export const getStoreByIdService = async (id: Types.ObjectId) => {
   const result = await Store.findOne({ _id: id }, "-postBy -updateBy");
@@ -44,6 +45,7 @@ export const updateAStoreService = async (
 
   return result;
 };
+
 // update posts thats are reffered to the store
 export const updateRefferencePosts = async (
   storeId: Types.ObjectId,
@@ -65,7 +67,7 @@ export const updateRefferencePosts = async (
 };
 
 // get all stores
-export const getAllStores = async (query: any) => {
+export const getAllStores = async (query: any, isAdmin: boolean) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
     search_filter_and_queries("store", query, ...store_query_fields) as any;
 
@@ -82,11 +84,33 @@ export const getAllStores = async (query: any) => {
       $addFields: { totalPosts: { $size: "$existPosts" } },
     },
     {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        storeName: { $first: "$storeName" },
+        storeLink: { $first: "$storeLink" },
+        storePhotoURL: { $first: "$storePhotoURL" },
+        storeDescription: { $first: "$storeDescription" },
+      },
+    },
+    {
       $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
+        storeName: 1,
+        storeLink: 1,
+        storePhotoURL: 1,
+        storeDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
       },
     },
     {
@@ -117,81 +141,7 @@ export const getAllStores = async (query: any) => {
     },
     { $count: "totalDocs" },
   ]);
-  return {
-    meta: {
-      page,
-      limit,
-      totalDocuments: Object.keys(totalDocuments).length
-        ? totalDocuments[0]?.totalDocs
-        : 0,
-    },
-    data: result,
-  };
-};
 
-// get all active stores
-export const getAllActiveStores = async (query: any) => {
-  const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries("store", query, ...store_query_fields) as any;
-
-  const result = await Store.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "store.moreAboutStore",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $addFields: { totalPosts: { $size: "$existPosts" } },
-    },
-    {
-      $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-  ]);
-
-  const totalDocuments = await Store.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "store.moreAboutStore",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $match: filters,
-    },
-    { $count: "totalDocs" },
-  ]);
   return {
     meta: {
       page,
@@ -207,6 +157,5 @@ export const getAllActiveStores = async (query: any) => {
 //== delete a Store
 export const deleteAStoreService = async (storeId: Types.ObjectId) => {
   const result = await Store.deleteOne({ _id: storeId });
-
   return result;
 };

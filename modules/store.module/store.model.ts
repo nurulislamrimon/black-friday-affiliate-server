@@ -10,7 +10,7 @@ const storeSchema = new Schema<IStore>(
     storeLink: { type: String, required: true, validate: validator.isURL },
     storePhotoURL: { type: String, required: true, validate: validator.isURL },
     storeDescription: String,
-    storeCountries: [{ type: String, enum: countries }],
+    // storeCountries: [{ type: String, enum: countries }],
     howToUse: [
       [
         {

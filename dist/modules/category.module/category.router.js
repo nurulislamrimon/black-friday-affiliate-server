@@ -43,7 +43,7 @@ const categoryRouter = express_1.default.Router();
  *@apiSuccess {Array of Object} all categorys.
  *@apiError 401, 403 unauthorized & forbidden
  */
-categoryRouter.get("/", categoryController.getActiveCategoriesController);
+categoryRouter.get("/", categoryController.getAllCategoriesClientController);
 /**
  *@api{get}/all get all category
  *@apiDescription get all categorys
@@ -55,7 +55,7 @@ categoryRouter.get("/", categoryController.getActiveCategoriesController);
  *@apiSuccess {Array of Object} all categorys.
  *@apiError 401, 403 unauthorized & forbidden
  */
-categoryRouter.get("/all", categoryController.getAllCategoriesController);
+categoryRouter.get("/all", categoryController.getAllCategoriesAdminController);
 /**
  *@api{get}/:id get a category by id
  *@apiDescription get a category by id

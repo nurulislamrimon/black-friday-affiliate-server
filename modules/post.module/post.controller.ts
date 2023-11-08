@@ -31,26 +31,29 @@ export const addNewPostController = catchAsync(
         campaign: { campaignName: req.body.campaignName },
         postBy: { ...postBy?.toObject(), moreAboutUser: postBy?._id },
       };
-      const session = await mongoose.startSession();
-      session.startTransaction();
-      try {
-        const result = await PostServices.addNewPostService(newPost);
-        if (result) {
-          await PostServices.updateCountriesToAllRelatedFields(result, session);
-        }
+      // const session = await mongoose.startSession();
+      // session.startTransaction();
+      // try {
+      const result = await PostServices.addNewPostService(newPost);
+      // if (result) {
+      // await PostServices.createNewPostUpdateCountriesToAllRelatedFields(
+      //     result,
+      //     session
+      //   );
+      // }
 
-        res.send({
-          success: true,
-          data: result,
-        });
-        console.log(`Post is added!`);
-        await session.commitTransaction();
-      } catch (error) {
-        session.abortTransaction();
-        throw error;
-      } finally {
-        session.endSession();
-      }
+      res.send({
+        success: true,
+        data: result,
+      });
+      console.log(`Post is added!`);
+      //   await session.commitTransaction();
+      // } catch (error) {
+      //   session.abortTransaction();
+      //   throw error;
+      // } finally {
+      //   session.endSession();
+      // }
     }
   }
 );

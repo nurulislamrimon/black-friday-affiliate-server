@@ -37,10 +37,11 @@ export const getABrandByBrandNameController = catchAsync(
     }
   }
 );
-// get all active Brands
-export const getAllActiveBrandsController = catchAsync(
+
+// get all Brands
+export const getAllBrandsAdminController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await brandServices.getAllActiveBrands(req.query);
+    const result = await brandServices.getAllBrands(req.query, true);
     res.send({
       success: true,
       ...result,
@@ -48,6 +49,19 @@ export const getAllActiveBrandsController = catchAsync(
     console.log(`${result?.data?.length} Brands are responsed!`);
   }
 );
+
+// get all active Brands
+export const getAllBrandsClientController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await brandServices.getAllBrands(req.query, false);
+    res.send({
+      success: true,
+      ...result,
+    });
+    console.log(`${result?.data?.length} Brands are responsed!`);
+  }
+);
+
 // add new Brand controller
 export const addNewBrandController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -75,17 +89,6 @@ export const addNewBrandController = catchAsync(
       });
       console.log(`Brand ${result._id} is added!`);
     }
-  }
-);
-// get all Brands
-export const getAllBrandsController = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await brandServices.getAllBrands(req.query);
-    res.send({
-      success: true,
-      ...result,
-    });
-    console.log(`${result?.data?.length} Brands are responsed!`);
   }
 );
 

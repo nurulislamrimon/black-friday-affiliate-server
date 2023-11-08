@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteABrandController = exports.updateABrandController = exports.getAllBrandsController = exports.addNewBrandController = exports.getAllActiveBrandsController = exports.getABrandByBrandNameController = exports.getABrandController = void 0;
+exports.deleteABrandController = exports.updateABrandController = exports.addNewBrandController = exports.getAllBrandsClientController = exports.getAllBrandsAdminController = exports.getABrandByBrandNameController = exports.getABrandController = void 0;
 const brandServices = __importStar(require("./brand.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = __importStar(require("mongoose"));
@@ -69,12 +69,19 @@ exports.getABrandByBrandNameController = (0, catchAsync_1.default)((req, res, ne
         });
     }
 }));
-// get all active Brands
-exports.getAllActiveBrandsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+// get all Brands
+exports.getAllBrandsAdminController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield brandServices.getAllActiveBrands(req.query);
+    const result = yield brandServices.getAllBrands(req.query, true);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} Brands are responsed!`);
+}));
+// get all active Brands
+exports.getAllBrandsClientController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const result = yield brandServices.getAllBrands(req.query, false);
+    res.send(Object.assign({ success: true }, result));
+    console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Brands are responsed!`);
 }));
 // add new Brand controller
 exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -95,13 +102,6 @@ exports.addNewBrandController = (0, catchAsync_1.default)((req, res, next) => __
         });
         console.log(`Brand ${result._id} is added!`);
     }
-}));
-// get all Brands
-exports.getAllBrandsController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b;
-    const result = yield brandServices.getAllBrands(req.query);
-    res.send(Object.assign({ success: true }, result));
-    console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} Brands are responsed!`);
 }));
 // update a brand
 exports.updateABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

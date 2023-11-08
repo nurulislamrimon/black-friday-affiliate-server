@@ -55,7 +55,7 @@ storeRouter.post("/add", verify_token_1.verify_token, (0, verify_authorization_1
  *@apiSuccess {Array of Object} all stores.
  *@apiError 401, 403 unauthorized & forbidden
  */
-storeRouter.get("/", storeController.getAllActiveStoresController);
+storeRouter.get("/", storeController.getAllStoresClientController);
 /**
  *@api{get}/all get all store
  *@apiDescription get all stores
@@ -67,7 +67,7 @@ storeRouter.get("/", storeController.getAllActiveStoresController);
  *@apiSuccess {Array of Object} all stores.
  *@apiError 401, 403 unauthorized & forbidden
  */
-storeRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), storeController.getAllStoresController);
+storeRouter.get("/all", verify_token_1.verify_token, (0, verify_authorization_1.verify_authorization)(authorization_roles_1.roles.SUPER_ADMIN, authorization_roles_1.roles.ADMIN, authorization_roles_1.roles.MANAGER), storeController.getAllStoresAdminController);
 /**
  *@api{get}/:id get a store by id
  *@apiDescription get a store by id

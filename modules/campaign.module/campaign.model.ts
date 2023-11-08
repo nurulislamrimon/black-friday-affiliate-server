@@ -14,7 +14,7 @@ const campaignSchema = new Schema<ICampaign>(
     },
     startPeriod: { type: Date, default: Date.now() },
     endPeriod: { type: Date, required: true },
-    campaignCountries: [{ type: String, enum: countries }],
+    // campaignCountries: [{ type: String, enum: countries }],
 
     postBy: {
       name: { type: String, required: true },

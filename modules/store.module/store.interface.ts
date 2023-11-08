@@ -5,7 +5,7 @@ export default interface IStore {
   storePhotoURL: string;
   storeLink: string;
   storeDescription?: string;
-  storeCountries?: string[];
+  // storeCountries?: string[];
   howToUse?: {
     id: string;
     photoURL?: string;

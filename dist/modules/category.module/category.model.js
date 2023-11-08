@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const validator_1 = __importDefault(require("validator"));
 const mongoose_2 = require("mongoose");
-const countries_enum_1 = require("../../utils/constants/countries.enum");
 const categorySchema = new mongoose_1.Schema({
     categoryName: { type: String, required: true, unique: true, trim: true },
-    categoryCountries: [{ type: String, enum: countries_enum_1.countries }],
+    // categoryCountries: [{ type: String, enum: countries }],
     postBy: {
         name: { type: String, required: true },
         email: { type: String, required: true, validate: validator_1.default.isEmail },

@@ -7,7 +7,7 @@ import { countries } from "../../utils/constants/countries.enum";
 const networkSchema = new Schema<INetwork>(
   {
     networkName: { type: String, required: true, unique: true, trim: true },
-    networkCountries: [{ type: String, enum: countries }],
+    // networkCountries: [{ type: String, enum: countries }],
 
     postBy: {
       name: { type: String, required: true },

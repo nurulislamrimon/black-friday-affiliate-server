@@ -75,9 +75,9 @@ export const getAStoreByStoreNameController = catchAsync(
 );
 
 // get all active stores
-export const getAllActiveStoresController = catchAsync(
+export const getAllStoresClientController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await storeServices.getAllActiveStores(req.query);
+    const result = await storeServices.getAllStores(req.query, false);
     res.send({
       success: true,
       ...result,
@@ -87,9 +87,9 @@ export const getAllActiveStoresController = catchAsync(
 );
 
 // get all stores
-export const getAllStoresController = catchAsync(
+export const getAllStoresAdminController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await storeServices.getAllStores(req.query);
+    const result = await storeServices.getAllStores(req.query, true);
     res.send({
       success: true,
       ...result,

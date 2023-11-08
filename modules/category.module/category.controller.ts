@@ -69,7 +69,7 @@ export const addNewCategoryController = catchAsync(
 );
 
 // get all Categorys
-export const getAllCategoriesController = catchAsync(
+export const getAllCategoriesAdminController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await categoryServices.getAllCategories(req.query);
     res.send({
@@ -79,8 +79,9 @@ export const getAllCategoriesController = catchAsync(
     console.log(`${result?.data?.length} Categorys are responsed!`);
   }
 );
+
 // get all Categorys
-export const getActiveCategoriesController = catchAsync(
+export const getAllCategoriesClientController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const result = await categoryServices.getActiveCategories(req.query);
     res.send({

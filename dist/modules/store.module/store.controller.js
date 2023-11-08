@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteAStoreController = exports.updateAStoreController = exports.getAllStoresController = exports.getAllActiveStoresController = exports.getAStoreByStoreNameController = exports.getAStoreController = exports.addNewStoreController = void 0;
+exports.deleteAStoreController = exports.updateAStoreController = exports.getAllStoresAdminController = exports.getAllStoresClientController = exports.getAStoreByStoreNameController = exports.getAStoreController = exports.addNewStoreController = void 0;
 const storeServices = __importStar(require("./store.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = __importStar(require("mongoose"));
@@ -96,16 +96,16 @@ exports.getAStoreByStoreNameController = (0, catchAsync_1.default)((req, res, ne
     }
 }));
 // get all active stores
-exports.getAllActiveStoresController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllStoresClientController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _a;
-    const result = yield storeServices.getAllActiveStores(req.query);
+    const result = yield storeServices.getAllStores(req.query, false);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_a = result === null || result === void 0 ? void 0 : result.data) === null || _a === void 0 ? void 0 : _a.length} stores are responsed!`);
 }));
 // get all stores
-exports.getAllStoresController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getAllStoresAdminController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
-    const result = yield storeServices.getAllStores(req.query);
+    const result = yield storeServices.getAllStores(req.query, true);
     res.send(Object.assign({ success: true }, result));
     console.log(`${(_b = result === null || result === void 0 ? void 0 : result.data) === null || _b === void 0 ? void 0 : _b.length} stores are responsed!`);
 }));

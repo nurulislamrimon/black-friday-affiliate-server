@@ -63,10 +63,11 @@ export const updateRefferencePosts = async (
 
   return result;
 };
-// get all Brands
-export const getAllBrands = async (query: any) => {
+
+// get all brands
+export const getAllBrands = async (query: any, isAdmin: boolean) => {
   const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries("Brand", query, ...brand_query_fields) as any;
+    search_filter_and_queries("brand", query, ...brand_query_fields) as any;
 
   const result = await Brand.aggregate([
     {
@@ -81,11 +82,33 @@ export const getAllBrands = async (query: any) => {
       $addFields: { totalPosts: { $size: "$existPosts" } },
     },
     {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        brandName: { $first: "$brandName" },
+        brandLink: { $first: "$brandLink" },
+        brandPhotoURL: { $first: "$brandPhotoURL" },
+        brandDescription: { $first: "$brandDescription" },
+      },
+    },
+    {
       $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
+        brandName: 1,
+        brandLink: 1,
+        brandPhotoURL: 1,
+        brandDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
       },
     },
     {
@@ -116,81 +139,7 @@ export const getAllBrands = async (query: any) => {
     },
     { $count: "totalDocs" },
   ]);
-  return {
-    meta: {
-      page,
-      limit,
-      totalDocuments: Object.keys(totalDocuments).length
-        ? totalDocuments[0]?.totalDocs
-        : 0,
-    },
-    data: result,
-  };
-};
 
-// get all active Brands
-export const getAllActiveBrands = async (query: any) => {
-  const { filters, skip, page, limit, sortBy, sortOrder } =
-    search_filter_and_queries("Brand", query, ...brand_query_fields) as any;
-
-  const result = await Brand.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "brand.moreAboutBrand",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $addFields: { totalPosts: { $size: "$existPosts" } },
-    },
-    {
-      $project: {
-        existPosts: 0,
-        postBy: 0,
-        updateBy: 0,
-        howToUse: 0,
-      },
-    },
-    {
-      $match: filters,
-    },
-    {
-      $sort: { [sortBy]: sortOrder },
-    },
-    {
-      $skip: skip,
-    },
-    {
-      $limit: limit,
-    },
-  ]);
-
-  const totalDocuments = await Brand.aggregate([
-    {
-      $lookup: {
-        from: "posts",
-        foreignField: "brand.moreAboutBrand",
-        localField: "_id",
-        as: "existPosts",
-      },
-    },
-    {
-      $match: {
-        existPosts: { $ne: [] },
-      },
-    },
-    {
-      $match: filters,
-    },
-    { $count: "totalDocs" },
-  ]);
   return {
     meta: {
       page,
