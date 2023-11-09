@@ -89,6 +89,16 @@ postSchema.pre("validate", async function (next) {
     throw new Error("Please provide a store name!");
   } else {
     const isStoreExist = await getStoreByStoreNameService(this.store.storeName);
+    if (this.category?.categoryName) {
+      const isCategoryExist = await getCategoryByCategoryNameService(
+        this.category.categoryName
+      );
+      if (!isCategoryExist) {
+        throw new Error("Please enter a valid categoryName!");
+      } else {
+        this.category.moreAboutCategory = isCategoryExist._id as any;
+      }
+    }
     if (this.campaign?.campaignName) {
       const isCampaignExist = await getCampaignByCampaignNameService(
         this.campaign.campaignName
@@ -136,13 +146,9 @@ postSchema.pre("validate", async function (next) {
             "Please provide dealLink, categoryName and postPhotoURL or productPreviewLink!"
           );
         } else {
-          const isCategoryExist = await getCategoryByCategoryNameService(
-            this.category.categoryName
-          );
-          if (!isCategoryExist) {
-            throw new Error("Please enter a valid category name!");
+          if (!this.category.categoryName) {
+            throw new Error("Please enter a category name!");
           } else {
-            this.category.moreAboutCategory = isCategoryExist._id as any;
             if (this.brand?.brandName) {
               const isBrandExist = await getBrandByBrandNameService(
                 this.brand.brandName
