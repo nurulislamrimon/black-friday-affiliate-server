@@ -135,6 +135,33 @@ export const getAllCategories = async (query: any, isAdmin: boolean) => {
       },
     },
     {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        categoryName: { $first: "$categoryName" },
+        totalPosts: { $first: "$totalPosts" },
+        countries: { $addToSet: "$existPosts.countries" },
+      },
+    },
+    {
+      $project: {
+        categoryName: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+    {
       $match: filters,
     },
     { $count: "totalDocs" },

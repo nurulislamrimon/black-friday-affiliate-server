@@ -130,6 +130,33 @@ export const getAllNetworks = async (query: any, isAdmin: boolean) => {
       },
     },
     {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        networkName: { $first: "$networkName" },
+      },
+    },
+    {
+      $project: {
+        networkName: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+    {
       $match: filters,
     },
     { $count: "totalDocs" },

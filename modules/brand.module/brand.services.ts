@@ -136,6 +136,39 @@ export const getAllBrands = async (query: any, isAdmin: boolean) => {
       },
     },
     {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        brandName: { $first: "$brandName" },
+        brandLink: { $first: "$brandLink" },
+        brandPhotoURL: { $first: "$brandPhotoURL" },
+        brandDescription: { $first: "$brandDescription" },
+      },
+    },
+    {
+      $project: {
+        brandName: 1,
+        brandLink: 1,
+        brandPhotoURL: 1,
+        brandDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+    {
       $match: filters,
     },
     { $count: "totalDocs" },
