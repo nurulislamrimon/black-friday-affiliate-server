@@ -63,7 +63,7 @@ brandRouter.get(
  *@apiSuccess {Object} Brand.
  *@apiError Brand not found
  */
-brandRouter.get("/:id", brandController.getABrandController);
+brandRouter.get("/:id", brandController.getBrandByIdController);
 
 /**
  *@api{post}/add add new Brand

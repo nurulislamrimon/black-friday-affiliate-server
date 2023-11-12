@@ -6,7 +6,7 @@ import { getPostByBrandIdService } from "../post.module/post.services";
 import catchAsync from "../../Shared/catchAsync";
 
 // get Brand by Id controller
-export const getABrandController = catchAsync(
+export const getBrandByIdController = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const BrandId = new Types.ObjectId(req.params.id);
 

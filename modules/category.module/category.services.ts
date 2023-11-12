@@ -18,8 +18,55 @@ export const getCategoryByCategoryNameService = async (
 
 //== get Category by objectId
 export const getCategoryByIdService = async (id: Types.ObjectId) => {
-  const result = await Category.findOne({ _id: id }, "-postBy -updateBy");
-  return result;
+  const result = await Category.aggregate([
+    {
+      $match: { _id: id },
+    },
+    {
+      $lookup: {
+        from: "posts",
+        foreignField: "category.moreAboutCategory",
+        localField: "_id",
+        as: "existPosts",
+      },
+    },
+    {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        categoryName: { $first: "$categoryName" },
+        categoryLink: { $first: "$categoryLink" },
+        categoryPhotoURL: { $first: "$categoryPhotoURL" },
+        categoryDescription: { $first: "$categoryDescription" },
+        howToUse: { $first: "$howToUse" },
+      },
+    },
+    {
+      $project: {
+        categoryName: 1,
+        categoryLink: 1,
+        categoryPhotoURL: 1,
+        categoryDescription: 1,
+        totalPosts: 1,
+        howToUse: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+  ]);
+  return Object.keys(result).length ? result[0] : result;
 };
 
 //== create new Category

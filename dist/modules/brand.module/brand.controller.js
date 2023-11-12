@@ -35,14 +35,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteABrandController = exports.updateABrandController = exports.addNewBrandController = exports.getAllBrandsClientController = exports.getAllBrandsAdminController = exports.getABrandByBrandNameController = exports.getABrandController = void 0;
+exports.deleteABrandController = exports.updateABrandController = exports.addNewBrandController = exports.getAllBrandsClientController = exports.getAllBrandsAdminController = exports.getABrandByBrandNameController = exports.getBrandByIdController = void 0;
 const brandServices = __importStar(require("./brand.services"));
 const user_services_1 = require("../user.module/user.services");
 const mongoose_1 = __importStar(require("mongoose"));
 const post_services_1 = require("../post.module/post.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
 // get Brand by Id controller
-exports.getABrandController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getBrandByIdController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const BrandId = new mongoose_1.Types.ObjectId(req.params.id);
     const result = yield brandServices.getBrandByIdService(BrandId);
     if (!result) {

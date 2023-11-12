@@ -36,8 +36,55 @@ const getCategoryByCategoryNameService = (categoryName) => __awaiter(void 0, voi
 exports.getCategoryByCategoryNameService = getCategoryByCategoryNameService;
 //== get Category by objectId
 const getCategoryByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
-    return result;
+    const result = yield category_model_1.default.aggregate([
+        {
+            $match: { _id: id },
+        },
+        {
+            $lookup: {
+                from: "posts",
+                foreignField: "category.moreAboutCategory",
+                localField: "_id",
+                as: "existPosts",
+            },
+        },
+        {
+            $addFields: { totalPosts: { $size: "$existPosts" } },
+        },
+        {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                categoryName: { $first: "$categoryName" },
+                categoryLink: { $first: "$categoryLink" },
+                categoryPhotoURL: { $first: "$categoryPhotoURL" },
+                categoryDescription: { $first: "$categoryDescription" },
+                howToUse: { $first: "$howToUse" },
+            },
+        },
+        {
+            $project: {
+                categoryName: 1,
+                categoryLink: 1,
+                categoryPhotoURL: 1,
+                categoryDescription: 1,
+                totalPosts: 1,
+                howToUse: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
+            },
+        },
+    ]);
+    return Object.keys(result).length ? result[0] : result;
 });
 exports.getCategoryByIdService = getCategoryByIdService;
 //== create new Category

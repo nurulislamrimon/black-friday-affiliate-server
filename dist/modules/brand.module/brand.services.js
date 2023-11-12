@@ -36,8 +36,55 @@ const getBrandByBrandNameService = (brandName) => __awaiter(void 0, void 0, void
 exports.getBrandByBrandNameService = getBrandByBrandNameService;
 //== get Brand by objectId
 const getBrandByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield brand_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
-    return result;
+    const result = yield brand_model_1.default.aggregate([
+        {
+            $match: { _id: id },
+        },
+        {
+            $lookup: {
+                from: "posts",
+                foreignField: "brand.moreAboutBrand",
+                localField: "_id",
+                as: "existPosts",
+            },
+        },
+        {
+            $addFields: { totalPosts: { $size: "$existPosts" } },
+        },
+        {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                brandName: { $first: "$brandName" },
+                brandLink: { $first: "$brandLink" },
+                brandPhotoURL: { $first: "$brandPhotoURL" },
+                brandDescription: { $first: "$brandDescription" },
+                howToUse: { $first: "$howToUse" },
+            },
+        },
+        {
+            $project: {
+                brandName: 1,
+                brandLink: 1,
+                brandPhotoURL: 1,
+                brandDescription: 1,
+                totalPosts: 1,
+                howToUse: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
+            },
+        },
+    ]);
+    return Object.keys(result).length ? result[0] : result;
 });
 exports.getBrandByIdService = getBrandByIdService;
 //== create new Brand

@@ -17,8 +17,51 @@ export const getCampaignByCampaignNameService = async (
 };
 //== get Campaign by objectId
 export const getCampaignByIdService = async (id: Types.ObjectId) => {
-  const result = await Campaign.findOne({ _id: id }, "-postBy -updateBy");
-  return result;
+  const result = await Campaign.aggregate([
+    {
+      $match: { _id: id },
+    },
+    {
+      $lookup: {
+        from: "posts",
+        foreignField: "campaign.moreAboutCampaign",
+        localField: "_id",
+        as: "existPosts",
+      },
+    },
+    {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        campaignName: { $first: "$campaignName" },
+        campaignPhotoURL: { $first: "$campaignPhotoURL" },
+        campaignDescription: { $first: "$campaignDescription" },
+      },
+    },
+    {
+      $project: {
+        campaignName: 1,
+        campaignPhotoURL: 1,
+        campaignDescription: 1,
+        totalPosts: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+  ]);
+  return Object.keys(result).length ? result[0] : result;
 };
 
 //== create new Campaign

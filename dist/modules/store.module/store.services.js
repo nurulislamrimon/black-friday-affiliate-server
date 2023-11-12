@@ -42,52 +42,55 @@ const getStoreByStoreNameService = (storeName) => __awaiter(void 0, void 0, void
 exports.getStoreByStoreNameService = getStoreByStoreNameService;
 //== get Store by objectId
 const getStoreByIdService = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield store_model_1.default.findOne({ _id: id }, "-postBy -updateBy");
-    // const result = await Store.aggregate([
-    //   {
-    //     $lookup: {
-    //       from: "posts",
-    //       foreignField: "store.moreAboutStore",
-    //       localField: "_id",
-    //       as: "existPosts",
-    //     },
-    //   },
-    //   {
-    //     $addFields: { totalPosts: { $size: "$existPosts" } },
-    //   },
-    //   {
-    //     $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
-    //   },
-    //   {
-    //     $group: {
-    //       _id: "$_id",
-    //       countries: { $addToSet: "$existPosts.countries" },
-    //       totalPosts: { $first: "$totalPosts" },
-    //       storeName: { $first: "$storeName" },
-    //       storeLink: { $first: "$storeLink" },
-    //       storePhotoURL: { $first: "$storePhotoURL" },
-    //       storeDescription: { $first: "$storeDescription" },
-    //       howToUse: { $first: "$storeDescription" },
-    //     },
-    //   },
-    //   {
-    //     $project: {
-    //       storeName: 1,
-    //       storeLink: 1,
-    //       storePhotoURL: 1,
-    //       storeDescription: 1,
-    //       totalPosts: 1,
-    //       countries: {
-    //         $reduce: {
-    //           input: "$countries",
-    //           initialValue: [],
-    //           in: { $setUnion: ["$$this", "$$value"] },
-    //         },
-    //       },
-    //     },
-    //   },
-    // ]);
-    return result;
+    const result = yield store_model_1.default.aggregate([
+        {
+            $match: { _id: id },
+        },
+        {
+            $lookup: {
+                from: "posts",
+                foreignField: "store.moreAboutStore",
+                localField: "_id",
+                as: "existPosts",
+            },
+        },
+        {
+            $addFields: { totalPosts: { $size: "$existPosts" } },
+        },
+        {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                storeName: { $first: "$storeName" },
+                storeLink: { $first: "$storeLink" },
+                storePhotoURL: { $first: "$storePhotoURL" },
+                storeDescription: { $first: "$storeDescription" },
+                howToUse: { $first: "$howToUse" },
+            },
+        },
+        {
+            $project: {
+                storeName: 1,
+                storeLink: 1,
+                storePhotoURL: 1,
+                storeDescription: 1,
+                totalPosts: 1,
+                howToUse: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
+            },
+        },
+    ]);
+    return Object.keys(result).length ? result[0] : result;
 });
 exports.getStoreByIdService = getStoreByIdService;
 //== update a Store

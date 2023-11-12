@@ -15,8 +15,55 @@ export const getBrandByBrandNameService = async (brandName: string) => {
 };
 //== get Brand by objectId
 export const getBrandByIdService = async (id: Types.ObjectId) => {
-  const result = await Brand.findOne({ _id: id }, "-postBy -updateBy");
-  return result;
+  const result = await Brand.aggregate([
+    {
+      $match: { _id: id },
+    },
+    {
+      $lookup: {
+        from: "posts",
+        foreignField: "brand.moreAboutBrand",
+        localField: "_id",
+        as: "existPosts",
+      },
+    },
+    {
+      $addFields: { totalPosts: { $size: "$existPosts" } },
+    },
+    {
+      $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: true },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        countries: { $addToSet: "$existPosts.countries" },
+        totalPosts: { $first: "$totalPosts" },
+        brandName: { $first: "$brandName" },
+        brandLink: { $first: "$brandLink" },
+        brandPhotoURL: { $first: "$brandPhotoURL" },
+        brandDescription: { $first: "$brandDescription" },
+        howToUse: { $first: "$howToUse" },
+      },
+    },
+    {
+      $project: {
+        brandName: 1,
+        brandLink: 1,
+        brandPhotoURL: 1,
+        brandDescription: 1,
+        totalPosts: 1,
+        howToUse: 1,
+        countries: {
+          $reduce: {
+            input: "$countries",
+            initialValue: [],
+            in: { $setUnion: ["$$this", "$$value"] },
+          },
+        },
+      },
+    },
+  ]);
+  return Object.keys(result).length ? result[0] : result;
 };
 
 //== create new Brand
