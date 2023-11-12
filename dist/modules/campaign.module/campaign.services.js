@@ -61,7 +61,8 @@ const getCampaignByIdService = (id) => __awaiter(void 0, void 0, void 0, functio
                 totalPosts: { $first: "$totalPosts" },
                 campaignName: { $first: "$campaignName" },
                 campaignPhotoURL: { $first: "$campaignPhotoURL" },
-                campaignDescription: { $first: "$campaignDescription" },
+                startPeriod: { $first: "$startPeriod" },
+                endPeriod: { $first: "$endPeriod" },
             },
         },
         {
@@ -69,6 +70,8 @@ const getCampaignByIdService = (id) => __awaiter(void 0, void 0, void 0, functio
                 campaignName: 1,
                 campaignPhotoURL: 1,
                 campaignDescription: 1,
+                startPeriod: 1,
+                endPeriod: 1,
                 totalPosts: 1,
                 countries: {
                     $reduce: {
@@ -134,17 +137,13 @@ const getAllCampaigns = (query, isAdmin) => __awaiter(void 0, void 0, void 0, fu
                 countries: { $addToSet: "$existPosts.countries" },
                 totalPosts: { $first: "$totalPosts" },
                 campaignName: { $first: "$campaignName" },
-                campaignLink: { $first: "$campaignLink" },
                 campaignPhotoURL: { $first: "$campaignPhotoURL" },
-                campaignDescription: { $first: "$campaignDescription" },
             },
         },
         {
             $project: {
                 campaignName: 1,
-                campaignLink: 1,
                 campaignPhotoURL: 1,
-                campaignDescription: 1,
                 totalPosts: 1,
                 countries: {
                     $reduce: {

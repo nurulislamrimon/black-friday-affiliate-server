@@ -15,6 +15,7 @@ export const getCampaignByCampaignNameService = async (
   );
   return result;
 };
+
 //== get Campaign by objectId
 export const getCampaignByIdService = async (id: Types.ObjectId) => {
   const result = await Campaign.aggregate([
@@ -42,7 +43,8 @@ export const getCampaignByIdService = async (id: Types.ObjectId) => {
         totalPosts: { $first: "$totalPosts" },
         campaignName: { $first: "$campaignName" },
         campaignPhotoURL: { $first: "$campaignPhotoURL" },
-        campaignDescription: { $first: "$campaignDescription" },
+        startPeriod: { $first: "$startPeriod" },
+        endPeriod: { $first: "$endPeriod" },
       },
     },
     {
@@ -50,6 +52,8 @@ export const getCampaignByIdService = async (id: Types.ObjectId) => {
         campaignName: 1,
         campaignPhotoURL: 1,
         campaignDescription: 1,
+        startPeriod: 1,
+        endPeriod: 1,
         totalPosts: 1,
         countries: {
           $reduce: {
@@ -139,17 +143,13 @@ export const getAllCampaigns = async (query: any, isAdmin: boolean) => {
         countries: { $addToSet: "$existPosts.countries" },
         totalPosts: { $first: "$totalPosts" },
         campaignName: { $first: "$campaignName" },
-        campaignLink: { $first: "$campaignLink" },
         campaignPhotoURL: { $first: "$campaignPhotoURL" },
-        campaignDescription: { $first: "$campaignDescription" },
       },
     },
     {
       $project: {
         campaignName: 1,
-        campaignLink: 1,
         campaignPhotoURL: 1,
-        campaignDescription: 1,
         totalPosts: 1,
         countries: {
           $reduce: {
