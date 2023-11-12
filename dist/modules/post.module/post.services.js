@@ -31,14 +31,14 @@ const constants_1 = require("../../utils/constants");
 const store_services_1 = require("../store.module/store.services");
 //== get search client
 const searchGloballyClientService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const stores = yield getAllActiveStores(query);
+    const stores = yield (0, store_services_1.getAllStores)(query, false);
     const posts = yield (0, exports.getAllPosts)(query, true);
     return { stores, posts };
 });
 exports.searchGloballyClientService = searchGloballyClientService;
 //== get search admin
 const searchGloballyAdminService = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const stores = yield (0, store_services_1.getAllStores)(query);
+    const stores = yield (0, store_services_1.getAllStores)(query, true);
     const posts = yield (0, exports.getAllPosts)(query, false);
     return { stores, posts };
 });

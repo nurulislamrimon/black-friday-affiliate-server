@@ -135,6 +135,39 @@ const getAllCampaigns = (query, isAdmin) => __awaiter(void 0, void 0, void 0, fu
             },
         },
         {
+            $addFields: { totalPosts: { $size: "$existPosts" } },
+        },
+        {
+            $unwind: { path: "$existPosts", preserveNullAndEmptyArrays: isAdmin },
+        },
+        {
+            $group: {
+                _id: "$_id",
+                countries: { $addToSet: "$existPosts.countries" },
+                totalPosts: { $first: "$totalPosts" },
+                campaignName: { $first: "$campaignName" },
+                campaignLink: { $first: "$campaignLink" },
+                campaignPhotoURL: { $first: "$campaignPhotoURL" },
+                campaignDescription: { $first: "$campaignDescription" },
+            },
+        },
+        {
+            $project: {
+                campaignName: 1,
+                campaignLink: 1,
+                campaignPhotoURL: 1,
+                campaignDescription: 1,
+                totalPosts: 1,
+                countries: {
+                    $reduce: {
+                        input: "$countries",
+                        initialValue: [],
+                        in: { $setUnion: ["$$this", "$$value"] },
+                    },
+                },
+            },
+        },
+        {
             $match: filters,
         },
         { $count: "totalDocs" },

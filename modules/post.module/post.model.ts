@@ -85,83 +85,86 @@ const postSchema = new Schema<IPost>(
 );
 
 postSchema.pre("validate", async function (next) {
+  // ================check store and set values======================
   if (!this.store.storeName) {
     throw new Error("Please provide a store name!");
   } else {
     const isStoreExist = await getStoreByStoreNameService(this.store.storeName);
-    if (this.category?.categoryName) {
-      const isCategoryExist = await getCategoryByCategoryNameService(
-        this.category.categoryName
-      );
-      if (!isCategoryExist) {
-        throw new Error("Please enter a valid categoryName!");
-      } else {
-        this.category.moreAboutCategory = isCategoryExist._id as any;
-      }
-    }
-    if (this.campaign?.campaignName) {
-      const isCampaignExist = await getCampaignByCampaignNameService(
-        this.campaign.campaignName
-      );
-      if (!isCampaignExist) {
-        throw new Error("Please enter a valid campaignName!");
-      } else {
-        this.campaign.moreAboutCampaign = isCampaignExist._id as any;
-        this.campaign.campaignPhotoURL = isCampaignExist.campaignPhotoURL;
-      }
-    }
     if (!isStoreExist) {
       throw new Error("Please enter valid store name!");
     } else {
       this.store.moreAboutStore = isStoreExist._id as any;
       this.store.storePhotoURL = isStoreExist.storePhotoURL;
-      if (
-        (this.postType === "Coupon" && !this.couponCode) ||
-        (this.postType === "Coupon" && !this.network?.networkName)
-      ) {
-        throw new Error("Please provide a coupon code and Influencer Network!");
-      } else if (
-        (this.postType === "Voucher" && !this.dealLink) ||
-        (this.postType === "Voucher" && !this.network?.networkName)
-      ) {
-        throw new Error("Please provide dealLink and Influencer Network!");
-      } else if (this.postType !== "Deal" && this.network?.networkName) {
-        // for coupon and voucher network
-        const isNetworkExist = await getNetworkByNetworkNameService(
-          this.network?.networkName
-        );
-        if (!isNetworkExist) {
-          throw new Error("Please enter a valid network name!");
-        } else {
-          this.network.moreAboutNetwork = isNetworkExist._id as any;
-        }
-      } else if (this.postType === "Deal") {
-        // for products
-        if (
-          (!this.postPhotoURL && !this.productPreviewLink) ||
-          !this.dealLink ||
-          !this.category?.categoryName
-        ) {
-          throw new Error(
-            "Please provide dealLink, categoryName and postPhotoURL or productPreviewLink!"
-          );
-        } else {
-          if (!this.category.categoryName) {
-            throw new Error("Please enter a category name!");
-          } else {
-            if (this.brand?.brandName) {
-              const isBrandExist = await getBrandByBrandNameService(
-                this.brand.brandName
-              );
-              if (!isBrandExist) {
-                throw new Error("Please enter a valid brand name!");
-              } else {
-                this.brand.moreAboutBrand = isBrandExist._id as any;
-                this.brand.brandPhotoURL = isBrandExist.brandPhotoURL;
-              }
-            }
-          }
-        }
+    }
+  }
+  // ================check brand and set values======================
+  if (this.brand?.brandName) {
+    const isBrandExist = await getBrandByBrandNameService(this.brand.brandName);
+    if (!isBrandExist) {
+      throw new Error("Please enter a valid brandName!");
+    } else {
+      this.brand.moreAboutBrand = isBrandExist._id as any;
+      this.brand.brandPhotoURL = isBrandExist.brandPhotoURL;
+    }
+  }
+  // ================check category and set values===================
+  if (this.category?.categoryName) {
+    const isCategoryExist = await getCategoryByCategoryNameService(
+      this.category.categoryName
+    );
+    if (!isCategoryExist) {
+      throw new Error("Please enter a valid categoryName!");
+    } else {
+      this.category.moreAboutCategory = isCategoryExist._id as any;
+    }
+  }
+  // ================check campaign and set values===================
+  if (this.campaign?.campaignName) {
+    const isCampaignExist = await getCampaignByCampaignNameService(
+      this.campaign.campaignName
+    );
+    if (!isCampaignExist) {
+      throw new Error("Please enter a valid campaignName!");
+    } else {
+      this.campaign.moreAboutCampaign = isCampaignExist._id as any;
+      this.campaign.campaignPhotoURL = isCampaignExist.campaignPhotoURL;
+    }
+  }
+  // ================validate others requirement===================
+  // coupon validation-----------------
+  if (
+    (this.postType === "Coupon" && !this.couponCode) ||
+    (this.postType === "Coupon" && !this.network?.networkName)
+  ) {
+    throw new Error("Please provide a coupon code and Influencer Network!");
+  } else if (
+    // voucher validation-----------------
+    (this.postType === "Voucher" && !this.dealLink) ||
+    (this.postType === "Voucher" && !this.network?.networkName)
+  ) {
+    throw new Error("Please provide dealLink and Influencer Network!");
+  } else if (this.postType !== "Deal" && this.network?.networkName) {
+    const isNetworkExist = await getNetworkByNetworkNameService(
+      this.network?.networkName
+    );
+    if (!isNetworkExist) {
+      throw new Error("Please enter a valid network name!");
+    } else {
+      this.network.moreAboutNetwork = isNetworkExist._id as any;
+    }
+  } else if (this.postType === "Deal") {
+    // deal validation------------------
+    if (
+      (!this.postPhotoURL && !this.productPreviewLink) ||
+      !this.dealLink ||
+      !this.category?.categoryName
+    ) {
+      throw new Error(
+        "Please provide dealLink, categoryName and postPhotoURL or productPreviewLink!"
+      );
+    } else {
+      if (!this.category.categoryName) {
+        throw new Error("Please enter a category name!");
       }
     }
   }

@@ -7,14 +7,14 @@ import { getAllStores } from "../store.module/store.services";
 
 //== get search client
 export const searchGloballyClientService = async (query: object) => {
-  const stores = await getAllActiveStores(query);
+  const stores = await getAllStores(query, false);
   const posts = await getAllPosts(query, true);
   return { stores, posts };
 };
 
 //== get search admin
 export const searchGloballyAdminService = async (query: object) => {
-  const stores = await getAllStores(query);
+  const stores = await getAllStores(query, true);
   const posts = await getAllPosts(query, false);
   return { stores, posts };
 };
