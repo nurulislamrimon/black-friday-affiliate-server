@@ -20,6 +20,22 @@ const carouselRouter = express.Router();
 carouselRouter.get("/", carouselController.getCarouselController);
 
 /**
+ *@api{get}/carousel/:country get carousel
+ *@apiDescription get carousel
+ *@apiPermission none
+ *@apiHeader none
+ *@apiBody none
+ *@apiParam none
+ *@apiQuery none
+ *@apiSuccess {Object} carousel
+ *@apiError not found
+ */
+carouselRouter.get(
+  "/:country",
+  carouselController.getCarouselByCountryController
+);
+
+/**
  *@api{put}/carousel/add add new carousel
  *@apiDescription add new carousel for the first time
  *@apiPermission admin and manager

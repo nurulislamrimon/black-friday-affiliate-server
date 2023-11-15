@@ -27,7 +27,7 @@ exports.deleteCarouselService = exports.updateCarouselByIdService = exports.addN
 const carousel_model_1 = __importDefault(require("./carousel.model"));
 //== get a carousel by country
 const getCarouselByCountryService = (countryName) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield carousel_model_1.default.findOne({ country: countryName });
+    const result = yield carousel_model_1.default.findOne({ country: countryName }, "-postBy -updateBy");
     return result;
 });
 exports.getCarouselByCountryService = getCarouselByCountryService;

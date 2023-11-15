@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteCarouselController = exports.updateCarouselController = exports.addNewCarouselController = exports.getCarouselController = void 0;
+exports.deleteCarouselController = exports.updateCarouselController = exports.addNewCarouselController = exports.getCarouselByCountryController = exports.getCarouselController = void 0;
 const carouselServices = __importStar(require("./carousel.services"));
 const user_services_1 = require("../user.module/user.services");
 const catchAsync_1 = __importDefault(require("../../Shared/catchAsync"));
@@ -48,6 +48,15 @@ exports.getCarouselController = (0, catchAsync_1.default)((req, res, next) => __
         data: result,
     });
     console.log(`carousel ${result === null || result === void 0 ? void 0 : result.length} is added!`);
+}));
+// get carousel controller
+exports.getCarouselByCountryController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield carouselServices.getCarouselByCountryService(req.params.country);
+    res.send({
+        success: true,
+        data: result,
+    });
+    console.log(`carousel ${result === null || result === void 0 ? void 0 : result._id} is added!`);
 }));
 // add new carousel controller
 exports.addNewCarouselController = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

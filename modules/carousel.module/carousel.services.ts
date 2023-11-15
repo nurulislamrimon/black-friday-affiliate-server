@@ -3,7 +3,10 @@ import Carousel from "./carousel.model";
 
 //== get a carousel by country
 export const getCarouselByCountryService = async (countryName: string) => {
-  const result = await Carousel.findOne({ country: countryName });
+  const result = await Carousel.findOne(
+    { country: countryName },
+    "-postBy -updateBy"
+  );
   return result;
 };
 

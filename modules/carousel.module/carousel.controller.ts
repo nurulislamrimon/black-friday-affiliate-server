@@ -15,6 +15,19 @@ export const getCarouselController = catchAsync(
     console.log(`carousel ${result?.length} is added!`);
   }
 );
+// get carousel controller
+export const getCarouselByCountryController = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await carouselServices.getCarouselByCountryService(
+      req.params.country
+    );
+    res.send({
+      success: true,
+      data: result,
+    });
+    console.log(`carousel ${result?._id} is added!`);
+  }
+);
 
 // add new carousel controller
 export const addNewCarouselController = catchAsync(
